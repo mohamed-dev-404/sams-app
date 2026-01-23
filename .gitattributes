@@ -1,0 +1,9 @@
+# Ignore Android native build files
+android/ linguist-vendored
+/CMakeLists.txt linguist-vendored
+/*.c linguist-vendored
+/*.cpp linguist-vendored
+**/*.h linguist-vendored
+
+# Make Dart count higher
+*.dart linguist-detectable=true
