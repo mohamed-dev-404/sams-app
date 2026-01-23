@@ -1,0 +1,1 @@
+//todo shared animated loading indicator widget used in the app
