@@ -76,7 +76,7 @@ class AppTheme {
         ),
         fillColor: WidgetStateColor.resolveWith((states) {
           if (states.contains(WidgetState.focused)) {
-            return AppColors.secondaryLightActive;
+            return AppColors.secondaryLightHover;
           } else if (states.contains(WidgetState.error)) {
             return AppColors.redLightHover;
           }
