@@ -5,7 +5,7 @@ import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/data/models/home_course_model.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/custom_popup_menu_item.dart';
+import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
 
 enum UserRole { student, instructor }
 
