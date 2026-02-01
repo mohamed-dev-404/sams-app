@@ -1,1 +1,0 @@
-//todo shared web course details header widget used in the app
