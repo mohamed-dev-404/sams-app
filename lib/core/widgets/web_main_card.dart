@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sams_app/core/models/material_card_model.dart';
+import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
-class WebMaterialCard extends StatelessWidget {
-  const WebMaterialCard({super.key, required this.model});
-  final MaterialCardModel model;
+class WebMainCard extends StatelessWidget {
+  const WebMainCard({super.key, required this.model});
+  final MainCardModel model;
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(

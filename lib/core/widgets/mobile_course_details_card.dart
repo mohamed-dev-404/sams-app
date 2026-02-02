@@ -1,1 +1,0 @@
-//todo shared mobile course details card widget used in the app
