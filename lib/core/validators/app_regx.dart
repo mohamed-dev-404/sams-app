@@ -4,10 +4,16 @@ abstract class AppRegex {
     return RegExp(r'^.+@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$').hasMatch(email);
   }
 
-  // Strong Password Validation (8+ chars, 1 letter, 1 number)
+  //academic email validation
+  static bool isAcademicEmailValid(String email) {
+    return RegExp(r'^[a-zA-Z0-9._%+-]+@o6u\.edu\.eg$').hasMatch(email);
+  }
+
+  // Strong Password Validation (8+ chars, at least 1 lowercase letter, at least 1 uppercase letter, 1 digit, at least 1 special character)
   static bool isPasswordValid(String password) {
-    return RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$')
-        .hasMatch(password);
+    return RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+    ).hasMatch(password);
   }
 
   // Egyptian Phone Number Validation (010, 011, 012, 015)
@@ -18,8 +24,9 @@ abstract class AppRegex {
 
   // Global Phone Number Validation
   static bool isGlobalPhoneNumberValid(String phoneNumber) {
-    return RegExp(r'^\d{7,15}$')
-        .hasMatch(phoneNumber.replaceAll(RegExp(r'\D'), ''));
+    return RegExp(
+      r'^\d{7,15}$',
+    ).hasMatch(phoneNumber.replaceAll(RegExp(r'\D'), ''));
   }
 
   // Username Validation (Letters only, min 3 characters)
@@ -46,4 +53,4 @@ abstract class AppRegex {
 /// print(AppRegex.isUserNameValid("test")); // ✅ true
 /// print(AppRegex.isArabicNameValid("عربي)); // ✅ true
 /// print(AppRegex.isNumeric("12345")); // ✅ true
-/// 
+///

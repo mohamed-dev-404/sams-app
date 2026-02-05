@@ -53,12 +53,26 @@ abstract class AppValidators {
     return null;
   }
 
-  /// Validates password (min 8 characters, letters & numbers)
+  //validate academic email
+  static String? validateAcademicEmail(String? value) {
+    if (isNullOrEmpty(value)) {
+      return 'Email is required';
+    } else if (!AppRegex.isAcademicEmailValid(value!.trim())) {
+      return 'Invalid email. Use your @o6u.edu.eg student email';
+    }
+    return null;
+  }
+
+  /// Validates password (8+ chars, at least 1 lowercase letter, at least 1 uppercase letter, 1 digit, at least 1 special character)
   static String? validatePassword(String? value) {
     if (isNullOrEmpty(value)) {
       return 'Password is required';
     } else if (!AppRegex.isPasswordValid(value!.trim())) {
-      return 'Password must be at least 8 characters,\ncontain at least one letter and one number';
+      return 'Password must be at least 8 characters and contain:\n'
+          '• Uppercase letter\n'
+          '• Lowercase letter\n'
+          '• Number\n'
+          '• Special character (@\$!%*?&)';
     }
     return null;
   }
@@ -78,7 +92,7 @@ abstract class AppValidators {
     if (isNullOrEmpty(value)) {
       return 'This field is required';
     } else if (!AppRegex.isNumeric(value!)) {
-      return 'Only numbers are allowed';
+      return 'Only numbers are allowed in this field';
     } else {
       final num number = num.parse(value);
       if (min != null && number < min) return 'Number must be at least $min';
@@ -98,23 +112,3 @@ abstract class AppValidators {
     return null;
   }
 }
-
-///  Example usage inside TextFormField
-///
-/// 
-/// TextFormField(
-///   decoration: const InputDecoration(labelText: "Email"),
-///   validator: AppValidators.validateEmail,
-/// ),
-///
-/// TextFormField(
-///   decoration: const InputDecoration(labelText: "Password"),
-///   obscureText: true,
-///   validator: AppValidators.validatePassword,
-/// ),
-///
-/// TextFormField(
-///   decoration: const InputDecoration(labelText: "Phone"),
-///   validator: AppValidators.validatePhone,
-/// ),
-/// 
