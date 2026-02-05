@@ -58,7 +58,7 @@ abstract class AppValidators {
     if (isNullOrEmpty(value)) {
       return 'Email is required';
     } else if (!AppRegex.isAcademicEmailValid(value!.trim())) {
-      return 'Invalid email. Use your @o6u.edu.eg student email';
+      return 'Invalid email.\nUse your @o6u.edu.eg student email';
     }
     return null;
   }
