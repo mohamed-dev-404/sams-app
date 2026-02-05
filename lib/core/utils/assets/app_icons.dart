@@ -25,5 +25,6 @@ class AppIcons {
   static const String iconsProfileName = 'assets/icons/profile_name.svg';
   static const String iconsQuestionTimer = 'assets/icons/question_timer.svg';
   static const String iconsVideoMaterial = 'assets/icons/video_material.svg';
-
+  static const String iconsPasswordLock = 'assets/icons/password_lock_icon.svg';
+  static const String iconsTextFieldError = 'assets/icons/text_field_error_icon.svg';
 }
