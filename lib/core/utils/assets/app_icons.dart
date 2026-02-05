@@ -17,6 +17,7 @@ class AppIcons {
   static const String iconsOpenedEyeVisible = 'assets/icons/opened_eye_visible.svg';
   static const String iconsPdfMaterials = 'assets/icons/pdf_materials.svg';
   static const String iconsPerson = 'assets/icons/person.svg';
+  static const String iconsAuthName = 'assets/icons/auth_name.svg';
   static const String iconsPlusFloatingButton = 'assets/icons/plus_floating_button.svg';
   static const String iconsProfile = 'assets/icons/profile.svg';
   static const String iconsProfileEmail = 'assets/icons/profile_email.svg';
