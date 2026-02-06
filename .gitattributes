@@ -5,5 +5,8 @@ android/ linguist-vendored
 /*.cpp linguist-vendored
 **/*.h linguist-vendored
 
+# Ignore HTML files
+*.html linguist-vendored
+
 # Make Dart count higher
 *.dart linguist-detectable=true
