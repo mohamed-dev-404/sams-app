@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class TitledInputField extends StatelessWidget {
@@ -26,10 +27,12 @@ class TitledInputField extends StatelessWidget {
           label,
           style:
               labelStyle ??
-              // Default style
-              AppStyles.mobileLabelMediumMd.copyWith(
-                color: AppColors.primaryDark,
-              ),
+              (SizeConfig.isMobile(context)
+                      ? AppStyles.mobileLabelMediumMd
+                      : AppStyles.webLabelMd)
+                  .copyWith(
+                    color: AppColors.primaryDark,
+                  ),
         ),
         SizedBox(height: spacing),
         child,

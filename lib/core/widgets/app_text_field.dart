@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/enums/text_field_type.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/validators/app_validators.dart';
 import 'package:sams_app/core/widgets/text_field_error_builder.dart';
 
@@ -71,6 +74,12 @@ class AppTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: prefixIcon,
+        hintStyle:   (SizeConfig.isMobile(context)
+                        ? AppStyles.mobileBodyXsmallRg
+                        : AppStyles.mobileLabelMediumRg)
+                    .copyWith(
+                      color: AppColors.whiteDarkHover,
+                    ),
 
         // Ensures the hint text stays at the top when the field is tall
         alignLabelWithHint: true,

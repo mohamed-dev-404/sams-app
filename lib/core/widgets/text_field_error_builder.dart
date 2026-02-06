@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/svg_icon.dart';
 
 class TextFieldErrorBuilder extends StatelessWidget {
@@ -18,7 +20,7 @@ class TextFieldErrorBuilder extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.only(
-            top: 2,
+            top: 1,
           ), // Tiny offset to align icon with first line of text
           child: SvgIcon(
             AppIcons.iconsTextFieldError,
@@ -32,6 +34,13 @@ class TextFieldErrorBuilder extends StatelessWidget {
             maxLines: null,
             softWrap: true,
             textAlign: TextAlign.start,
+            style:
+                (SizeConfig.isMobile(context)
+                        ? AppStyles.mobileBodyXsmallRg
+                        : AppStyles.mobileLabelMediumRg)
+                    .copyWith(
+                      color: AppColors.red,
+                    ),
           ),
         ),
       ],

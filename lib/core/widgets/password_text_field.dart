@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/enums/password_field_type.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/validators/app_validators.dart';
 import 'package:sams_app/core/widgets/svg_icon.dart';
 import 'package:sams_app/core/widgets/text_field_error_builder.dart';
@@ -76,7 +79,13 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
 
       decoration: InputDecoration(
         hintText: widget.hintText,
-        // Visual cue that this is a secure field
+        hintStyle:
+            (SizeConfig.isMobile(context)
+                    ? AppStyles.mobileBodyXsmallRg
+                    : AppStyles.mobileLabelMediumRg)
+                .copyWith(
+                  color: AppColors.whiteDarkHover,
+                ),
         prefixIcon: const SvgIcon(AppIcons.iconsPasswordLock),
 
         // Eye toggle icon for showing/hiding password characters
