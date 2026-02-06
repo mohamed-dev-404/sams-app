@@ -20,7 +20,7 @@ class AppColors {
 
   //! ───────────────────────── Secondary ─────────────────────────
 
-  static const Color secondaryLight = Color(0xFFE7F4F4);
+  static const Color secondaryLight = Color(0xFFF8FFFD);
   static const Color secondaryLightHover = Color(0xFFDCF0EF);
   static const Color secondaryLightActive = Color(0xFFBEE6DE);
 
