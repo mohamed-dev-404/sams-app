@@ -4,7 +4,7 @@ class SizeConfig {
   SizeConfig._();
 
   // Breakpoint
-  static const double mobileBreakpoint = 750;
+  static const double mobileBreakpoint = 500;
 
   // base design sizes
   static const Size mobileBaseSize = Size(375, 812);
