@@ -19,7 +19,7 @@ class MobileMainCard extends StatelessWidget {
           color: Colors.transparent,
           child: Container(
             height: cardHeight,
-            padding: const EdgeInsets.all(15),
+            padding: EdgeInsets.all(cardWidth * 0.03),
             decoration: BoxDecoration(
               color: AppColors.primaryLightHover,
               borderRadius: BorderRadius.circular(15),
@@ -80,7 +80,8 @@ class MobileMainCard extends StatelessWidget {
                 cardWidth: cardWidth,
                 cardHeight: cardHeight,
                 maxLines: 1,
-                fontSizeFactor: 0.26,
+                fontSizeFactor: 0.22,
+                fontStyle: AppStyles.mobileBodyLargeSb,
                 color: AppColors.primaryDarkHover,
               ),
               SizedBox(height: cardHeight * 0.1),
@@ -89,7 +90,8 @@ class MobileMainCard extends StatelessWidget {
                 cardWidth: cardWidth,
                 cardHeight: cardHeight,
                 maxLines: 2,
-                fontSizeFactor: 0.18,
+                fontSizeFactor: 0.15,
+                fontStyle: AppStyles.mobileBodySmallRg,
               ),
             ],
           ),
@@ -104,6 +106,7 @@ class MobileMainCard extends StatelessWidget {
     required double cardHeight,
     required int maxLines,
     required double fontSizeFactor,
+    required TextStyle fontStyle,
     Color? color,
   }) {
     return ConstrainedBox(
@@ -115,7 +118,7 @@ class MobileMainCard extends StatelessWidget {
         text,
         maxLines: maxLines,
         overflow: TextOverflow.ellipsis,
-        style: AppStyles.mobileBodySmallRg.copyWith(
+        style: fontStyle.copyWith(
           color: color ?? AppColors.primaryDark,
           fontSize: cardHeight * fontSizeFactor,
         ),

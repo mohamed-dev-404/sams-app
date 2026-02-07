@@ -15,7 +15,6 @@ class MobileCoursesHeaderCard extends StatelessWidget {
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth;
         final cardHeight = MediaQuery.of(context).size.height * 0.3;
-        final scale = cardHeight / 280;
 
         return Container(
           width: double.infinity,
@@ -27,7 +26,7 @@ class MobileCoursesHeaderCard extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              _buildTextSection(cardHeight, scale, cardWidth),
+              _buildTextSection(cardHeight, cardWidth),
               _buildHeaderImage(cardHeight),
             ],
           ),
@@ -36,7 +35,7 @@ class MobileCoursesHeaderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTextSection(double cardHeight, double scale, double cardWidth) {
+  Widget _buildTextSection(double cardHeight, double cardWidth) {
     return Padding(
       padding: EdgeInsets.all(cardWidth * 0.06),
       child: SizedBox(
@@ -46,13 +45,11 @@ class MobileCoursesHeaderCard extends StatelessWidget {
           children: [
             _buildHeaderText(
               text: cardModel.title,
-              fontSize: AppStyles.mobileTitleLargeMd.fontSize! * scale,
               height: cardHeight * 0.21,
             ),
             SizedBox(height: cardHeight * 0.02),
             _buildHeaderText(
               text: cardModel.description,
-              fontSize: AppStyles.mobileBodyLargeSb.fontSize! * scale,
               height: cardHeight * 0.14,
               style: AppStyles.mobileBodyLargeSb,
             ),
@@ -64,19 +61,17 @@ class MobileCoursesHeaderCard extends StatelessWidget {
 
   Widget _buildHeaderText({
     required String text,
-    required double fontSize,
     required double height,
     TextStyle? style,
   }) {
     return SizedBox(
       height: height,
       child: FittedBox(
-        fit: BoxFit.scaleDown,
+        fit: BoxFit.contain,
         alignment: Alignment.centerLeft,
         child: Text(
           text,
           style: (style ?? AppStyles.mobileTitleLargeMd).copyWith(
-            fontSize: fontSize,
             color: AppColors.primaryLight,
           ),
         ),
