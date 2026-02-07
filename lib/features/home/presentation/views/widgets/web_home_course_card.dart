@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
@@ -18,151 +19,183 @@ class WebHomeCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 301, maxHeight: 240),
-      child: AspectRatio(
-        aspectRatio: 301 / 240,
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: AppColors.primaryLightHover,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final w = constraints.maxWidth;
-              final h = constraints.maxHeight;
+    return AspectRatio(
+      aspectRatio: 301 / 240,
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: AppColors.primaryLightHover,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final w = constraints.maxWidth;
+            final h = constraints.maxHeight;
 
-              return Stack(
-                children: [
-                  // Corner Top Image
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: SvgPicture.asset(
-                      width: constraints.maxWidth * 0.3,
-                      height: constraints.maxHeight * 0.34,
-
-                      AppImages.imagesCourseCardTopCorner,
-                      fit: BoxFit.contain,
-                      alignment: Alignment.topLeft,
-                    ),
+            return Stack(
+              children: [
+                /// Top Decoration
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: SvgPicture.asset(
+                    AppImages.imagesCourseCardTopCorner,
+                    width: w * 0.3,
+                    height: h * 0.34,
+                    fit: BoxFit.fill,
                   ),
+                ),
 
-                  // (Dots Menu)
-                  Positioned(
-                    right: constraints.maxWidth * 0.05,
-                    top: constraints.maxHeight * 0.05,
-                    child: PopupMenuButton<String>(
-                      offset: Offset(
-                        constraints.maxWidth * -.07,
-                        .2 * constraints.maxHeight,
-                      ),
-                      color: AppColors.whiteLight,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 3,
-                      padding: EdgeInsets.zero,
-                      icon: SvgPicture.asset(
-                        AppIcons.iconsMenu,
-                        width: constraints.maxWidth * 0.02,
-                      ),
-                      itemBuilder: (context) {
-                        if (role == UserRole.student) {
-                          return [
-                            CustomPopupMenuItem(
-                              value: 'Unenroll',
-                              title: 'Unenroll',
-                              onTap: () {},
-                            ),
-                          ];
-                        }
+                /// Menu
+                Positioned(
+                  right: w * 0.05,
+                  top: h * 0.05,
+                  child: PopupMenuButton<String>(
+                    offset: Offset(-w * .07, h * .2),
+                    color: AppColors.whiteLight,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                    padding: EdgeInsets.zero,
+                    icon: SvgPicture.asset(
+                      AppIcons.iconsMenu,
+                      width: w * 0.08, // Increased from 0.04
+                      height: w * 0.08,
+                    ),
+                    itemBuilder: (context) {
+                      final menuItemStyle = AppStyles.mobileBodySmallMd
+                          .copyWith(
+                            color: AppColors.primaryDarkHover,
+                            fontSize: (w * 0.05).clamp(
+                              12.0,
+                              24.0,
+                            ), // Force min size
+                          );
+
+                      if (role == UserRole.student) {
                         return [
                           CustomPopupMenuItem(
+                            value: 'Unenroll',
+                            title: 'Unenroll',
                             onTap: () {},
-                            title: 'Edit',
-                            value: 'edit',
-                          ),
-                          CustomPopupMenuItem(
-                            onTap: () {},
-                            title: 'Share link invitation',
-                            value: 'share',
+                            textStyle: menuItemStyle,
                           ),
                         ];
-                      },
-                    ),
-                  ),
+                      }
 
-                  Positioned(
-                    left: w * 0.15,
-                    right: w * 0.05,
-                    top: h * 0.35,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
+                      return [
+                        CustomPopupMenuItem(
+                          value: 'edit',
+                          title: 'Edit',
+                          onTap: () {},
+                          textStyle: menuItemStyle,
+                        ),
+                        CustomPopupMenuItem(
+                          value: 'share',
+                          title: 'Share link invitation',
+                          onTap: () {},
+                          textStyle: menuItemStyle,
+                        ),
+                      ];
+                    },
+                  ),
+                ),
+
+                /// MAIN CONTENT
+                Positioned(
+                  left: w * 0.15,
+                  right: w * 0.05,
+                  top: h * 0.2,
+                  bottom: h * 0.08, // Increased bottom margin slightly
+                  child: Column(
+                    mainAxisSize:
+                        MainAxisSize.min, // Allow column to shrink if needed
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, // Center content vertically available space
+                    children: [
+                      // Course Name & Code
+                      Flexible(
+                        flex: 2,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              course.courseName,
-                              style: AppStyles.mobileTitleLargeMd.copyWith(
-                                color: AppColors.primaryDarker,
-                                fontSize: w * 0.1, // ريسبونسيف بناءً على العرض
+                            Flexible(
+                              // Changed from Expanded so text doesn't force full width
+                              child: AutoSizeText(
+                                course.courseName,
+                                style: AppStyles.mobileTitleLargeMd.copyWith(
+                                  color: AppColors.primaryDarker,
+                                ),
+                                maxLines: 2,
+                                minFontSize: 8,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 6),
-                            Text(
+                            // SizedBox(width: w * 0.02),
+                            AutoSizeText(
                               '(${course.courseCode})',
                               style: AppStyles.mobileBodySmallRg.copyWith(
                                 color: AppColors.whiteDarkHover,
-                                fontSize: w * 0.045,
+                                fontSize: w * 0.04, // Reduced from 0.045
                               ),
+                              maxLines: 1,
+                              minFontSize: 8,
                             ),
                           ],
                         ),
-                        SizedBox(height: h * 0.05),
-                        Row(
+                      ),
+                      SizedBox(height: h * 0.04),
+                      // Instructor
+                      Flexible(
+                        flex: 2,
+                        child: Row(
                           children: [
                             SvgPicture.asset(
                               AppIcons.iconsPerson,
-                              width: w * 0.07,
-                              height: w * 0.07,
+                              width: w * 0.06,
+                              height: w * 0.06,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: w * 0.02),
                             Expanded(
-                              child: Text(
-                                course.instructorName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppStyles.webBodySmallRg.copyWith(
-                                  color: AppColors.primaryDarker,
-                                  fontSize: w * 0.06,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  right: w * 0.25,
+                                ), // Reduced padding
+                                child: AutoSizeText(
+                                  course.instructorName,
+                                  style: AppStyles.mobileTitleLargeMd.copyWith(
+                                    color: AppColors.primaryDarker,
+                                    fontSize: w * 0.06, // Reduced from 0.08
+                                  ),
+                                  maxLines: 2,
+                                  minFontSize: 8,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
 
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: SvgPicture.asset(
-                      width: constraints.maxWidth * 0.50,
-                      height: constraints.minHeight * 0.4,
-                      AppImages.imagesCourseCardBottomCorner,
-                      fit: BoxFit.contain,
-                      alignment: Alignment.bottomRight,
-                    ),
+                /// Bottom Decoration
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: SvgPicture.asset(
+                    AppImages.imagesCourseCardBottomCorner,
+                    width: w * 0.5,
+                    height: h * 0.4,
+                    fit: BoxFit.fill,
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
