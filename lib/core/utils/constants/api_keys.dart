@@ -1,8 +1,12 @@
 class ApiKeys {
   ApiKeys._();
+  
+  //? Common Keys
+  static const String status = 'status';
+  static const String data = 'data';
+  static const String message = 'message';
+  static const String validationErrors = 'validationErrors';
 
-  static String error = 'error';
-  static String message = 'message';
   // static String validationMessage = 'validationErrors';
   // static String errorMessage = 'businessErrorDescription';
   // static String email = 'email';
