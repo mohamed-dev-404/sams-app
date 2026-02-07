@@ -22,7 +22,6 @@ class WebMainCard extends StatelessWidget {
               builder: (context, constraints) {
                 final w = constraints.maxWidth;
                 final h = constraints.maxHeight;
-
                 return Stack(
                   children: [
                     Positioned(
