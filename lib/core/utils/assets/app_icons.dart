@@ -28,4 +28,6 @@ class AppIcons {
   static const String iconsVideoMaterial = 'assets/icons/video_material.svg';
   static const String iconsPasswordLock = 'assets/icons/password_lock_icon.svg';
   static const String iconsTextFieldError = 'assets/icons/text_field_error_icon.svg';
+  static const String iconsHomeProfileHeader ='assets/icons/home_profile_header.svg';
+  static const String iconsHomeNotificationHeader ='assets/icons/home_notification_header.svg';
 }
