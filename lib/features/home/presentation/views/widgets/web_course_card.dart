@@ -5,17 +5,18 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/features/home/data/models/home_course_model.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
+import 'package:sams_app/features/home/data/models/home_course_model.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 
-enum UserRole { student, instructor }
 
-class WebHomeCourseCard extends StatelessWidget {
-  WebHomeCourseCard({super.key, required this.course, required this.role});
+class WebCourseCard extends StatelessWidget {
+  const WebCourseCard({super.key, required this.course, required this.role});
 
   final UserRole role;
   final HomeCourseModel course;
-  String selectedValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -64,22 +65,28 @@ class WebHomeCourseCard extends StatelessWidget {
                       height: w * 0.08,
                     ),
                     itemBuilder: (context) {
-                      final menuItemStyle = AppStyles.mobileBodySmallMd
-                          .copyWith(
-                            color: AppColors.primaryDarkHover,
-                            fontSize: (w * 0.05).clamp(
-                              12.0,
-                              24.0,
-                            ), // Force min size
-                          );
+                      // final menuItemStyle = AppStyles.mobileBodySmallMd
+                      //     .copyWith(
+                      //       color: AppColors.primaryDarkHover,
+                      //       fontSize: (w * 0.05).clamp(
+                      //         12.0,
+                      //         24.0,
+                      //       ), // Force min size
+                      //     );
 
                       if (role == UserRole.student) {
                         return [
                           CustomPopupMenuItem(
                             value: 'Unenroll',
                             title: 'Unenroll',
-                            onTap: () {},
-                            textStyle: menuItemStyle,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const UnenrollCourseDialog(),
+                              );
+                            },
+                            //  textStyle: menuItemStyle,
                           ),
                         ];
                       }
@@ -88,14 +95,25 @@ class WebHomeCourseCard extends StatelessWidget {
                         CustomPopupMenuItem(
                           value: 'edit',
                           title: 'Edit',
-                          onTap: () {},
-                          textStyle: menuItemStyle,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const EnrollCourseDialog(),
+                            );
+                          },
+                          //  textStyle: menuItemStyle,
                         ),
                         CustomPopupMenuItem(
                           value: 'share',
                           title: 'Share link invitation',
-                          onTap: () {},
-                          textStyle: menuItemStyle,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  const UnenrollCourseDialog(),
+                            );
+                          },
+                          //  textStyle: menuItemStyle,
                         ),
                       ];
                     },
@@ -128,6 +146,10 @@ class WebHomeCourseCard extends StatelessWidget {
                                 style: AppStyles.mobileTitleLargeMd.copyWith(
                                   color: AppColors.primaryDarker,
                                 ),
+
+                                // AppStylesSecondary.mobileTitleLargeMd(context).copyWith(
+                                //    color: AppColors.primaryDarker,
+                                // ),
                                 maxLines: 2,
                                 minFontSize: 8,
                                 overflow: TextOverflow.ellipsis,
@@ -140,6 +162,10 @@ class WebHomeCourseCard extends StatelessWidget {
                                 color: AppColors.whiteDarkHover,
                                 fontSize: w * 0.04, // Reduced from 0.045
                               ),
+
+                              //  AppStylesSecondary.mobileBodySmallRg(context).copyWith(
+                              //     color: AppColors.whiteDarkHover,
+                              // ),
                               maxLines: 1,
                               minFontSize: 8,
                             ),
@@ -169,6 +195,10 @@ class WebHomeCourseCard extends StatelessWidget {
                                     color: AppColors.primaryDarker,
                                     fontSize: w * 0.06, // Reduced from 0.08
                                   ),
+
+                                  // AppStylesSecondary.mobileTitleLargeMd(context).copyWith(
+                                  //   color: AppColors.primaryDarker,
+                                  // ),
                                   maxLines: 2,
                                   minFontSize: 8,
                                   overflow: TextOverflow.ellipsis,
