@@ -5,6 +5,7 @@ import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
 
@@ -168,10 +169,14 @@ class MobileCourseCard extends StatelessWidget {
                 ),
                 CustomPopupMenuItem(
                   value: 'share',
-                  title: 'Share Invitation Link',
+                  title: 'Share Invitation Code',
                   onTap: () {
-                    Navigator.pop(context);
-                    debugPrint('Share Course');
+                   showDialog(
+                      context: context,
+                      builder: (context) => const ShowInvitationCodeDialog(
+                        invitationCode: 'DJI345',
+                      ),
+                    ); 
                   },
                 ),
               ]
