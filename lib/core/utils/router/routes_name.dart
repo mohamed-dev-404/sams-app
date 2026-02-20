@@ -4,7 +4,7 @@ class RoutesName {
   static const String splash = '/splash';
   
   // Home
-  static const String createCourseView = '/CreateCourseView';
-  static const String homeView = '/HomeView';
+  static const String createCourseView = '/CreateCourse';
+  static const String homeView = '/Home';
   
 }
