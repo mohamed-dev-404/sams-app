@@ -37,6 +37,7 @@ dependencies:
   dotted_border: ^2.1.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^10.0.0
   flutter_svg: ^2.2.3
