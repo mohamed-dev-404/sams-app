@@ -1,22 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
-import 'package:sams_app/features/home/data/models/home_course_model.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
+import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
-
 
 class WebCourseCard extends StatelessWidget {
   const WebCourseCard({super.key, required this.course, required this.role});
 
   final UserRole role;
-  final HomeCourseModel course;
+  final CourseModel course;
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +96,9 @@ class WebCourseCard extends StatelessWidget {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) =>
-                                  const ShowInvitationCodeDialog(invitationCode: 'DJI345',),
+                              builder: (context) => ShowInvitationCodeDialog(
+                                invitationCode: course.courseInvitationCode!,
+                              ),
                             );
                           },
                           //  textStyle: menuItemStyle,
@@ -130,7 +130,7 @@ class WebCourseCard extends StatelessWidget {
                             Flexible(
                               // Changed from Expanded so text doesn't force full width
                               child: AutoSizeText(
-                                course.courseName,
+                                course.name,
                                 style: AppStyles.mobileTitleLargeMd.copyWith(
                                   color: AppColors.primaryDarker,
                                 ),
@@ -141,7 +141,7 @@ class WebCourseCard extends StatelessWidget {
                             ),
                             // SizedBox(width: w * 0.02),
                             AutoSizeText(
-                              '(${course.courseCode})',
+                              '(${course.academicCourseCode})',
                               style: AppStyles.mobileBodySmallRg.copyWith(
                                 color: AppColors.whiteDarkHover,
                                 fontSize: w * 0.04, // Reduced from 0.045
@@ -170,7 +170,7 @@ class WebCourseCard extends StatelessWidget {
                                   right: w * 0.25,
                                 ), // Reduced padding
                                 child: AutoSizeText(
-                                  course.instructorName,
+                                  course.instructor,
                                   style: AppStyles.mobileTitleLargeMd.copyWith(
                                     color: AppColors.primaryDarker,
                                     fontSize: w * 0.06, // Reduced from 0.08

@@ -4,14 +4,20 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
 
 class MobileCourseCard extends StatelessWidget {
-  const MobileCourseCard({super.key, required this.role});
+  const MobileCourseCard({
+    super.key,
+    required this.role,
+    required this.courseModel,
+  });
   final UserRole role;
+  final CourseModel courseModel;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,13 @@ class MobileCourseCard extends StatelessWidget {
               _buildTitleSection(cardWidth, cardHeight),
               _buildTopCorner(cardHeight),
               _buildBottomCorner(cardHeight),
-              _buildPopupMenu(context, cardWidth, cardHeight, role),
+              _buildPopupMenu(
+                context, courseModel.courseInvitationCode,
+                cardWidth,
+                cardHeight,
+                role,
+               
+              ),
             ],
           ),
         );
@@ -63,13 +75,13 @@ class MobileCourseCard extends StatelessWidget {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    'Database',
+                    courseModel.name,
                     style: AppStyles.mobileBodyXXlargeMd.copyWith(
                       color: AppColors.primaryDark,
                     ),
                   ),
                   Text(
-                    '(CS1010)',
+                    courseModel.academicCourseCode,
                     style: AppStyles.mobileBodyXsmallRg.copyWith(
                       color: AppColors.whiteDarkHover,
                     ),
@@ -86,7 +98,7 @@ class MobileCourseCard extends StatelessWidget {
                   SvgPicture.asset(AppIcons.iconsPerson, width: 18, height: 18),
                   const SizedBox(width: 5),
                   Text(
-                    'Julie Watson',
+                    courseModel.instructor,
                     style: AppStyles.mobileBodySmallRg.copyWith(
                       color: AppColors.primaryDark,
                     ),
@@ -142,10 +154,11 @@ class MobileCourseCard extends StatelessWidget {
   }
 
   Widget _buildPopupMenu(
-    BuildContext context,
+    BuildContext context, String? invitationCode,
     double cardWidth,
     double cardHeight,
     UserRole role,
+   
   ) {
     return Positioned(
       top: cardHeight * 0.1,
@@ -171,12 +184,13 @@ class MobileCourseCard extends StatelessWidget {
                   value: 'share',
                   title: 'Share Invitation Code',
                   onTap: () {
-                   showDialog(
+                    showDialog(
                       context: context,
-                      builder: (context) => const ShowInvitationCodeDialog(
-                        invitationCode: 'DJI345',
+                      builder: (context) => ShowInvitationCodeDialog(
+                        invitationCode: invitationCode!,
                       ),
-                    ); 
+                    );
+                    debugPrint('Share Course');
                   },
                 ),
               ]

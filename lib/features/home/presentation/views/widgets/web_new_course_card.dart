@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/features/home/presentation/views/layouts/web_create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
 
 class WebNewCourseCard extends StatelessWidget {
   const WebNewCourseCard({super.key, required this.role});
@@ -15,18 +16,17 @@ class WebNewCourseCard extends StatelessWidget {
       aspectRatio: 301 / 240,
       child: GestureDetector(
         onTap: () {
-          // role == UserRole.teacher
-          //     ? Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (_) => const WebCreateCourseView(),
-          //         ),
-          //       )
-          //     : showDialog(
-          //         context: context,
-          //         builder: (context) => const EnrollCourseDialog(),
-          //       );
-          // ;
+          role == UserRole.teacher
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const WebCreateCourseView(),
+                  ),
+                )
+              : showDialog(
+                  context: context,
+                  builder: (context) => const EnrollCourseDialog(),
+                );
         },
         child: DottedBorder(
           color: AppColors.secondary,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/enum_user_role.dart';
-
 
 class MobileNewCourseCard extends StatelessWidget {
   const MobileNewCourseCard({super.key, required this.role});
@@ -25,12 +25,13 @@ class MobileNewCourseCard extends StatelessWidget {
                 builder: (context) => const EnrollCourseDialog(),
               );
             } else {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const CreateCourseView(),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateCourseView(),
+                ),
+              );
+              debugPrint('Create Course');
             }
           },
           child: Opacity(
