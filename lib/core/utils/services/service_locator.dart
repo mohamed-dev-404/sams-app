@@ -9,8 +9,6 @@ import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit
 GetIt getIt = GetIt.instance;
 
 void setupServiceLocator() {
-  getIt.registerLazySingleton<Dio>(() => Dio());
-  
   getIt.registerSingleton<ApiConsumer>(DioConsumer(Dio()));
 
 //! register HomeRepo

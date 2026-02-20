@@ -15,12 +15,13 @@ class HomeRepoImpl implements HomeRepo {
     required UserRole role,
   }) async {
     try {
+      var response = await api.get(role.myCoursesEndpoint);
 
-      var data = await api.get(role.myCoursesEndpoint);
-
-      List<CourseModel> courses = (data['data'] as List)
-          .map((item) => CourseModel.fromJson(item))
-          .toList();
+      List<CourseModel> courses =
+          (response['data'] as List?)
+              ?.map((item) => CourseModel.fromJson(item))
+              .toList() ??
+          [];
 
       return right(courses);
     } on ApiException catch (e) {

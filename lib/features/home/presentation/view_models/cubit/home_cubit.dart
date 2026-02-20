@@ -8,18 +8,14 @@ class HomeCubit extends Cubit<HomeState> {
 
   final HomeRepo homeRepo;
 
-  
   Future<void> fetchMyCourses({required UserRole role}) async {
     emit(HomeLoading());
 
-    final result = await homeRepo.fetchMyCourses(
-      role: role
-    );
+    final result = await homeRepo.fetchMyCourses(role: role);
 
     result.fold(
       (failure) => emit(HomeFailure(failure)),
       (courses) => emit(HomeSuccess(courses)),
     );
   }
-
 }
