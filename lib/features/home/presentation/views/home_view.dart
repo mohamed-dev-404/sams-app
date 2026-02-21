@@ -14,7 +14,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeCubit(getIt.get<HomeRepo>())..fetchMyCourses(role: UserRole.teacher),
+      create: (context) => HomeCubit(getIt.get<HomeRepo>(), role: UserRole.teacher)..fetchMyCourses(role: UserRole.teacher),
       child: AdaptiveLayout(
         mobileLayout: (context) => const MobileHomeView(),
         webLayout: (context) => const WebHomeView(),
