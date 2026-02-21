@@ -14,10 +14,17 @@ class MobileCreateCourseViewBody extends StatefulWidget {
 
 class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
     with CreateCourseLogic {
+      
   @override
   void initState() {
     super.initState();
     initCourseLogic();
+  }
+
+  @override
+  void dispose() {
+    disposeControllers();
+    super.dispose();
   }
 
   @override
@@ -32,8 +39,9 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
             SliverToBoxAdapter(
               child: BasicInformationSection(
                 totalController: totalGradeController,
-                finalController: finalExamController, courseNameController: courseNameController, courseCodeController: courseCodeController, 
-                
+                finalController: finalExamController,
+                courseNameController: courseNameController,
+                courseCodeController: courseCodeController,
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -57,4 +65,3 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
     );
   }
 }
-

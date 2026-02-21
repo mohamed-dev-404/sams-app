@@ -16,6 +16,18 @@ class WebCreateCourseViewBody extends StatefulWidget {
 
 class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
     with CreateCourseLogic {
+
+@override
+  void initState() {
+    super.initState();
+    initCourseLogic();
+  }  
+@override
+  void dispose() {
+    disposeControllers();
+    super.dispose();
+  }
+ 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -71,4 +83,5 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
       ],
     );
   }
+  
 }
