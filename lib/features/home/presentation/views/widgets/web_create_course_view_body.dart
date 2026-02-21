@@ -106,7 +106,12 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
-            SliverToBoxAdapter(child: CreateCourseButton(formKey: formKey)),
+            SliverToBoxAdapter(
+              child: CreateCourseButton(
+                isLoading: state is CreateCourseLoading,
+                onPressed: () => submitCourse(context),
+              ),
+            ),
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         );

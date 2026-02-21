@@ -80,7 +80,10 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 40)),
                 SliverToBoxAdapter(
-                  child: CreateCourseButton(formKey: formKey),
+                  child: CreateCourseButton(
+                    isLoading: state is CreateCourseLoading,
+                    onPressed: () => submitCourse(context),
+                  ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 60)),
               ],

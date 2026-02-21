@@ -6,30 +6,28 @@ import 'package:sams_app/core/widgets/app_button.dart';
 class CreateCourseButton extends StatelessWidget {
   const CreateCourseButton({
     super.key,
-    required this.formKey,
+    required this.onPressed,
+    this.isLoading = false,
   });
 
-  final GlobalKey<FormState> formKey;
+  final VoidCallback onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: AppButton(
-        model: AppButtonStyleModel(
-          height: 55,
-          width: 230,
-          backgroundColor: AppColors.secondary,
-          textColor: AppColors.whiteLight,
-          label: 'Create Course',
-          onPressed: () {
-            // final bool isValid = formKey.currentState!.validate();
-            // if (isValid) {
-            //   // do something
-            // }
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      child: isLoading
+          ? const CircularProgressIndicator()
+          : AppButton(
+              model: AppButtonStyleModel(
+                height: 55,
+                width: 230,
+                backgroundColor: AppColors.secondary,
+                textColor: AppColors.whiteLight,
+                label: 'Create Course',
+                onPressed: isLoading ? () {} : onPressed,
+              ),
+            ),
     );
   }
 }
