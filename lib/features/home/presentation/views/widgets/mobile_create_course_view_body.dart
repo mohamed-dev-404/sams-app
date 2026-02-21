@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/features/home/presentation/views/mixins/mixin_create_course.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/basic_information_section.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/create_course_button.dart';
@@ -14,7 +18,6 @@ class MobileCreateCourseViewBody extends StatefulWidget {
 
 class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
     with CreateCourseLogic {
-      
   @override
   void initState() {
     super.initState();
@@ -29,39 +32,62 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Form(
-        key: formKey,
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(
-              child: BasicInformationSection(
-                totalController: totalGradeController,
-                finalController: finalExamController,
-                courseNameController: courseNameController,
-                courseCodeController: courseCodeController,
-              ),
+    return BlocConsumer<HomeCubit, HomeState>(
+      listenWhen: (previous, current) => current is CourseActionState,
+      listener: (context, state) {
+        if (state is CreateCourseSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.green,
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(
-              child: GradeBreakdownSection(
-                fields: classworkFields,
-                remaining: remainingPoints,
-                limit: totalClassworkLimit,
-                onAddField: addDynamicField,
-                onRemoveField: removeDynamicField,
-              ),
+          );
+          Navigator.pop(context);
+        } else if (state is CreateCourseFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errMessage),
+              backgroundColor: AppColors.red,
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),
-            SliverToBoxAdapter(
-              child: CreateCourseButton(formKey: formKey),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: formKey,
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                SliverToBoxAdapter(
+                  child: BasicInformationSection(
+                    totalController: totalGradeController,
+                    finalController: finalExamController,
+                    courseNameController: courseNameController,
+                    courseCodeController: courseCodeController,
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                SliverToBoxAdapter(
+                  child: GradeBreakdownSection(
+                    fields: classworkFields,
+                    remaining: remainingPoints,
+                    limit: totalClassworkLimit,
+                    onAddField: addDynamicField,
+                    onRemoveField: removeDynamicField,
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 40)),
+                SliverToBoxAdapter(
+                  child: CreateCourseButton(formKey: formKey),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 60)),
+              ],
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 60)),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
