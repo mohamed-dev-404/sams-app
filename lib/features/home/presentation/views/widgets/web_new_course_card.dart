@@ -1,10 +1,12 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/enums/enum_user_role.dart';
-import 'package:sams_app/features/home/presentation/views/layouts/web_create_course_view.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
 
 class WebNewCourseCard extends StatelessWidget {
@@ -18,11 +20,14 @@ class WebNewCourseCard extends StatelessWidget {
         onTap: () {
           role == UserRole.teacher
               ? Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const WebCreateCourseView(),
+                context,
+                MaterialPageRoute(
+                  builder: (homeContext) => BlocProvider.value(
+                    value: BlocProvider.of<HomeCubit>(context),
+                    child: const CreateCourseView(),
                   ),
-                )
+                ),
+              )
               : showDialog(
                   context: context,
                   builder: (context) => const EnrollCourseDialog(),
@@ -73,17 +78,6 @@ class WebNewCourseCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // role == UserRole.student
-                    //     ? Container(
-                    //         width: double.infinity,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(20),
-                    //           // color: AppColors.primaryLight,
-                    //           color: Colors.white.withOpacity(0.6),
-                    //         ),
-                    //       )
-                    //     : Container(),
                   ],
                 ),
               );
