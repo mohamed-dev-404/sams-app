@@ -17,3 +17,17 @@ final class HomeFailure extends HomeState {
   final String errMessage;
   HomeFailure(this.errMessage);
 }
+
+sealed class CourseActionState extends HomeState {}
+
+final class CreateCourseLoading extends CourseActionState {}
+
+final class CreateCourseSuccess extends CourseActionState {
+  final String message;
+  CreateCourseSuccess(this.message);
+}
+
+final class CreateCourseFailure extends CourseActionState {
+  final String errMessage;
+  CreateCourseFailure(this.errMessage);
+}
