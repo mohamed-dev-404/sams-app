@@ -16,5 +16,8 @@ abstract class HomeRepo {
   Future<Either<String, String>> joinCourse({
     required JoinCourseModel model,
   });
-  
+
+  Future<Either<String, String>> unEnrollCourse({
+    required String courseId,
+  });
 }

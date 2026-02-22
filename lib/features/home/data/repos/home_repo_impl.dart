@@ -3,6 +3,7 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/errors/exceptions/api_exception.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/utils/constants/api_endpoints.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
@@ -13,7 +14,7 @@ class HomeRepoImpl implements HomeRepo {
 
   HomeRepoImpl({required this.api});
 
-   //? Fetches courses based on the user role.
+  //? Fetches courses based on the user role.
   ///
   /// Uses the role-specific endpoint to get the user's courses
   /// and converts the response into a list of [CourseModel].
@@ -26,7 +27,7 @@ class HomeRepoImpl implements HomeRepo {
       var response = await api.get(role.myCoursesEndpoint);
 
       List<CourseModel> courses =
-          (response['data'] as List?)
+          (response[ApiKeys.data] as List?)
               ?.map((item) => CourseModel.fromJson(item))
               .toList() ??
           [];
@@ -38,7 +39,8 @@ class HomeRepoImpl implements HomeRepo {
       return left(e.toString());
     }
   }
-   //! Creates a new course.
+
+  //! Creates a new course.
   ///
   /// Sends [CreateCourseModel] data to the API.
   /// Returns success message if created successfully,
@@ -52,7 +54,7 @@ class HomeRepoImpl implements HomeRepo {
         EndPoints.createCourse,
         data: course.toJson(),
       );
-      return right(response['message'] ?? 'Course Created Successfully');
+      return right(response[ApiKeys.message] ?? 'Course Created Successfully');
     } on ApiException catch (e) {
       return left(e.errorModel.errorMessage);
     } catch (e) {
@@ -60,7 +62,7 @@ class HomeRepoImpl implements HomeRepo {
     }
   }
 
-   //* Joins a course using an invitation code.
+  //* Joins a course using an invitation code.
   ///
   /// Sends [JoinCourseModel] data to the API.
   /// Returns success message if joining succeeds,
@@ -75,12 +77,32 @@ class HomeRepoImpl implements HomeRepo {
         data: model.toJson(),
       );
 
-      return right(response['message'] ?? 'Joined successfully');
+      return right(response[ApiKeys.message] ?? 'Joined successfully');
     } on ApiException catch (e) {
       return left(e.errorModel.errorMessage);
     } catch (e) {
       return left(e.toString());
     }
   }
-  
+
+  //! Unenrolls from a course.
+  ///
+  /// Sends the course ID to the API.
+  /// Returns success message if unenrolling succeeds,
+  /// otherwise returns an error message.
+  @override
+  Future<Either<String, String>> unEnrollCourse({
+    required String courseId,
+  }) async {
+    try {
+
+      final response = await api.delete(EndPoints.unenrollCourse(courseId));
+
+      return right(response[ApiKeys.message] ?? 'Unenrolled successfully');
+    } on ApiException catch (e) {
+      return left(e.errorModel.errorMessage);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
 }
