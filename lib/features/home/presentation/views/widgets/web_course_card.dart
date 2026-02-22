@@ -76,7 +76,7 @@ class WebCourseCard extends StatelessWidget {
                                 context: context,
                                 builder: (context) => BlocProvider.value(
                                   value: context.read<HomeCubit>(),
-                                  child: const UnenrollCourseDialog(),
+                                  child: UnenrollCourseDialog(courseId: course.id, courseName: course.name,),
                                 ),
                               );
                             },

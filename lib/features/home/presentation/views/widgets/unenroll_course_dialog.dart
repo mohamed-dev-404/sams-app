@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/app_button.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 
 class UnenrollCourseDialog extends StatelessWidget {
-  const UnenrollCourseDialog({super.key});
+  const UnenrollCourseDialog({
+    super.key,
+    required this.courseId,
+    required this.courseName,
+  });
+
+  final String courseId;
+  final String courseName;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +29,9 @@ class UnenrollCourseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Center(
+      title: Center(
         child: Text(
-          'Unenrol from Database?',
+          'Unenroll from $courseName?',
         ),
       ),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
@@ -61,6 +70,7 @@ All your files will remain in Google Drive.
                 backgroundColor: AppColors.secondaryLight,
                 label: 'Unenroll',
                 onPressed: () {
+                  context.read<HomeCubit>().unEnrollCourse(courseId: courseId);
                   Navigator.pop(context);
                 },
               ),

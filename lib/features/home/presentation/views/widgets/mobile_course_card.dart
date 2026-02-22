@@ -44,6 +44,8 @@ class MobileCourseCard extends StatelessWidget {
               _buildPopupMenu(
                 context,
                 courseModel.courseInvitationCode,
+                courseModel.id,
+                courseModel.name,
                 cardWidth,
                 cardHeight,
                 role,
@@ -158,6 +160,8 @@ class MobileCourseCard extends StatelessWidget {
   Widget _buildPopupMenu(
     BuildContext context,
     String? invitationCode,
+    String courseId,
+    String courseName,
     double cardWidth,
     double cardHeight,
     UserRole role,
@@ -201,14 +205,18 @@ class MobileCourseCard extends StatelessWidget {
                   value: 'unenroll',
                   title: 'Unenroll',
                   onTap: () {
-                    debugPrint('Unenroll');
+                    final homeCubit = context.read<HomeCubit>();Navigator.pop(context);
                     showDialog(
                       context: context,
                       builder: (context) => BlocProvider.value(
-                        value: context.read<HomeCubit>(),
-                        child: const UnenrollCourseDialog(),
+                        value: homeCubit,
+                        child: UnenrollCourseDialog(
+                          courseId: courseId,
+                          courseName: courseName,
+                        ),
                       ),
                     );
+                    debugPrint('Unenroll');
                   },
                 ),
               ],
