@@ -63,4 +63,23 @@ class HomeCubit extends Cubit<HomeState> {
       },
     );
   }
+
+  //! Unenrolls from a course as a Student.
+  ///
+  /// Sends the course ID to the repository.
+  /// If successful, re-fetches the user's courses and emits [UnEnrollCourseSuccess].
+  Future<void> unEnrollCourse({required String courseId}) async {
+    emit(UnEnrollCourseLoading());
+
+    final result = await homeRepo.unEnrollCourse(courseId: courseId);
+
+    result.fold(
+      (errMessage) => emit(UnEnrollCourseFailure(errMessage)),
+      (successMessage) {
+        emit(UnEnrollCourseSuccess(successMessage));
+
+        fetchMyCourses(role: role);
+      },
+    );
+  }
 }
