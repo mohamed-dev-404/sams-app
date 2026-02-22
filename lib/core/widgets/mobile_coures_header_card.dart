@@ -2,94 +2,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
+import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/svg_icon.dart';
 
 class MobileCoursesHeaderCard extends StatelessWidget {
   const MobileCoursesHeaderCard({super.key, required this.cardModel});
   final CourseHeaderCardModel cardModel;
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardWidth = constraints.maxWidth;
-        final cardHeight = MediaQuery.of(context).size.height * 0.3;
-
-        return Container(
-          width: double.infinity,
-          height: cardHeight,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(cardWidth * 0.06),
-          ),
+    return AspectRatio(
+      aspectRatio: 343 / 241,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
           child: Stack(
-            clipBehavior: Clip.none,
             children: [
-              _buildTextSection(cardHeight, cardWidth),
-              _buildHeaderImage(cardHeight),
+              _buildHeaderImage(),
+              _buildTextSection(),
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget _buildTextSection(double cardHeight, double cardWidth) {
+  Widget _buildTextSection() {
     return Padding(
-      padding: EdgeInsets.all(cardWidth * 0.06),
-      child: SizedBox(
-        height: cardHeight * 0.55,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeaderText(
-              text: cardModel.title,
-              height: cardHeight * 0.21,
-            ),
-            SizedBox(height: cardHeight * 0.02),
-            _buildHeaderText(
-              text: cardModel.description,
-              height: cardHeight * 0.14,
-              style: AppStyles.mobileBodyLargeSb,
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeaderText(
+            text: cardModel.title,
+          ),
+          const SizedBox(height: 4),
+          cardModel.instructor == null
+              ? _buildHeaderText(
+                  text: cardModel.description!,
+                  style: AppStyles.mobileBodyLargeSb,
+                )
+              : Row(
+                  children: [
+                    const SvgIcon(
+                      width: 19,
+                      height: 19,
+                      AppIcons.iconsPerson,
+                      color: AppColors.whiteLight,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      cardModel.instructor!,
+                      style: AppStyles.mobileBodySmallRg.copyWith(
+                        color: AppColors.primaryLight,
+                      ),
+                    ),
+                  ],
+                ),
+        ],
       ),
     );
   }
 
   Widget _buildHeaderText({
     required String text,
-    required double height,
     TextStyle? style,
   }) {
     return SizedBox(
-      height: height,
-      child: FittedBox(
-        fit: BoxFit.contain,
-        alignment: Alignment.centerLeft,
-        child: Text(
-          text,
-          style: (style ?? AppStyles.mobileTitleLargeMd).copyWith(
-            color: AppColors.primaryLight,
-          ),
+      child: Text(
+        text,
+        style: (style ?? AppStyles.mobileTitleLargeMd).copyWith(
+          color: AppColors.primaryLight,
         ),
       ),
     );
   }
 
-  Widget _buildHeaderImage(double cardHeight) {
+  Widget _buildHeaderImage() {
     return Positioned(
-      bottom: -cardHeight * 0.016,
+      bottom: 0,
       left: 0,
       right: 0,
-      child: SizedBox(
-        height: cardHeight * 0.55,
-        child: SvgPicture.asset(
-          AppImages.imagesHeaderCard,
-          fit: BoxFit.contain,
-        ),
+      child: SvgPicture.asset(
+        AppImages.imagesHeaderCard,
       ),
     );
   }

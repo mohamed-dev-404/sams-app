@@ -1,10 +1,13 @@
 //todo shared web course details header widget used in the app
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
+import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/svg_icon.dart';
 
 class WebCourseHeaderCard extends StatelessWidget {
   const WebCourseHeaderCard({super.key, required this.cardModel});
@@ -13,9 +16,7 @@ class WebCourseHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
       width: double.infinity,
-      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(25),
@@ -25,9 +26,10 @@ class WebCourseHeaderCard extends StatelessWidget {
         children: [
           Expanded(
             flex: 5,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, bottom: 24, top: 24),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -36,24 +38,45 @@ class WebCourseHeaderCard extends StatelessWidget {
                       color: AppColors.primaryLight,
                     ),
                   ),
-                  //AppStyles.webTitleLargeMd.copyWith(
-                  //   color: AppColors.primaryLight,
-                  // ),
-                  const SizedBox(height: 24),
-                  Text(
-                    cardModel.description,
-                    style: AppStyles.webLabelMd.copyWith(
+                  SizedBox(height: 24.h),
+              cardModel.description == null
+                      ? const SizedBox()
+                      :     Text(
+                    cardModel.description!,
+                    style: AppStyles.mobileBodySmallRg.copyWith(
                       color: AppColors.primaryLight,
                     ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  SizedBox(height: 24.h),
+                  cardModel.instructor == null
+                      ? const SizedBox()
+                      : Row(
+                          children: [
+                            const SvgIcon(
+                              width: 20,
+                              height: 20,
+                              AppIcons.iconsPerson,
+                              color: AppColors.whiteLight,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              cardModel.instructor!,
+                              style: AppStyles.mobileBodyXlargeRg.copyWith(
+                                color: AppColors.primaryLight,
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
           ),
+          const SizedBox(width: 80),
           Expanded(
             flex: 4,
             child: FittedBox(
-              fit: BoxFit.contain,
               child: SvgPicture.asset(
                 AppImages.imagesHeaderCard,
               ),

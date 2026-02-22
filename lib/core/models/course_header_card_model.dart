@@ -1,8 +1,10 @@
 class CourseHeaderCardModel {
   final String title;
-  final String description;
+  final String? description;
+  final String? instructor;
   CourseHeaderCardModel({
-    required this.description,
-    required this.title
+    this.description,
+    required this.title,
+    this.instructor,
   });
 }

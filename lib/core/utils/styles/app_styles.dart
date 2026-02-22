@@ -113,7 +113,7 @@ class AppStyles {
   );
 
   static TextStyle get mobileBodyXlargeRg => TextStyle(
-    fontSize: 20.sp.clamp(18, 22),
+    fontSize: 20.sp.clamp(16, 22),
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
   );
@@ -153,7 +153,7 @@ class AppStyles {
   // =========================================================
 
   static TextStyle get webTitleLargeMd => TextStyle(
-    fontSize: 50.sp.clamp(40, 60),
+    fontSize: 50.sp.clamp(30, 60),
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
   );

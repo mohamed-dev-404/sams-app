@@ -6,6 +6,6 @@ class AnnouncementsWebLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Announcements mobile TabView'));
+    return const Center(child: Text('Announcements web TabView'));
   }
 }
