@@ -20,17 +20,20 @@ class WebNewCourseCard extends StatelessWidget {
         onTap: () {
           role == UserRole.teacher
               ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (homeContext) => BlocProvider.value(
-                    value: BlocProvider.of<HomeCubit>(context),
-                    child: const CreateCourseView(),
+                  context,
+                  MaterialPageRoute(
+                    builder: (homeContext) => BlocProvider.value(
+                      value: BlocProvider.of<HomeCubit>(context),
+                      child: const CreateCourseView(),
+                    ),
                   ),
-                ),
-              )
+                )
               : showDialog(
                   context: context,
-                  builder: (context) => const EnrollCourseDialog(),
+                  builder: (context) => BlocProvider.value(
+                    value: context.read<HomeCubit>(),
+                    child: const EnrollCourseDialog(),
+                  ),
                 );
         },
         child: DottedBorder(

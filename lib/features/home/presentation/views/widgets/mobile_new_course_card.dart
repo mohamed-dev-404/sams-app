@@ -22,10 +22,15 @@ class MobileNewCourseCard extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             if (role == UserRole.student) {
+              final homeCubit = context.read<HomeCubit>();
               showDialog(
                 context: context,
-                builder: (context) => const EnrollCourseDialog(),
+                builder: (context) => BlocProvider.value(
+                  value: homeCubit,
+                  child: const EnrollCourseDialog(),
+                ),
               );
+              debugPrint('Join Course');
             } else {
               Navigator.push(
                 context,
