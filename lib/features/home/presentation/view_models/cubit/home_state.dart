@@ -57,3 +57,18 @@ final class JoinCourseFailure extends CourseActionState {
   final String errMessage;
   JoinCourseFailure(this.errMessage);
 }
+
+//? Emitted while unenrolling a course.
+final class UnEnrollCourseLoading extends CourseActionState {}
+
+//* Emitted when unenrolled successfully and emits success message.
+final class UnEnrollCourseSuccess extends CourseActionState {
+  final String message;
+  UnEnrollCourseSuccess(this.message);
+}
+
+//! Emitted when unenrolling fails and emits error message.
+final class UnEnrollCourseFailure extends CourseActionState {
+  final String errMessage;
+  UnEnrollCourseFailure(this.errMessage);
+}
