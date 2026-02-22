@@ -5,6 +5,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/app_button.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 
 class UnenrollCourseDialog extends StatelessWidget {
   const UnenrollCourseDialog({
@@ -47,35 +48,69 @@ All your files will remain in Google Drive.
         ),
       ),
       actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            AppButton(
-              model: AppButtonStyleModel(
-                height: 55,
-                width: 150,
-                textColor: AppColors.primaryDark,
-                backgroundColor: AppColors.secondaryLight,
-                label: 'Cancel',
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            AppButton(
-              model: AppButtonStyleModel(
-                height: 55,
-                width: 150,
-                textColor: AppColors.primaryDark,
-                backgroundColor: AppColors.secondaryLight,
-                label: 'Unenroll',
-                onPressed: () {
-                  context.read<HomeCubit>().unEnrollCourse(courseId: courseId);
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
+        BlocConsumer<HomeCubit, HomeState>(
+          listener: (context, state) {
+            if (state is UnEnrollCourseFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errMessage),
+                  backgroundColor: AppColors.red,
+                ),
+              );
+              Navigator.pop(context);
+            } else if (state is UnEnrollCourseSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppColors.green,
+                ),
+              );
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+            if (state is UnEnrollCourseLoading) {
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryDark,
+                  ),
+                ),
+              );
+            }
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                AppButton(
+                  model: AppButtonStyleModel(
+                    height: 55,
+                    width: 150,
+                    textColor: AppColors.primaryDark,
+                    backgroundColor: AppColors.secondaryLight,
+                    label: 'Cancel',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                AppButton(
+                  model: AppButtonStyleModel(
+                    height: 55,
+                    width: 150,
+                    textColor: AppColors.primaryDark,
+                    backgroundColor: AppColors.secondaryLight,
+                    label: 'Unenroll',
+                    onPressed: () {
+                      context.read<HomeCubit>().unEnrollCourse(
+                        courseId: courseId,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
