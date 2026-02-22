@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
@@ -8,6 +9,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 
@@ -72,8 +74,10 @@ class WebCourseCard extends StatelessWidget {
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (context) =>
-                                    const UnenrollCourseDialog(),
+                                builder: (context) => BlocProvider.value(
+                                  value: context.read<HomeCubit>(),
+                                  child: const UnenrollCourseDialog(),
+                                ),
                               );
                             },
                             //  textStyle: menuItemStyle,

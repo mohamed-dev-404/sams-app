@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
@@ -6,6 +7,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
@@ -40,11 +42,11 @@ class MobileCourseCard extends StatelessWidget {
               _buildTopCorner(cardHeight),
               _buildBottomCorner(cardHeight),
               _buildPopupMenu(
-                context, courseModel.courseInvitationCode,
+                context,
+                courseModel.courseInvitationCode,
                 cardWidth,
                 cardHeight,
                 role,
-               
               ),
             ],
           ),
@@ -154,11 +156,11 @@ class MobileCourseCard extends StatelessWidget {
   }
 
   Widget _buildPopupMenu(
-    BuildContext context, String? invitationCode,
+    BuildContext context,
+    String? invitationCode,
     double cardWidth,
     double cardHeight,
     UserRole role,
-   
   ) {
     return Positioned(
       top: cardHeight * 0.1,
@@ -199,11 +201,13 @@ class MobileCourseCard extends StatelessWidget {
                   value: 'unenroll',
                   title: 'Unenroll',
                   onTap: () {
-                    Navigator.pop(context);
                     debugPrint('Unenroll');
                     showDialog(
                       context: context,
-                      builder: (context) => const UnenrollCourseDialog(),
+                      builder: (context) => BlocProvider.value(
+                        value: context.read<HomeCubit>(),
+                        child: const UnenrollCourseDialog(),
+                      ),
                     );
                   },
                 ),
