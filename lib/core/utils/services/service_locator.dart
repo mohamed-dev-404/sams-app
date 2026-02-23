@@ -6,6 +6,9 @@ import 'package:sams_app/core/network/dio_consumer.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
+import 'package:sams_app/features/profile/data/repos/profile_repo_impl.dart';
+import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -19,6 +22,14 @@ void setupServiceLocator() {
 //!  New HomeCubit every time 
 getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<HomeRepo>(), role: UserRole.teacher),
+  );
+//! register ProfileRepo
+getIt.registerLazySingleton<ProfileRepo>(
+    () => ProfileRepoImpl(api: getIt<ApiConsumer>()),
+  );
+//! register ProfileRepo
+getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(getIt<ProfileRepo>()),
   );
 
   //todo register other services and repositories as needed...
