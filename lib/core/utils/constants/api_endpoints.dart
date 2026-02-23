@@ -14,4 +14,7 @@ class EndPoints {
   static String unenrollCourse(String courseId) =>
       'enrollments/my-courses/$courseId';
 
+  //! --- Profile  --- ;
+  static const String getProfile = 'users/profile';
+
 }
