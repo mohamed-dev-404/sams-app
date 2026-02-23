@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/widgets/general_arrow_back.dart';
 
 class MobileCustomAppBar extends StatelessWidget
@@ -22,7 +23,7 @@ class MobileCustomAppBar extends StatelessWidget
       backgroundColor: Colors.transparent,
       title: Text(title, style: titleStyle),
       leading: IconButton(
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => context.pop(),
         icon: GeneralArrowBack(color: arrowBackColor),
       ),
     );

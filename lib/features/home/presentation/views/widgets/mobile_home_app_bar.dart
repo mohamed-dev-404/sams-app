@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -41,11 +43,7 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     height: profileIconSize,
                     child: GestureDetector(
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (_) => const ProfileView(),
-                        //   ),
-                        // );
+                        context.push(RoutesName.profileView);
                       },
                       child: SvgPicture.asset(
                         AppIcons.iconsHomeProfileHeader,
