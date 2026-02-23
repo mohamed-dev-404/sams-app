@@ -6,5 +6,8 @@ class RoutesName {
   // Home
   static const String createCourseView = '/CreateCourse';
   static const String homeView = '/Home';
+
+  // Profile
+  static const String profileView = '/Profile';
   
 }
