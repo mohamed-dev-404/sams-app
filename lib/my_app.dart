@@ -50,7 +50,11 @@ class MyApp extends StatelessWidget {
             // 5. Provide modified data to all screens
             return MediaQuery(
               data: modifiedData,
-              child: widget, // <- Your actual screens go here (all routes)
+              child: SafeArea(
+                top: false,
+                bottom: true,
+                child: widget,
+              ), // <- Your actual screens go here (all routes)
             );
           },
         );
