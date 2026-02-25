@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sams_app/core/helper/app_logger.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
 
 ///! ===================================================
 ///! SecureStorageService
@@ -90,26 +91,41 @@ class SecureStorageService {
 
   //* Save access token
   Future<void> saveAccessToken(String token) async {
-    await setString('access_token', token);
+    await setString(CacheKeys.accessToken, token);
   }
 
   //* Get access token
   Future<String?> getAccessToken() async {
-    return getString('access_token');
+    return getString(CacheKeys.accessToken);
   }
 
   //* Delete access token
   Future<void> deleteAccessToken() async {
-    await remove('access_token');
+    await remove(CacheKeys.accessToken);
+  }
+
+  //* Save refresh token
+  Future<void> saveRefreshToken(String token) async {
+    await setString(CacheKeys.refreshToken, token);
+  }
+
+  //* Get refresh token
+  Future<String?> getRefreshToken() async {
+    return getString(CacheKeys.refreshToken);
+  }
+
+  //* Delete refresh token
+  Future<void> deleteRefreshToken() async {
+    await remove(CacheKeys.refreshToken);
   }
 
   //* Save user role
   Future<void> saveUserRole(String role) async {
-    await setString('user_role', role);
+    await setString(CacheKeys.role, role);
   }
 
   //* Get user role
   Future<String?> getUserRole() async {
-    return getString('user_role');
+    return getString(CacheKeys.role);
   }
 }
