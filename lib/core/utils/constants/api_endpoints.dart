@@ -1,16 +1,26 @@
 class EndPoints {
   EndPoints._();
 
-  //? EndPoints
-  // static String volumes = 'volumes';
-  // static String logIn = 'auth/login';
-  // static String register = 'auth/register';
-  // static String forgetpassword = 'auth/forgotten-password';
-  // static String virfyOTP = 'auth/verify-token';
-  // static String resetPassword = 'auth/reset-password';
-  // static String addProduct = 'admin/products';
-  // static String uploadProductImageEndPoint(id) {
-  //   return 'admin/products/$id/image';
-  // }
-  // ... more endpoints
+  //? --- Admin User  --- ;
+
+  static String users = 'admin/users';
+
+  static String toggleUserActivation(String userId) {
+    return 'admin/users/$userId/toggle-activation';
+  }
+
+  static String changeRole(String userId) {
+    return 'admin/users/$userId/role';
+  }
+
+  static const String roles = 'admin/roles';
+
+  //? --- Auth  --- ;
+  static String login = 'auth/login';
+  static String register = 'auth/register';
+  static String refresh = 'auth/refresh';
+  static String forgetPassword = 'auth/forgot-password';
+  static String verifyOTP = 'auth/verify-otp';
+  static String resetPassword = 'auth/reset-password';
+  static String resendOTP = 'auth/resend-code';
 }
