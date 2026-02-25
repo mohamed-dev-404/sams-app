@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/helper/app_logger.dart';
 
 GoRoute buildRoute({
   required String name,
@@ -9,7 +10,10 @@ GoRoute buildRoute({
   return GoRoute(
     name: name,
     path: path,
-    pageBuilder: (context, state) =>
-        MaterialPage(child: builder(context, state)),
+    pageBuilder: (context, state) {
+      AppLogger.info('Navigating to: $name, tag: "ROUTER');
+
+      return MaterialPage(child: builder(context, state));
+    },
   );
 }

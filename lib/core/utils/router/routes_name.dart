@@ -1,10 +1,15 @@
 class RoutesName {
   RoutesName._();
+  static const String test = '/test';
 
-  static const String splash = '/splash';
-  // static const String login = '/login';
-  // static const String register = '/register';
-  // static const String otp = '/otp';
-  // static const String home = '/home';
-  // ... other routes
+  //?auth routes
+  //login
+  static const String login = '/login';
+  //sign up
+  static const String signUp = '/signUp';
+  static const String activateAccount = '/auth/activateAccount';
+  // Password Reset Flow Paths
+  static const String forgotPassword = '/auth/forgot-password';
+  static const String verifyOtp = '/auth/verify-otp';
+  static const String resetPassword = '/auth/reset-password';
 }
