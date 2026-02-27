@@ -15,54 +15,50 @@ class ProfileInfoCard extends StatelessWidget {
   final UserModel userModel;
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      flex: 12,
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.whiteLight,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.secondary),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Personal Data',
-                style: AppStyles.mobileButtonMediumSb.copyWith(
-                  color: AppColors.primaryDarkHover,
-                ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.whiteLight,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.secondary),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Personal Data',
+              style: AppStyles.mobileButtonMediumSb.copyWith(
+                color: AppColors.primaryDarkHover,
               ),
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight(context) * .03,
+            ),
 
-              SizedBox(
-                height: SizeConfig.screenHeight(context) * .03,
-              ),
+            ProfileInfoItem(
+              svgPath: AppIcons.iconsProfileName,
+              label: 'Name',
+              value: userModel.name ?? '',
+            ),
+            ProfileInfoItem(
+              svgPath: AppIcons.iconsProfileEmail,
+              label: 'Email',
+              value: userModel.academicEmail ?? '',
+            ),
+            ProfileInfoItem(
+              svgPath: AppIcons.iconsProfileId,
+              label: 'ID',
+              value: userModel.academicId ?? '',
+            ),
 
-              ProfileInfoItem(
-                svgPath: AppIcons.iconsProfileName,
-                label: 'Name',
-                value: userModel.name ?? '',
-              ),
-              ProfileInfoItem(
-                svgPath: AppIcons.iconsProfileEmail,
-                label: 'Email',
-                value: userModel.academicEmail ?? '',
-              ),
-              ProfileInfoItem(
-                svgPath: AppIcons.iconsProfileId,
-                label: 'ID',
-                value: userModel.academicId ?? '',
-              ),
-
-              const LogoutSection(),
-              SizedBox(
-                height: SizeConfig.screenHeight(context) * .03,
-              ),
-            ],
-          ),
+            const LogoutSection(),
+            SizedBox(
+              height: SizeConfig.screenHeight(context) * .03,
+            ),
+          ],
         ),
       ),
     );
