@@ -8,6 +8,7 @@ import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
+import 'package:sams_app/features/home/presentation/views/home_view.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/views/profile_view.dart';
@@ -27,7 +28,6 @@ class AppRouter {
       ),
     ),
     routes: [
-
       //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       buildRoute(
         name: 'authTOHome',
@@ -55,6 +55,7 @@ class AppRouter {
           create: (context) =>
               HomeCubit(getIt.get<HomeRepo>(), role: UserRole.teacher)
                 ..fetchMyCourses(role: UserRole.teacher),
+          child: const HomeView(),
         ),
       ),
       // Create course view
