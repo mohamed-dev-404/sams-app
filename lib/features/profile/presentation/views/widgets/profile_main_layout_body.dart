@@ -16,16 +16,42 @@ class ProfileMainLayoutBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileState>(
+      listenWhen: (previous, current) =>
+          current is ProfileFailure ||
+          current is UploadProfilePicSuccess ||
+          current is UploadProfilePicFailure,
       listener: (context, state) {
         if (state is ProfileFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errMessage),
               backgroundColor: AppColors.red,
+              duration: const Duration(seconds: 2),
+            ),
+            
+          );
+        }
+
+        if (state is UploadProfilePicSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('the image uploaded successfully ✓ '),
+              backgroundColor: AppColors.greenDark,
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+
+        if (state is UploadProfilePicFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errMessage),
+              backgroundColor: Colors.red,
             ),
           );
         }
       },
+      buildWhen: (previous, current) => current is! ProfileActionState,
       builder: (context, state) {
         if (state is ProfileSuccess) {
           return Stack(
@@ -45,14 +71,20 @@ class ProfileMainLayoutBody extends StatelessWidget {
                   const Spacer(
                     flex: 1,
                   ),
-                  ProfilePicSection(
-                    userModel: state.userModel,
+                  Expanded(
+                    flex: 5,
+                    child: ProfilePicSection(
+                      userModel: state.userModel,
+                    ),
                   ),
                   const Spacer(
                     flex: 1,
                   ),
-                  ProfileInfoCard(
-                    userModel: state.userModel,
+                  Flexible(
+                    flex: 12,
+                    child: ProfileInfoCard(
+                      userModel: state.userModel,
+                    ),
                   ),
                   const Spacer(
                     flex: 1,
@@ -65,7 +97,8 @@ class ProfileMainLayoutBody extends StatelessWidget {
               ),
             ],
           );
-        } else if (state is ProfileFailure) {
+        }
+        if (state is ProfileFailure) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -81,13 +114,12 @@ class ProfileMainLayoutBody extends StatelessWidget {
               ],
             ),
           );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.primary,
-            ),
-          );
         }
+        return const Center(
+          child: CircularProgressIndicator(
+            color: AppColors.whiteLight,
+          ),
+        );
       },
     );
   }
