@@ -2,11 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
-import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
 
 class WebNewCourseCard extends StatelessWidget {
@@ -19,15 +20,10 @@ class WebNewCourseCard extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           role == UserRole.teacher
-              ? Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (homeContext) => BlocProvider.value(
-                      value: BlocProvider.of<HomeCubit>(context),
-                      child: const CreateCourseView(),
-                    ),
-                  ),
-                )
+              ? context.pushNamed(
+                RoutesName.createCourse,
+                extra: BlocProvider.of<HomeCubit>(context),
+              )
               : showDialog(
                   context: context,
                   builder: (context) => BlocProvider.value(

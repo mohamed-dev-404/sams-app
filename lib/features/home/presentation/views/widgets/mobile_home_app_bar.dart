@@ -43,7 +43,8 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     height: profileIconSize,
                     child: GestureDetector(
                       onTap: () {
-                        context.push(RoutesName.profileView);
+                        context.pushNamed(RoutesName.profile);
+                        debugPrint('Profile');
                       },
                       child: SvgPicture.asset(
                         AppIcons.iconsHomeProfileHeader,

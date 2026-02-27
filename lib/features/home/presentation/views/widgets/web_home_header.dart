@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class WebHomeHeader extends StatelessWidget {
@@ -16,20 +18,20 @@ class WebHomeHeader extends StatelessWidget {
       child: Row(
         children: [
           /// Logo + Name
-          Row(
-            children: [
-              SvgPicture.asset(AppIcons.iconsLogo, height: 28),
-              const SizedBox(width: 8),
-              Text(
-                'Univerra',
-                style: AppStyles.mobileTitleLargeMd.copyWith(
-                  color: AppColors.secondaryLight,
+          GestureDetector(
+            onTap: () => context.goNamed(RoutesName.home),
+            child: Row(
+              children: [
+                SvgPicture.asset(AppIcons.iconsLogo, height: 28),
+                const SizedBox(width: 8),
+                Text(
+                  'Univerra',
+                  style: AppStyles.mobileTitleLargeMd.copyWith(
+                    color: AppColors.secondaryLight,
+                  ),
                 ),
-                //  AppStylesSecondary.mobileTitleLargeMd(context).copyWith(
-                //   color: AppColors.secondaryLight,
-                // )
-              ),
-            ],
+              ],
+            ),
           ),
 
           const Spacer(),
@@ -43,16 +45,15 @@ class WebHomeHeader extends StatelessWidget {
               const SizedBox(width: 12),
               GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (_) => const ProfileView(),
-                  //   ),
-                  // );
+                  context.pushNamed(RoutesName.profile);
+                  debugPrint('Profile');
                 },
                 child: SvgPicture.asset(
                   AppIcons.iconsHomeProfileHeader,
-                  color: AppColors.white,
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.whiteLight,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
               const SizedBox(width: 9),
@@ -65,18 +66,12 @@ class WebHomeHeader extends StatelessWidget {
                     style: AppStyles.mobileBodyXsmallRg.copyWith(
                       color: AppColors.whiteLight,
                     ),
-                    // AppStylesSecondary.mobileBodyXsmallRg(context).copyWith(
-                    //   color:AppColors.whiteLight,
-                    // )
                   ),
                   Text(
                     'John Doe',
                     style: AppStyles.webBodySmallSb.copyWith(
                       color: AppColors.whiteLight,
                     ),
-                    // AppStylesSecondary.webBodySmallSb(context).copyWith(
-                    //   color: AppColors.whiteLight,
-                    // )
                   ),
                 ],
               ),

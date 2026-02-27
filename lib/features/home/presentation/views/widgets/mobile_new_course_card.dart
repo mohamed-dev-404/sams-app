@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
-import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
 
 class MobileNewCourseCard extends StatelessWidget {
@@ -32,14 +33,9 @@ class MobileNewCourseCard extends StatelessWidget {
               );
               debugPrint('Join Course');
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (homeContext) => BlocProvider.value(
-                    value: BlocProvider.of<HomeCubit>(context),
-                    child: const CreateCourseView(),
-                  ),
-                ),
+              context.pushNamed(
+                RoutesName.createCourse,
+                extra: BlocProvider.of<HomeCubit>(context),
               );
               debugPrint('Create Course');
             }
