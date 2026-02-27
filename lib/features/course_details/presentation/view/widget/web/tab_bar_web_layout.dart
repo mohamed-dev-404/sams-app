@@ -4,14 +4,18 @@ import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/web_coures_header_card.dart';
-import 'package:sams_app/features/course_details/presentation/view/widget/course_tabs_content.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
 //! tab_bar_web_layout.dart
 class TabBarWebLayout extends StatelessWidget {
-  const TabBarWebLayout({super.key, required this.navigationShell});
+  const TabBarWebLayout({
+    super.key,
+    required this.navigationShell,
+    required this.headerModel,
+  });
   final StatefulNavigationShell navigationShell;
+  final CourseHeaderCardModel headerModel;
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<CourseNavigationCubit>();
@@ -21,17 +25,13 @@ class TabBarWebLayout extends StatelessWidget {
         elevation: 0,
         backgroundColor: AppColors.primary,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(20),
+          preferredSize: const Size.fromHeight(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: CustomWebTabBar(
               tabs: cubit.tabs,
-              onTap: (index) {
-                navigationShell.goBranch(
-                  index,
-                  initialLocation: index == navigationShell.currentIndex,
-                );
-              },
+              currentIndex: navigationShell.currentIndex,
+              onTap: (index) => navigationShell.goBranch(index),
             ),
           ),
         ),
@@ -42,18 +42,9 @@ class TabBarWebLayout extends StatelessWidget {
         child: Column(
           children: [
             WebCourseHeaderCard(
-              cardModel: CourseHeaderCardModel(
-                description:
-                    'Stay informed about important campus news, academic updates, events, and opportunities so you never miss what matters.',
-                title: 'Database',
-                instructor: 'Julie Watson',
-              ),
+              cardModel: headerModel,
             ),
-            Expanded(
-              child: TabBarView(
-                children: getCourseTabsContent(),
-              ),
-            ),
+            Expanded(child: navigationShell),
           ],
         ),
       ),

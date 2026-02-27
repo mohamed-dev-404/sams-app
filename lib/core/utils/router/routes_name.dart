@@ -3,7 +3,7 @@ class RoutesName {
 
   static const String splash = '/splash';
 
-  static const String home = '/home';
+  static const String home = '/courses';
 
   static const String courseDetails = '/courseDetails';
 

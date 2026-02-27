@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/widgets/mobile_coures_header_card.dart';
-import 'package:sams_app/features/course_details/presentation/view/widget/course_tabs_content.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/mobile/custom_mobile_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
@@ -32,18 +31,12 @@ class TabBarMobileLayout extends StatelessWidget {
                 child: CustomMobileTabBar(
                   tabs: cubit.tabs,
                   onTap: (index) {
-                    navigationShell.goBranch(
-                      index,
-                      initialLocation: index == navigationShell.currentIndex,
-                    );
+                    navigationShell.goBranch(index);
                   },
+                  currentIndex: navigationShell.currentIndex,
                 ),
               ),
-              Expanded(
-                child: TabBarView(
-                  children: getCourseTabsContent(),
-                ),
-              ),
+              Expanded(child: navigationShell),
             ],
           ),
         ),

@@ -5,11 +5,13 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class CustomWebTabBar extends StatelessWidget {
   final List<String> tabs;
-final Function(int) onTap ;
+  final Function(int) onTap;
+  final int currentIndex;
   const CustomWebTabBar({
     super.key,
     required this.tabs,
-  required  this.onTap ,
+    required this.onTap,
+    required this.currentIndex,
   });
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,8 @@ final Function(int) onTap ;
       child: SizedBox(
         height: 35,
         child: ButtonsTabBar(
-          onTap: onTap ,
+          onTap: onTap,
+          key: ValueKey(currentIndex),
           buttonMargin: const EdgeInsets.symmetric(horizontal: 10),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           borderWidth: 1,
