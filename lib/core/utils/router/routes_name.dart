@@ -2,12 +2,7 @@ class RoutesName {
   RoutesName._();
 
   static const String splash = '/splash';
-  
-  // Home
-  static const String createCourseView = '/CreateCourse';
-  static const String homeView = '/Home';
-
-  // Profile
-  static const String profileView = '/Profile';
-  
+  static const String home = '/home';
+  static const String createCourse = '/createCourse';
+  static const String profile = '/profile';
 }
