@@ -26,7 +26,7 @@ class CourseSliverList extends StatelessWidget {
               (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 7),
                 child: MobileCourseCard(
-                  role: UserRole.teacher,
+                  role: UserRole.student,
                   courseModel: state.courses[index],
                 ),
               ),

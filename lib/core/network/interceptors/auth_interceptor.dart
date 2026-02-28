@@ -30,7 +30,6 @@
 //   }
 // }
 
-
 import 'package:dio/dio.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -40,13 +39,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     const String manualAccessToken =
-
-
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OThjNTM1ZWM5NWZkNjVmMzYyOTE1MGUiLCJhY2FkZW1pY0VtYWlsIjoiMjAyMjA3MDAwQG82dS5lZHUuZWciLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImlhdCI6MTc3MTYxNDY3MiwiZXhwIjoxNzcxNjE1NTcyfQ.0AGOYy7aCcDz6TO17hXkPzyqtywWex__WJ_FzIObpMA";
-
-
-
-
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc3YmI3NTI0YjE5NTczMWMwYWU1NDciLCJhY2FkZW1pY0VtYWlsIjoiMjAyMjAyNjExQG82dS5lZHUuZWciLCJyb2xlcyI6WyJzdHVkZW50Il0sImlhdCI6MTc3MjMwOTYzNywiZXhwIjoxNzcyMzEwNTM3fQ.hiwkNV8VxaZD8Q0DKJnGRImhtGYMewEYrSln7L0M24E";
 
     options.headers['Authorization'] = 'Bearer $manualAccessToken';
 

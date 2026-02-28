@@ -64,65 +64,68 @@ class WebProfileViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return CustomScrollView(
-  slivers: [
-    /// الهيدر
-    const SliverToBoxAdapter(
-      child: WebHomeHeader(),
-    ),
-
-    const SliverToBoxAdapter(
-      child: SizedBox(height: 5),
-    ),
-
-    /// العنوان
-    SliverToBoxAdapter(
-      child: Center(
-        child: Text(
-          'Profile',
-          style: AppStyles.webTitleLargeMd.copyWith(
-            color: AppColors.primaryDarkHover,
-          ),
+      slivers: [
+        /// الهيدر
+        const SliverToBoxAdapter(
+          child: WebHomeHeader(),
         ),
-      ),
-    ),
 
-    const SliverToBoxAdapter(
-      child: SizedBox(height: 10),
-    ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 5),
+        ),
 
-    /// الكارد الرئيسي
-    SliverToBoxAdapter(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: 300,
-            maxWidth: 700,
-          ),
-          child: SizedBox(
-            /// خليه نسبي للشاشة زي ما كنتي عاملة
-            height: SizeConfig.screenHeight(context) * .7,
-            width: SizeConfig.screenWidth(context) * .27,
-
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(25)),
-                color: AppColors.primary,
+        /// العنوان
+        SliverToBoxAdapter(
+          child: Center(
+            child: Text(
+              'Profile',
+              style: AppStyles.webTitleLargeMd.copyWith(
+                color: AppColors.primaryDarkHover,
+                fontSize: width * .024,
               ),
-              child: const ProfileMainLayoutBody(),
             ),
           ),
         ),
-      ),
-    ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
+        ),
 
-    /// بدل Spacer (مهم جداً)
-    const SliverFillRemaining(
-      hasScrollBody: false,
-      child: SizedBox(),
-    ),
-  ],
-);
+        /// الكارد الرئيسي
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 300,
+                maxWidth: 700,
+              ),
+              child: SizedBox(
+                /// خليه نسبي للشاشة زي ما كنتي عاملة
+                height: SizeConfig.isMobile(context)
+                    ? SizeConfig.screenHeight(context) * .7
+                    : SizeConfig.screenHeight(context) * .9,
+                width: SizeConfig.screenWidth(context) * .27,
 
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    color: AppColors.primary,
+                  ),
+                  child: const ProfileMainLayoutBody(),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        /// بدل Spacer (مهم جداً)
+        // const SliverFillRemaining(
+        //   hasScrollBody: false,
+        //   child: SizedBox(),
+        // ),
+      ],
+    );
   }
 }
+
