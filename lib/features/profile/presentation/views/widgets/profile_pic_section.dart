@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart'; // لعمل فحص kIsWeb
+import 'package:flutter/foundation.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,8 +9,11 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
+import 'package:sams_app/features/profile/presentation/utils/image_acquisition.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_state.dart';
+import 'package:sams_app/features/profile/presentation/views/widgets/image_preview_dialog.dart';
+import 'package:sams_app/features/profile/presentation/views/widgets/image_source_sheet.dart';
 
 class ProfilePicSection extends StatefulWidget {
   const ProfilePicSection({super.key, required this.userModel});
@@ -43,7 +46,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  width: double.infinity,
+                  //  width: double.infinity,
                   height: double.infinity,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
@@ -81,8 +84,9 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
                 Positioned(
                   bottom: 5,
                   right: 0,
+                  left: 85,
                   child: GestureDetector(
-                    onTap: _pickImage,
+                    onTap: _showImageSourceSheet,
                     child: _buildEditIcon(),
                   ),
                 ),
@@ -93,24 +97,36 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
       ),
     );
   }
-   
-  
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.gallery,
+ 
+Future<void> _pickImage(ImageSource source) async {
+    final XFile? processedImage = await ImageAcquisition.pickImage(
+      context,
+      source,
     );
-    if (image != null) {
+
+    if (processedImage != null) {
       setState(() {
-        _pickedImage = image;
+        _pickedImage = processedImage;
       });
+
       if (mounted) {
-        context.read<ProfileCubit>().uploadProfileImage(image);
+        context.read<ProfileCubit>().uploadProfileImage(processedImage);
       }
     }
   }
 
-
+ void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => ImageSourceBottomSheet(
+        onSourceSelected: _pickImage,
+      ),
+    );
+  }
+ 
   Widget _buildEditIcon() {
     return Container(
       width: SizeConfig.isMobile(context)
@@ -147,36 +163,42 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
   }
 
   Widget _buildProfileImage(ProfileState state) {
-        if (state is UploadProfilePicLoading && _pickedImage != null) {
-          return kIsWeb
-              ? Image.network(_pickedImage!.path, fit: BoxFit.cover)
-              : Image.file(File(_pickedImage!.path), fit: BoxFit.cover);
-        }
-    
-        UserModel displayUser = widget.userModel;
-        if (state is ProfileSuccess) {
-          displayUser = state.userModel;
-        } else if (state is UploadProfilePicSuccess) {
-          displayUser = state.userModel;
-        }
-    
-        if (displayUser.profilePic != null &&
-            displayUser.profilePic!.isNotEmpty) {
-          return CachedNetworkImage(
-            imageUrl:
-                '${displayUser.profilePic}?t=${DateTime.now().millisecondsSinceEpoch}',
-            fit: BoxFit.cover,
-            key: ValueKey(displayUser.profilePic),
-            placeholder: (context, url) => const Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
+    if (state is UploadProfilePicLoading && _pickedImage != null) {
+      return kIsWeb
+          ? Image.network(_pickedImage!.path, fit: BoxFit.cover)
+          : Image.file(File(_pickedImage!.path), fit: BoxFit.cover);
+    }
+
+    UserModel displayUser = widget.userModel;
+    if (state is ProfileSuccess) {
+      displayUser = state.userModel;
+    } else if (state is UploadProfilePicSuccess) {
+      displayUser = state.userModel;
+    }
+
+    if (displayUser.profilePic != null && displayUser.profilePic!.isNotEmpty) {
+      return GestureDetector(
+        onTap: () => ImagePreviewDialog.open(context, displayUser.profilePic!),
+        child: Hero(
+          tag: displayUser.profilePic!,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: CachedNetworkImage(
+              imageUrl:
+                  '${displayUser.profilePic}?t=${DateTime.now().millisecondsSinceEpoch}',
+              fit: BoxFit.cover,
+              key: ValueKey(displayUser.profilePic),
+              placeholder: (context, url) => const Center(
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              errorWidget: (context, url, error) => _buildDefaultIcon(),
             ),
-            errorWidget: (context, url, error) => _buildDefaultIcon(),
-          );
-        }
-    
-        return _buildDefaultIcon();
-      
-    
+          ),
+        ),
+      );
+    }
+
+    return _buildDefaultIcon();
   }
 
   Widget _buildDefaultIcon() {
