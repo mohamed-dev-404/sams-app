@@ -39,7 +39,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     const String manualAccessToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc3YmI3NTI0YjE5NTczMWMwYWU1NDciLCJhY2FkZW1pY0VtYWlsIjoiMjAyMjAyNjExQG82dS5lZHUuZWciLCJyb2xlcyI6WyJzdHVkZW50Il0sImlhdCI6MTc3MjMwOTYzNywiZXhwIjoxNzcyMzEwNTM3fQ.hiwkNV8VxaZD8Q0DKJnGRImhtGYMewEYrSln7L0M24E";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc3YmI3NTI0YjE5NTczMWMwYWU1NDciLCJhY2FkZW1pY0VtYWlsIjoiMjAyMjAyNjExQG82dS5lZHUuZWciLCJyb2xlcyI6WyJzdHVkZW50Il0sImlhdCI6MTc3MjMxODk2OCwiZXhwIjoxNzcyMzE5ODY4fQ.5RhdvYgePTsUtzhe-GiNZaevqT8dHbUvrzcrNAo_l3I";
 
     options.headers['Authorization'] = 'Bearer $manualAccessToken';
 

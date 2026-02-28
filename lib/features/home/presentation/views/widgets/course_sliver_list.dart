@@ -4,6 +4,7 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/widgets/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/mobile_course_card.dart';
 
 class CourseSliverList extends StatelessWidget {
@@ -25,10 +26,11 @@ class CourseSliverList extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 7),
-                child: MobileCourseCard(
-                  role: UserRole.student,
-                  courseModel: state.courses[index],
-                ),
+                child: CustomCourseCard(course: state.courses[index], role: UserRole.student, isMobile: true)
+                // MobileCourseCard(
+                //   role: UserRole.student,
+                //   courseModel: state.courses[index],
+                // ),
               ),
               childCount: state.courses.length,
             ),

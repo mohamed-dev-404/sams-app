@@ -38,7 +38,7 @@ class MobileHomeViewBody extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(bottom: 50, top: 7),
               child: MobileNewCourseCard(
-                role: UserRole.teacher,
+                role: UserRole.student,
               ),
             ),
           ),
