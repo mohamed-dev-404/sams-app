@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:mime/mime.dart';
 import 'package:sams_app/core/errors/exceptions/api_exception.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/utils/constants/api_endpoints.dart';
@@ -13,11 +10,13 @@ import 'package:sams_app/features/profile/data/models/upload_url_model.dart';
 import 'package:sams_app/features/profile/data/models/upload_url_request.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
+import 'package:sams_app/features/profile/data/services/image_processor.dart';
 
 class ProfileRepoImpl extends ProfileRepo {
-  ProfileRepoImpl({required this.api, required this.s3Service});
+  ProfileRepoImpl({required this.api, required this.s3Service, required this.imageProcessor});
   final ApiConsumer api;
   final S3UploadService s3Service;
+  final ImageProcessor imageProcessor;
 
   //* Fetches user profile data.
   ///
@@ -47,49 +46,35 @@ class ProfileRepoImpl extends ProfileRepo {
   @override
   Future<Either<String, UserModel>> uploadProfilePicture(XFile imageFile) async {
     try {
-       Uint8List fileBytes = await imageFile.readAsBytes();
-      final String fileName = imageFile.name;
-      final String contentType = lookupMimeType(imageFile.path) ?? 'image/png';
+       final processResult = await imageProcessor.processImage(imageFile);
 
-      const int maxLimit = 5 * 1024 * 1024;
-
-      if (fileBytes.length > maxLimit) {
-        if (!contentType.startsWith('image')) {
-          return const Left('File is too large. Maximum allowed size is 5MB.');
-        }
-
-        fileBytes = await _compressImageLogic(fileBytes);
-
-        if (fileBytes.length > maxLimit) {
-          return const Left(
-            'The image is still too large (over 5MB) even after compression. Please choose another image.',
-          );
-        }
-      }
-
-      final int finalSize = fileBytes.length;
+      return await processResult.fold(
+      (error) => Left(error), 
+      (processed) async {
 
       final uploadData = await _getPresignedUrl(
-        fileName,
-        finalSize,
-        contentType,
+        processed.fileName,
+          processed.bytes.length,
+          processed.contentType,
       );
 
       await s3Service.uploadFile(
         url: uploadData.uploadUrl,
-        fileBytes: fileBytes,
-        fileName: fileName,
-        contentType: contentType,
+          fileBytes: processed.bytes,
+          fileName: processed.fileName,
+          contentType: processed.contentType,
       );
 
       final userUpdated = await _savePictureToProfile(uploadData.key);
-      return Right(userUpdated);
-    } on ApiException catch (e) {
-      return Left(e.errorModel.errorMessage);
-    } catch (e) {
-      return Left('Failed to upload profile picture: ${e.toString()}');
-    }
+        return Right(userUpdated);
+      },
+    );
+  } on ApiException catch (e) {
+    return Left(e.errorModel.errorMessage);
+  } catch (e) {
+    return Left('Failed to upload profile picture: ${e.toString()}');
   }
+}
 
   Future<UploadUrlModel> _getPresignedUrl(
     String name,
@@ -117,19 +102,5 @@ class ProfileRepoImpl extends ProfileRepo {
     );
   
     return UserModel.fromMap(response[ApiKeys.data]);
-  }
-
-  Future<Uint8List> _compressImageLogic(Uint8List bytes) async {
-    try {
-      final result = await FlutterImageCompress.compressWithList(
-        bytes,
-        minHeight: 1000,
-        minWidth: 1000,
-        quality: 80,
-      );
-      return Uint8List.fromList(result);
-    } catch (e) {
-      return bytes;
-    }
   }
 }
