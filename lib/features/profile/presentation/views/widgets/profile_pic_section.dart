@@ -447,8 +447,11 @@ import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/presentation/utils/image_acquisition.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_state.dart';
+import 'package:sams_app/features/profile/presentation/views/widgets/default_profile_icon.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/image_preview_dialog.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/image_source_sheet.dart';
+import 'package:sams_app/features/profile/presentation/views/widgets/profile_edit_button.dart';
+import 'package:sams_app/features/profile/presentation/views/widgets/profile_pic_loading_overlay.dart';
 
 // --- Main Section (Stateful) ---
 
@@ -594,82 +597,3 @@ class ProfileAvatarDisplay extends StatelessWidget {
   }
 }
 
-class ProfilePicLoadingOverlay extends StatelessWidget {
-  const ProfilePicLoadingOverlay({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        if (state is UploadProfilePicLoading) {
-          return Container(
-            decoration: BoxDecoration(
-              color: AppColors.black.withAlpha((0.4 * 255).toInt()),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
-  }
-}
-
-class ProfileEditButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const ProfileEditButton({super.key, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isMobile = SizeConfig.isMobile(context);
-    final double buttonSize = isMobile 
-        ? SizeConfig.screenWidth(context) * .10 
-        : 30;
-
-    return Positioned(
-      bottom: 5,
-      right: 0,
-      left: isMobile ? 85 : 75,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: buttonSize,
-          height: buttonSize,
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
-            color: AppColors.secondary,
-            shape: BoxShape.circle,
-          ),
-          child: SvgPicture.asset(
-            AppIcons.iconsEditMaterial,
-            colorFilter: const ColorFilter.mode(
-              AppColors.whiteLight,
-              BlendMode.srcIn,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DefaultProfileIcon extends StatelessWidget {
-  const DefaultProfileIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FittedBox(
-      child: SvgPicture.asset(
-        AppIcons.iconsHomeProfileHeader,
-        colorFilter: const ColorFilter.mode(
-          AppColors.white,
-          BlendMode.srcIn,
-        ),
-      ),
-    );
-  }
-}
