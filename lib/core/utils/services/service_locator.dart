@@ -9,6 +9,7 @@ import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo_impl.dart';
+import 'package:sams_app/features/profile/data/services/image_processor.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 
 GetIt getIt = GetIt.instance;
@@ -29,11 +30,14 @@ getIt.registerFactory<HomeCubit>(
 //! register S3UploadService
 getIt.registerLazySingleton<S3UploadService>(() => S3UploadService());
 
+//! register ImageProcessor
+getIt.registerLazySingleton<ImageProcessor>(() => ImageProcessorImpl());
+
 //! register ProfileRepo
 getIt.registerLazySingleton<ProfileRepo>(
     () => ProfileRepoImpl(
       api: getIt<ApiConsumer>(),
-       s3Service: getIt<S3UploadService>(),
+       s3Service: getIt<S3UploadService>(), imageProcessor: getIt<ImageProcessor>(),
     ),
   );
   
