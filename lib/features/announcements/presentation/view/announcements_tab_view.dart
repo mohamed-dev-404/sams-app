@@ -4,7 +4,8 @@ import 'package:sams_app/features/announcements/presentation/view/widget/announc
 import 'package:sams_app/features/announcements/presentation/view/widget/announcements_web_layout.dart';
 
 class AnnouncementsTabView extends StatelessWidget {
-  const AnnouncementsTabView({super.key});
+  final String courseId;
+  const AnnouncementsTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

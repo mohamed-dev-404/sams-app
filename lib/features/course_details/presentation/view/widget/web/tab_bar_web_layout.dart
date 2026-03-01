@@ -12,10 +12,13 @@ class TabBarWebLayout extends StatelessWidget {
   const TabBarWebLayout({
     super.key,
     required this.navigationShell,
+    required this.courseId,
     required this.headerModel,
   });
   final StatefulNavigationShell navigationShell;
+  final String courseId;
   final CourseHeaderCardModel headerModel;
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<CourseNavigationCubit>();
@@ -29,7 +32,7 @@ class TabBarWebLayout extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: CustomWebTabBar(
-              tabs: cubit.tabs,
+              tabs: cubit.visibleTabs.map((e) => e.title).toList(),
               currentIndex: navigationShell.currentIndex,
               onTap: (index) => navigationShell.goBranch(index),
             ),

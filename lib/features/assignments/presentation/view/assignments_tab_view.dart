@@ -4,7 +4,8 @@ import 'package:sams_app/features/assignments/presentation/view/widget/assignmen
 import 'package:sams_app/features/assignments/presentation/view/widget/assignments_web_layout.dart';
 
 class AssignmentsTabView extends StatelessWidget {
-  const AssignmentsTabView({super.key});
+  final String courseId; // نستلمه من الـ Router
+  const AssignmentsTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

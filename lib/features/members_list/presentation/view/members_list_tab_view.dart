@@ -4,7 +4,8 @@ import 'package:sams_app/features/members_list/presentation/view/widget/members_
 import 'package:sams_app/features/members_list/presentation/view/widget/members_list_web_layout.dart';
 
 class MembersListTabView extends StatelessWidget {
-  const MembersListTabView({super.key});
+  final String courseId;
+  const MembersListTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

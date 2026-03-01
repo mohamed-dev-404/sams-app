@@ -5,13 +5,11 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 class CustomMobileTabBar extends StatelessWidget {
   final List<String> tabs;
   final Function(int) onTap;
-  final int currentIndex;
 
   const CustomMobileTabBar({
     super.key,
     required this.tabs,
     required this.onTap,
-    required this.currentIndex,
   });
 
   @override
@@ -26,7 +24,8 @@ class CustomMobileTabBar extends StatelessWidget {
         height: 35,
         child: ButtonsTabBar(
           onTap: onTap,
-          key: ValueKey(currentIndex),
+          duration: 1,
+          physics: const BouncingScrollPhysics(),
           buttonMargin: const EdgeInsets.only(right: 10, left: 4),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           backgroundColor: AppColors.secondary,

@@ -7,8 +7,16 @@ import 'package:sams_app/features/course_details/presentation/view/widget/mobile
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
 class TabBarMobileLayout extends StatelessWidget {
-  const TabBarMobileLayout({super.key, required this.navigationShell});
+  const TabBarMobileLayout({
+    super.key,
+    required this.navigationShell,
+    required this.headerModel,
+    required this.courseId,
+  });
+
   final StatefulNavigationShell navigationShell;
+  final CourseHeaderCardModel headerModel;
+  final String courseId;
 
   @override
   Widget build(BuildContext context) {
@@ -20,20 +28,20 @@ class TabBarMobileLayout extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              MobileCoursesHeaderCard(
-                cardModel: CourseHeaderCardModel(
-                  title: 'Database',
-                  instructor: 'Julie Watson',
-                ),
-              ),
+             MobileCoursesHeaderCard(cardModel: headerModel   ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: CustomMobileTabBar(
-                  tabs: cubit.tabs,
-                  onTap: (index) {
-                    navigationShell.goBranch(index);
+                  tabs: cubit.visibleTabs.map((e) => e.title).toList(),
+                  onTap: (uiIndex) {
+                    final targetBranchIndex =
+                        cubit.visibleTabs[uiIndex].branchIndex;
+                    navigationShell.goBranch(
+                      targetBranchIndex,
+                      initialLocation:
+                          targetBranchIndex == navigationShell.currentIndex,
+                    );
                   },
-                  currentIndex: navigationShell.currentIndex,
                 ),
               ),
               Expanded(child: navigationShell),

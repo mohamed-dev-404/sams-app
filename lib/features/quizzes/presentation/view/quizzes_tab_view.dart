@@ -4,7 +4,8 @@ import 'package:sams_app/features/quizzes/presentation/view/widget/quiz_mobile_l
 import 'package:sams_app/features/quizzes/presentation/view/widget/quiz_web_layout.dart';
 
 class QuizzesTabView extends StatelessWidget {
-  const QuizzesTabView({super.key});
+  final String courseId;
+  const QuizzesTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

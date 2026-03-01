@@ -4,17 +4,14 @@ import 'package:sams_app/features/materials/presentation/view/widget/materials_m
 import 'package:sams_app/features/materials/presentation/view/widget/materials_web_layout.dart';
 
 class MaterialsTabView extends StatelessWidget {
-  const MaterialsTabView({super.key});
+  final String courseId;
+  const MaterialsTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {
     return AdaptiveLayout(
-      mobileLayout: (BuildContext context) {
-        return const MaterialsMobileLayout();
-      },
-      webLayout: (BuildContext context) {
-        return const MaterialsWebLayout();
-      },
+      mobileLayout: (context) => const MaterialsMobileLayout(),
+      webLayout: (context) => const MaterialsWebLayout(),
     );
   }
 }

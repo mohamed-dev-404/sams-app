@@ -4,7 +4,8 @@ import 'package:sams_app/features/course_code/presentation/view/widget/course_co
 import 'package:sams_app/features/course_code/presentation/view/widget/course_code_web_layout.dart';
 
 class CourseCodeTabView extends StatelessWidget {
-  const CourseCodeTabView({super.key});
+  final String courseId;
+  const CourseCodeTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

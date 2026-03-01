@@ -19,72 +19,102 @@ import 'package:sams_app/features/quizzes/presentation/view/quizzes_tab_view.dar
 class AppRouter {
   AppRouter._();
 
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _rootNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'root');
 
   static final appRouter = GoRouter(
-    navigatorKey: navigatorKey,
-    initialLocation: RoutesName.home,
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: RoutesName.courses,
     errorBuilder: (context, state) => const GeneralErrorPage(),
     routes: [
       buildRoute(
-        name: RoutesName.home,
-        path: RoutesName.home,
+        name: RoutesName.courses,
+        path: RoutesName.courses,
         builder: (context, state) => const HomeView(),
       ),
 
-      //* COURSE DETAILS (Nested Routing)
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          final headerModel =
-              state.extra as CourseHeaderCardModel? ??
-              CourseHeaderCardModel(title: 'Loading...', instructor: '');
-          return CourseDetailsView(
-            navigationShell: navigationShell,
-            headerModel: headerModel,
-          );
+      GoRoute(
+        path: '/course/:courseId',
+        redirect: (context, state) {
+          final courseId = state.pathParameters['courseId'];
+          if (state.uri.path == '/course/$courseId') {
+            return '/course/$courseId/${RoutesName.materials}';
+          }
+          return null;
         },
-        branches: [
-          _buildBranch(RoutesName.materials, const MaterialsTabView()),
-          _buildBranch(RoutesName.assignments, const AssignmentsTabView()),
-          _buildBranch(RoutesName.announcements, const AnnouncementsTabView()),
-          _buildBranch(RoutesName.grades, const GradesTabView()),
-          _buildBranch(RoutesName.quizzes, const QuizzesTabView()),
-          _buildBranch(RoutesName.liveSessions, const LiveSessionsTabView()),
-          _buildBranch(RoutesName.courseCode, const CourseCodeTabView()),
-          _buildBranch(RoutesName.membersList, const MembersListTabView()),
+        routes: [
+          StatefulShellRoute.indexedStack(
+            builder: (context, state, navigationShell) {
+              final courseId = state.pathParameters['courseId'] ?? '';
+              final headerModel =
+                  state.extra as CourseHeaderCardModel? ??
+                  CourseHeaderCardModel(title: 'eee ee');
+
+              return CourseDetailsView(
+                navigationShell: navigationShell,
+                headerModel: headerModel,
+                courseId: courseId,
+              );
+            },
+            branches: [
+              _buildBranch(
+                RoutesName.materials,
+                (courseId) => MaterialsTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.assignments,
+                (courseId) => AssignmentsTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.announcements,
+                (courseId) => AnnouncementsTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.grades,
+                (courseId) => GradesTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.quizzes,
+                (courseId) => QuizzesTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.liveSessions,
+                (courseId) => LiveSessionsTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.courseCode,
+                (courseId) => CourseCodeTabView(courseId: courseId),
+              ),
+              _buildBranch(
+                RoutesName.membersList,
+                (courseId) => MembersListTabView(courseId: courseId),
+              ),
+            ],
+          ),
         ],
       ),
-
-      /// buildRoute(
-      ///   name: RoutesName.homeView,
-      ///   path: RoutesName.homeView,
-      ///   builder: (context, state) {
-      ///     final args = state.extra as UserModel;
-      ///    return BlocProvider(
-      ///       create: (context) => sl<HomeCubit>(),
-      ///       child: Homeview(args: args),
-      ///     );
-      ///   },
-      ///),
-      //... more buildRoute calls
     ],
   );
+
   static StatefulShellBranch _buildBranch(
     String path,
-    Widget view, {
+    Widget Function(String courseId) viewBuilder, {
     bool instructorOnly = false,
   }) {
     return StatefulShellBranch(
       routes: [
         GoRoute(
           name: path,
-          path: '${RoutesName.courseDetails}/$path',
-          builder: (context, state) => view,
+          path: path,
+          builder: (context, state) {
+            final courseId = state.pathParameters['courseId'] ?? '';
+            return viewBuilder(courseId);
+          },
           redirect: (context, state) {
             if (instructorOnly) {
-              final role = UserRole.instructor;
-              return role == UserRole.student ? RoutesName.home : null;
+              // TODO: Get actual role from Auth Cache
+              const role = UserRole.instructor;
+              return role == UserRole.student ? RoutesName.courses : null;
             }
             return null;
           },

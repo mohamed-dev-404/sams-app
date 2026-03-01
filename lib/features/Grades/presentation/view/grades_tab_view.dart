@@ -4,7 +4,8 @@ import 'package:sams_app/features/Grades/presentation/view/widget/grades_mobile_
 import 'package:sams_app/features/Grades/presentation/view/widget/grades_web_layout.dart';
 
 class GradesTabView extends StatelessWidget {
-  const GradesTabView({super.key});
+  final String courseId;
+  const GradesTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

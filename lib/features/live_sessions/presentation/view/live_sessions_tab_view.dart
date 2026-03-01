@@ -4,7 +4,8 @@ import 'package:sams_app/features/live_sessions/presentation/view/widget/live_se
 import 'package:sams_app/features/live_sessions/presentation/view/widget/live_sessions_web_layout.dart';
 
 class LiveSessionsTabView extends StatelessWidget {
-  const LiveSessionsTabView({super.key});
+  final String courseId;
+  const LiveSessionsTabView({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {
