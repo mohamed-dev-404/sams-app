@@ -11,17 +11,24 @@ import 'package:sams_app/features/course_details/presentation/view_models/course
 class TabBarWebLayout extends StatelessWidget {
   const TabBarWebLayout({
     super.key,
-    required this.navigationShell,
+    required this.child,
     required this.courseId,
     required this.headerModel,
   });
-  final StatefulNavigationShell navigationShell;
+
+  final Widget child;
   final String courseId;
   final CourseHeaderCardModel headerModel;
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<CourseNavigationCubit>();
+    final currentPath = GoRouterState.of(context).uri.path;
+
+    // Calculate which tab is active based on the URL
+    final currentIndex = cubit.visibleTabs.indexWhere(
+      (tab) => currentPath.contains(tab.path),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -33,21 +40,23 @@ class TabBarWebLayout extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: CustomWebTabBar(
               tabs: cubit.visibleTabs.map((e) => e.title).toList(),
-              currentIndex: navigationShell.currentIndex,
-              onTap: (index) => navigationShell.goBranch(index),
+              currentIndex: currentIndex == -1 ? 0 : currentIndex,
+              onTap: (index) {
+                final targetPath = cubit.visibleTabs[index].path;
+                // Navigate and pass the headerModel to prevent it from turning null
+                context.pushReplacement('/course/$courseId/$targetPath', extra: headerModel);
+              },
             ),
           ),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(40),
         child: Column(
           children: [
-            WebCourseHeaderCard(
-              cardModel: headerModel,
-            ),
-            Expanded(child: navigationShell),
+            WebCourseHeaderCard(cardModel: headerModel),
+            const SizedBox(height: 20),
+            Expanded(child: child), // Tab content changes here
           ],
         ),
       ),

@@ -7,23 +7,24 @@ part 'course_navigation_state.dart';
 
 class CourseTabItem {
   final String title;
-  final int branchIndex;
+  final String path;
 
-  CourseTabItem({required this.title, required this.branchIndex});
+  CourseTabItem({required this.title, required this.path});
 }
 
 class CourseNavigationCubit extends Cubit<int> {
   final UserRole userRole;
   CourseNavigationCubit({required this.userRole}) : super(0);
+
   final List<CourseTabItem> _allTabs = [
-    CourseTabItem(title: 'Materials', branchIndex: 0),
-    CourseTabItem(title: 'Assignments', branchIndex: 1),
-    CourseTabItem(title: 'Announcements', branchIndex: 2),
-    CourseTabItem(title: 'Grades', branchIndex: 3),
-    CourseTabItem(title: 'Quizzes', branchIndex: 4),
-    CourseTabItem(title: 'Live Sessions', branchIndex: 5),
-    CourseTabItem(title: 'Course Code', branchIndex: 6),
-    CourseTabItem(title: 'Members List', branchIndex: 7),
+    CourseTabItem(title: 'Materials', path: 'materials'),
+    CourseTabItem(title: 'Assignments', path: 'assignments'),
+    CourseTabItem(title: 'Announcements', path: 'announcements'),
+    CourseTabItem(title: 'Grades', path: 'grades'),
+    CourseTabItem(title: 'Quizzes', path: 'quizzes'),
+    CourseTabItem(title: 'Live Sessions', path: 'liveSessions'),
+    CourseTabItem(title: 'Course Code', path: 'courseCode'),
+    CourseTabItem(title: 'Members List', path: 'membersList'),
   ];
 
   List<CourseTabItem> get visibleTabs {
@@ -31,12 +32,5 @@ class CourseNavigationCubit extends Cubit<int> {
       return _allTabs.where((tab) => tab.title != 'Members List').toList();
     }
     return _allTabs;
-  }
-
-  int getUiIndexFromBranch(int branchIndex) {
-    final index = visibleTabs.indexWhere(
-      (tab) => tab.branchIndex == branchIndex,
-    );
-    return index == -1 ? 0 : index;
   }
 }

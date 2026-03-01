@@ -9,18 +9,23 @@ import 'package:sams_app/features/course_details/presentation/view_models/course
 class TabBarMobileLayout extends StatelessWidget {
   const TabBarMobileLayout({
     super.key,
-    required this.navigationShell,
+    required this.child,
     required this.headerModel,
     required this.courseId,
   });
 
-  final StatefulNavigationShell navigationShell;
+  final Widget child;
   final CourseHeaderCardModel headerModel;
   final String courseId;
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<CourseNavigationCubit>();
+    final currentPath = GoRouterState.of(context).uri.path;
+
+    final currentIndex = cubit.visibleTabs.indexWhere(
+      (tab) => currentPath.contains(tab.path),
+    );
 
     return SafeArea(
       child: Scaffold(
@@ -28,23 +33,23 @@ class TabBarMobileLayout extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-             MobileCoursesHeaderCard(cardModel: headerModel   ),
+              MobileCoursesHeaderCard(cardModel: headerModel),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: CustomMobileTabBar(
                   tabs: cubit.visibleTabs.map((e) => e.title).toList(),
-                  onTap: (uiIndex) {
-                    final targetBranchIndex =
-                        cubit.visibleTabs[uiIndex].branchIndex;
-                    navigationShell.goBranch(
-                      targetBranchIndex,
-                      initialLocation:
-                          targetBranchIndex == navigationShell.currentIndex,
+                  currentIndex: currentIndex == -1 ? 0 : currentIndex,
+                  onTap: (index) {
+                    final targetPath = cubit.visibleTabs[index].path;
+                    // Navigate and pass the headerModel
+                    context.pushReplacement(
+                      '/course/$courseId/$targetPath',
+                      extra: headerModel,
                     );
                   },
                 ),
               ),
-              Expanded(child: navigationShell),
+              Expanded(child: child), // Tab content changes here
             ],
           ),
         ),

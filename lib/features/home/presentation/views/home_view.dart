@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
-import 'package:sams_app/core/utils/router/routes_name.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -20,9 +19,8 @@ class HomeView extends StatelessWidget {
               description: 'Advanced DB Course...',
             );
 
-            context.goNamed(
-              RoutesName.materials,
-              pathParameters: {'courseId': courseId},
+            context.go(
+              '/course/$courseId/materials',
               extra: myCourseData,
             );
           },

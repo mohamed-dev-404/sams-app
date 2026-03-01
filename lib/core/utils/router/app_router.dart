@@ -10,7 +10,6 @@ import 'package:sams_app/features/assignments/presentation/view/assignments_tab_
 import 'package:sams_app/features/course_code/presentation/view/course_code_tab_view.dart';
 import 'package:sams_app/features/course_details/presentation/view/course_details_view.dart';
 import 'package:sams_app/features/home/presentation/views/home_view.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/web_home_course_card.dart';
 import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
 import 'package:sams_app/features/materials/presentation/view/materials_tab_view.dart';
 import 'package:sams_app/features/members_list/presentation/view/members_list_tab_view.dart';
@@ -33,93 +32,66 @@ class AppRouter {
         builder: (context, state) => const HomeView(),
       ),
 
-      GoRoute(
-        path: '/course/:courseId',
-        redirect: (context, state) {
-          final courseId = state.pathParameters['courseId'];
-          if (state.uri.path == '/course/$courseId') {
-            return '/course/$courseId/${RoutesName.materials}';
-          }
-          return null;
+      // The ShellRoute wraps the layout around the changing tabs
+      ShellRoute(
+        builder: (context, state, child) {
+          final courseId = state.pathParameters['courseId'] ?? '';
+          final headerModel =
+              state.extra as CourseHeaderCardModel? ??
+              CourseHeaderCardModel(title: 'Course');
+
+          return CourseDetailsView(
+            courseId: courseId,
+            headerModel: headerModel,
+            child: child, // This is the tab content
+          );
         },
         routes: [
-          StatefulShellRoute.indexedStack(
-            builder: (context, state, navigationShell) {
-              final courseId = state.pathParameters['courseId'] ?? '';
-              final headerModel =
-                  state.extra as CourseHeaderCardModel? ??
-                  CourseHeaderCardModel(title: 'eee ee');
-
-              return CourseDetailsView(
-                navigationShell: navigationShell,
-                headerModel: headerModel,
-                courseId: courseId,
-              );
-            },
-            branches: [
-              _buildBranch(
-                RoutesName.materials,
-                (courseId) => MaterialsTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.assignments,
-                (courseId) => AssignmentsTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.announcements,
-                (courseId) => AnnouncementsTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.grades,
-                (courseId) => GradesTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.quizzes,
-                (courseId) => QuizzesTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.liveSessions,
-                (courseId) => LiveSessionsTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.courseCode,
-                (courseId) => CourseCodeTabView(courseId: courseId),
-              ),
-              _buildBranch(
-                RoutesName.membersList,
-                (courseId) => MembersListTabView(courseId: courseId),
-              ),
-            ],
+          _buildTabRoute(
+            RoutesName.materials,
+            (id) => MaterialsTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.assignments,
+            (id) => AssignmentsTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.announcements,
+            (id) => AnnouncementsTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.grades,
+            (id) => GradesTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.quizzes,
+            (id) => QuizzesTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.liveSessions,
+            (id) => LiveSessionsTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.courseCode,
+            (id) => CourseCodeTabView(courseId: id),
+          ),
+          _buildTabRoute(
+            RoutesName.membersList,
+            (id) => MembersListTabView(courseId: id),
           ),
         ],
       ),
     ],
   );
 
-  static StatefulShellBranch _buildBranch(
+  static GoRoute _buildTabRoute(
     String path,
-    Widget Function(String courseId) viewBuilder, {
-    bool instructorOnly = false,
-  }) {
-    return StatefulShellBranch(
-      routes: [
-        GoRoute(
-          name: path,
-          path: path,
-          builder: (context, state) {
-            final courseId = state.pathParameters['courseId'] ?? '';
-            return viewBuilder(courseId);
-          },
-          redirect: (context, state) {
-            if (instructorOnly) {
-              // TODO: Get actual role from Auth Cache
-              const role = UserRole.instructor;
-              return role == UserRole.student ? RoutesName.courses : null;
-            }
-            return null;
-          },
-        ),
-      ],
+    Widget Function(String courseId) viewBuilder,
+  ) {
+    return GoRoute(
+      path: '/course/:courseId/$path',
+      builder: (context, state) =>
+          viewBuilder(state.pathParameters['courseId'] ?? ''),
     );
   }
 }
