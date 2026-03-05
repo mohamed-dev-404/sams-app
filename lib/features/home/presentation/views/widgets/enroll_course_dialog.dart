@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/text_field_type.dart';
-import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/app_button.dart';
 import 'package:sams_app/core/widgets/app_error_dialog.dart';
 import 'package:sams_app/core/widgets/app_success_dialog.dart';
 import 'package:sams_app/core/widgets/app_text_field.dart';
+import 'package:sams_app/core/widgets/custom_app_button.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
@@ -24,8 +24,22 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = SizeConfig.isMobile(context);
+    final double screenWidth = SizeConfig.screenWidth(context);
     return AlertDialog(
+      scrollable: true,
       backgroundColor: AppColors.whiteLight,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : screenWidth * 0.2,
+        vertical: 20,
+      ),
+      contentPadding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+      actionsPadding: const EdgeInsets.only(
+        top: 15,
+        bottom: 20,
+        left: 10,
+        right: 10,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       title: const Center(child: Text('Enter Course Code')),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
@@ -42,7 +56,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
           ),
           const SizedBox(height: 16),
           Text(
-            'to sign in with a course code\n• Use an authorised account\n• Use a class code with ( 6 ) letters or numbers without spaces or symbols',
+            'to sign in with a course code\n\n• Instructor must share the course code with you.\n\n• Use a class code with ( 6 ) letters or numbers without spaces or symbols.',
             style: AppStyles.mobileBodyMediumRg.copyWith(
               color: AppColors.primaryDark,
             ),
@@ -59,13 +73,12 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
                   color: AppColors.primaryDarkHover,
                 );
               }
-              return AppButton(
-                model: AppButtonStyleModel(
-                  height: 55,
-                  width: 230,
+              return ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 230),
+                child: CustomAppButton(
+                  textColor: AppColors.whiteLight,
                   label: 'Join Course',
-                  onPressed: () =>
-                      _onJoinPressed(context), 
+                  onPressed: () => _onJoinPressed(context),
                 ),
               );
             },
@@ -74,6 +87,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
       ],
     );
   }
+
   @override
   void dispose() {
     _inviteCodeController.dispose();
@@ -91,7 +105,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
 
   void _handleJoinStates(BuildContext context, HomeState state) {
     if (state is JoinCourseSuccess) {
-      Navigator.pop(context); 
+      Navigator.pop(context);
       _showResultDialog(
         context,
         dialog: AppSuccessDialog(
