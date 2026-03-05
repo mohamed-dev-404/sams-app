@@ -12,46 +12,34 @@ class WebHomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        // 🟢 Header
-        const SliverToBoxAdapter(
-          child: WebHomeHeader(),
-        ),
+        const SliverToBoxAdapter(child: WebHomeHeader()),
 
-        // 🟢 Course Header Card
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
           sliver: SliverToBoxAdapter(
             child: WebCourseHeaderCard(
               cardModel: CourseHeaderCardModel(
                 description:
-                    'Stay informed about important campus news, academic updates, events, and opportunities so you never miss what matters new mmmmmmmshtsftf.',
+                    'Stay informed about important campus news, academic updates, and events.',
                 title: 'Courses',
               ),
             ),
           ),
         ),
 
-        // 🟢 Title: My Courses
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           sliver: SliverToBoxAdapter(
-            child: Text(
-              'My Courses',
-              style: AppStyles.webTitleMediumSb,
-
-              // AppStylesSecondary.webTitleMediumSb(context),
-            ),
+            child: Text('My Courses', style: AppStyles.webTitleMediumSb),
           ),
         ),
 
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 16),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-        // 🟢 Grid Courses
         const CoursesSliverGrid(),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );
   }
 }
-

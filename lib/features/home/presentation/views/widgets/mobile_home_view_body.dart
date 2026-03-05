@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/widgets/mobile_coures_header_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/course_sliver_list.dart';
-import 'package:sams_app/core/enums/enum_user_role.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/mobile_new_course_card.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/new_course_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/section_title.dart';
 
 class MobileHomeViewBody extends StatelessWidget {
@@ -30,19 +30,20 @@ class MobileHomeViewBody extends StatelessWidget {
           ),
           const SliverToBoxAdapter(
             child: SectionTitle(
-              title: 'Courses',
+              title: 'My Courses',
             ),
           ),
-          const CourseSliverList(),
-          const SliverToBoxAdapter(
+            const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 50, top: 7),
-              child: MobileNewCourseCard(
-                role: UserRole.student,
+              padding: EdgeInsets.symmetric(vertical: 7),
+              child: NewCourseCard(
+                role: CurrentRole.role,
+                isMobile: true,
               ),
             ),
           ),
-        ],
+          const CourseSliverList(),
+         ],
       ),
     );
   }
