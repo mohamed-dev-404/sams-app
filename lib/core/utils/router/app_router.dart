@@ -5,13 +5,10 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/router/build_route.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
-import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/home_view.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/views/profile_view.dart';
@@ -56,8 +53,8 @@ class AppRouter {
         path: RoutesName.home,
         builder: (context, state) => BlocProvider(
           create: (context) =>
-              HomeCubit(getIt.get<HomeRepo>(), role: UserRole.teacher)
-                ..fetchMyCourses(role: UserRole.teacher),
+              HomeCubit(getIt.get<HomeRepo>(), role:  CurrentRole.role)
+                ..fetchMyCourses(role: CurrentRole.role),
           child: const HomeView(),
         ),
       ),

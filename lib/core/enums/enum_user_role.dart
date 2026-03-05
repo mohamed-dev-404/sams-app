@@ -16,3 +16,7 @@ extension UserRoleEndpointExtension on UserRole {
     }
   }
 }
+
+class CurrentRole {
+  static const role = UserRole.teacher;
+}

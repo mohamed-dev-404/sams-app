@@ -24,7 +24,7 @@ void setupServiceLocator() {
   
 //!  New HomeCubit every time 
 getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<HomeRepo>(), role: UserRole.teacher),
+    () => HomeCubit(getIt<HomeRepo>(), role:  CurrentRole.role),
   );
 
 //! register S3UploadService
