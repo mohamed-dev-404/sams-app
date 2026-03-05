@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class ShowInvitationCodeDialog extends StatefulWidget {
-  const ShowInvitationCodeDialog({super.key, required this.invitationCode});
-
+  const ShowInvitationCodeDialog({
+    super.key,
+    required this.invitationCode,
+    required this.courseName,
+  });
+  final String courseName;
   final String invitationCode;
 
   @override
@@ -15,7 +20,6 @@ class ShowInvitationCodeDialog extends StatefulWidget {
 
 class _ShowInvitationCodeDialogState extends State<ShowInvitationCodeDialog> {
   bool isCopied = false;
- 
 
   void _handleCopy() {
     Clipboard.setData(ClipboardData(text: widget.invitationCode));
@@ -34,11 +38,15 @@ class _ShowInvitationCodeDialogState extends State<ShowInvitationCodeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = SizeConfig.isMobile(context);
+    final double screenWidth = SizeConfig.screenWidth(context);
     return AlertDialog(
+      insetPadding:  EdgeInsets.symmetric(horizontal: isMobile ? 20 : screenWidth * 0.25, vertical: 20),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       backgroundColor: AppColors.whiteLight,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
-        'Course Invitation Code',
+        'Invitation code for "${widget.courseName}" .',
         textAlign: TextAlign.center,
         style: AppStyles.mobileTitleMediumSb.copyWith(
           color: AppColors.primaryDarkHover,
@@ -47,13 +55,10 @@ class _ShowInvitationCodeDialogState extends State<ShowInvitationCodeDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Opacity(
-            opacity: 0.8,
-            child: Text(
-              'Students can join using the code below',
-              style: AppStyles.mobileBodyMediumRg.copyWith(
-                color: AppColors.primaryDarkHover,
-              ),
+          Text(
+            '• Students can join using the code below. ',
+            style: AppStyles.mobileBodyMediumRg.copyWith(
+              color: AppColors.primaryDarkHover.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 20),
@@ -78,7 +83,7 @@ class _ShowInvitationCodeDialogState extends State<ShowInvitationCodeDialog> {
                 InkWell(
                   onTap: _handleCopy,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 5),
+                    duration: const Duration(milliseconds: 20),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isCopied
