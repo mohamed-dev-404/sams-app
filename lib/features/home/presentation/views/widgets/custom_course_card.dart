@@ -6,8 +6,6 @@ import 'package:sams_app/features/home/presentation/views/widgets/course_card_co
 import 'package:sams_app/features/home/presentation/views/widgets/course_card_decoration.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/course_card_menu.dart';
 
-
-// --- Main Course Card Widget ---
 class CustomCourseCard extends StatelessWidget {
   final UserRole role;
   final CourseModel course;
@@ -35,18 +33,22 @@ class CustomCourseCard extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final w = constraints.maxWidth;
-            final h = constraints.maxHeight;
+            final cardWidth = constraints.maxWidth;
+            final cardHeight = constraints.maxHeight;
 
             return Stack(
               children: [
                 /// Background Decorative Elements
-                CourseCardDecorations(w: w, h: h, isMobile: isMobile),
+                CourseCardDecorations(
+                  cardWidth: cardWidth,
+                  h: cardHeight,
+                  isMobile: isMobile,
+                ),
 
                 /// Management Menu Button
                 CourseCardMenu(
-                  w: w,
-                  h: h,
+                  cardWidth: cardWidth,
+                  cardHeight: cardHeight,
                   role: role,
                   isMobile: isMobile,
                   course: course,
@@ -54,8 +56,8 @@ class CustomCourseCard extends StatelessWidget {
 
                 /// Primary Course Information
                 CourseCardContent(
-                  w: w,
-                  h: h,
+                  cardWidth: cardWidth,
+                  cardHeight: cardHeight,
                   course: course,
                   isMobile: isMobile,
                 ),
@@ -67,17 +69,3 @@ class CustomCourseCard extends StatelessWidget {
     );
   }
 }
-
-// --- Sub-Widget: Background Decorations ---
-
-
-
-
-
-
-
-
-
-
-
-

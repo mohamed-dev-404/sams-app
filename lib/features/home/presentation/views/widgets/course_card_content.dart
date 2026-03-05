@@ -4,15 +4,15 @@ import 'package:sams_app/features/home/presentation/views/widgets/course_title_r
 import 'package:sams_app/features/home/presentation/views/widgets/instructor_row.dart';
 
 class CourseCardContent extends StatelessWidget {
-  final double w;
-  final double h;
+  final double cardWidth;
+  final double cardHeight;
   final CourseModel course;
   final bool isMobile;
 
   const CourseCardContent({
     super.key,
-    required this.w,
-    required this.h,
+    required this.cardWidth,
+    required this.cardHeight,
     required this.course,
     required this.isMobile,
   });
@@ -20,18 +20,27 @@ class CourseCardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: w * 0.15,
-      right: w * 0.05,
-      top: h * 0.2,
-      bottom: h * 0.08,
+      left: cardWidth * 0.10,
+      right: cardWidth * 0.05,
+      top: cardHeight * 0.2,
+      bottom: cardHeight * 0.08,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CourseTitleRow(course: course, isMobile: isMobile, w: w),
-          SizedBox(height: h * (isMobile ? 0.08 : 0.04)),
-          InstructorRow(course: course, w: w),
+          CourseTitleRow(
+            course: course,
+            isMobile: isMobile,
+            w: cardWidth,
+            h: cardHeight,
+          ),
+          SizedBox(height: cardHeight * (isMobile ? 0.08 : 0.04)),
+          InstructorRow(
+            course: course,
+            w: cardWidth,
+            isMobile: isMobile,
+          ),
         ],
       ),
     );

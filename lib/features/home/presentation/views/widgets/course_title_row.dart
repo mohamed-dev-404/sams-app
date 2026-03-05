@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
@@ -7,45 +6,49 @@ import 'package:sams_app/features/home/data/models/course_model.dart';
 class CourseTitleRow extends StatelessWidget {
   final CourseModel course;
   final bool isMobile;
-  final double w;
+  final double w, h;
 
   const CourseTitleRow({
+    super.key,
     required this.course,
     required this.isMobile,
     required this.w,
+    required this.h,
   });
-
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      flex: 2,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Flexible(
-            child: AutoSizeText(
-              course.name,
-              style: AppStyles.mobileBodyXXlargeMd.copyWith(
-                color: AppColors.primaryDarker,
+      flex: isMobile ? 2 : 3,
+      child: Container(
+        width: w * 0.79,
+        height: h,
+        alignment: Alignment.centerLeft,
+        child: RichText(
+          maxLines: isMobile ? 2 : 3,
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            style: isMobile
+                ? AppStyles.mobileBodyLargeMd.copyWith(
+                    color: AppColors.primaryDarker,
+                  )
+                : AppStyles.mobileTitleLargeMd.copyWith(
+                    color: AppColors.primaryDarker,
+                    fontSize: !isMobile ? w * 0.08 : null,
+                  ),
+            children: [
+              TextSpan(
+                text: course.name,
               ),
-              maxLines: 2,
-              minFontSize: 8,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 3),
-            child: AutoSizeText(
-              '(${course.academicCourseCode})',
-              style: AppStyles.mobileBodySmallRg.copyWith(
-                color: AppColors.whiteDarkHover,
-                fontSize: w * (isMobile ? 0.033 : 0.04),
+              TextSpan(
+                text: '(${course.academicCourseCode})',
+                style: AppStyles.mobileBodySmallRg.copyWith(
+                  color: AppColors.whiteDarkActive,
+                  fontSize: !isMobile ? w * 0.05 : w * 0.04,
+                ),
               ),
-              maxLines: 1,
-              minFontSize: 8,
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

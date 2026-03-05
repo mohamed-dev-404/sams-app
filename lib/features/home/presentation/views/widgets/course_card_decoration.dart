@@ -3,13 +3,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 
 class CourseCardDecorations extends StatelessWidget {
-  final double w;
+  final double cardWidth;
   final double h;
   final bool isMobile;
 
   const CourseCardDecorations({
     super.key,
-    required this.w,
+    required this.cardWidth,
     required this.h,
     required this.isMobile,
   });
@@ -47,7 +47,7 @@ class CourseCardDecorations extends StatelessWidget {
           child: IgnorePointer(
             child: SvgPicture.asset(
               AppImages.imagesCourseCardBottomCorner,
-              width: w * 0.5,
+              width: cardWidth * 0.5,
               height: h * (isMobile ? 0.45 : 0.4),
               fit: BoxFit.fill,
             ),
