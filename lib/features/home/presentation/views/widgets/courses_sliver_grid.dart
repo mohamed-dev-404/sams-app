@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
@@ -5,17 +6,18 @@ import 'package:sams_app/core/widgets/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/web_course_card.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/web_new_course_card.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/new_course_card.dart';
 
 class CoursesSliverGrid extends StatelessWidget {
-  const CoursesSliverGrid({
-    super.key,
-  });
+  const CoursesSliverGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) =>
+          current is HomeSuccess ||
+          current is HomeFailure ||
+          current is HomeLoading,
       builder: (context, state) {
         if (state is HomeSuccess) {
           return SliverPadding(
@@ -23,28 +25,22 @@ class CoursesSliverGrid extends StatelessWidget {
             sliver: SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index == state.courses.length - 1) {
-                    return const WebNewCourseCard(
-                      role: UserRole.student,
-                    );
+                  if (index == state.courses.length) {
+                    return const NewCourseCard(role: CurrentRole.role);
                   }
                   return CustomCourseCard(
                     course: state.courses[index],
-                    role: UserRole.student,
+                    role: CurrentRole.role,
                     isMobile: false,
                   );
-                  // WebCourseCard(
-                  //   course: state.courses[index],
-                  //   role: UserRole.student,
-                  // );
                 },
-                childCount: state.courses.length,
+                childCount: state.courses.length + 1,
               ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 320,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
-                childAspectRatio: 301 / 240,
+                mainAxisExtent: 200,
               ),
             ),
           );
@@ -54,8 +50,9 @@ class CoursesSliverGrid extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJoseKWLdz4o3GA4o_7P-b0cVClLE5o1RM0skmuTHYQ&s',
+                CachedNetworkImage(
+                  imageUrl:
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJoseKWLdz4o3GA4o_7P-b0cVClLE5o1RM0skmuTHYQ&s',
                 ),
                 const SizedBox(height: 10),
                 Text(state.errMessage),
@@ -65,7 +62,7 @@ class CoursesSliverGrid extends StatelessWidget {
         } else {
           return const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.symmetric(vertical: 40),
               child: Center(child: AppAnimatedLoadingIndicator()),
             ),
           );
