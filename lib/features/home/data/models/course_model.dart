@@ -24,6 +24,16 @@ class CourseModel {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'academicCourseCode': academicCourseCode,
+      'instructor': instructor,
+      'courseInvitationCode': courseInvitationCode,
+    };
+  }
+  
   
   CourseModel copyWith({
     String? id,
