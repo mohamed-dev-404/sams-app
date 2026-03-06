@@ -4,6 +4,7 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/network/dio_consumer.dart';
 import 'package:sams_app/core/utils/services/s3_upload_service.dart';
+import 'package:sams_app/features/home/data/data_sources/home_local_data_sourse.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
@@ -17,9 +18,15 @@ GetIt getIt = GetIt.instance;
 void setupServiceLocator() {
   getIt.registerSingleton<ApiConsumer>(DioConsumer(Dio()));
 
+//! register HomeLocalDataSource
+getIt.registerLazySingleton<HomeLocalDataSource>(
+    () => HomeLocalDataSource(),
+  );
+
+
 //! register HomeRepo
   getIt.registerLazySingleton<HomeRepo>(
-    () => HomeRepoImpl( api:getIt<ApiConsumer>()),
+    () => HomeRepoImpl( api:getIt<ApiConsumer>(), localDataSource: getIt<HomeLocalDataSource>()),
   );
   
 //!  New HomeCubit every time 
