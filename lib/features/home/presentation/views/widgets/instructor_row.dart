@@ -2,6 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sams_app/core/extentions/split_first_two_strings.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
@@ -37,8 +38,7 @@ class InstructorRow extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           AutoSizeText(
-            course.instructor,
-            //course.instructor.firstTwoNames,
+            course.instructor.firstTwoNames,
             style: AppStyles.mobileBodySmallRg.copyWith(
               color: AppColors.primaryDarker,
               fontSize: isMobile ? null : w * 0.05,
@@ -50,13 +50,5 @@ class InstructorRow extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-extension StringFormat on String {
-  String get firstTwoNames {
-    List<String> names = trim().split(RegExp(r'\s+'));
-    if (names.length <= 2) return this;
-    return '${names[0]} ${names[1]}';
   }
 }

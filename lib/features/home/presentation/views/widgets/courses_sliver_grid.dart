@@ -1,15 +1,47 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/widgets/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/new_course_card.dart';
 
-class CoursesSliverGrid extends StatelessWidget {
+class CoursesSliverGrid extends StatefulWidget {
   const CoursesSliverGrid({super.key});
+
+  @override
+  State<CoursesSliverGrid> createState() => _CoursesSliverGridState();
+}
+
+class _CoursesSliverGridState extends State<CoursesSliverGrid> {
+    StreamSubscription? _messageSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageSubscription = context.read<HomeCubit>().messageStream.listen((
+      msg,
+    ) {
+      if (mounted) {
+        AppSnackBar.warning(context, msg);
+      }
+    });
+
+    final role = context.read<HomeCubit>().role;
+    context.read<HomeCubit>().fetchMyCourses(role: role);
+  }
+
+  @override
+  void dispose() {
+    _messageSubscription?.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
