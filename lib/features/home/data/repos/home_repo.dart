@@ -5,6 +5,7 @@ import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
 
 abstract class HomeRepo {
+  List<CourseModel> getCachedCourses();
   Future<Either<String, List<CourseModel>>> fetchMyCourses({
     required UserRole role,
   });
