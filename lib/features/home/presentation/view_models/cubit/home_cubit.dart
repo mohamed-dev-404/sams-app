@@ -4,8 +4,9 @@ import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
+import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 
-class HomeCubit extends Cubit<HomeState> {
+class HomeCubit extends Cubit<HomeState> with CubitMessageMixin {
   HomeCubit(this.homeRepo, {required this.role}) : super(HomeInitial());
 
   final HomeRepo homeRepo;
@@ -16,16 +17,28 @@ class HomeCubit extends Cubit<HomeState> {
   /// Emits [HomeLoading] while fetching, and either [HomeSuccess] with the courses
   /// or [HomeFailure] with an error message.
   Future<void> fetchMyCourses({required UserRole role}) async {
-    emit(HomeLoading());
+     
+     final cachedCourses = homeRepo.getCachedCourses();
+     if (cachedCourses.isNotEmpty) {
+      emit(HomeSuccess(cachedCourses)); 
+    } else {
+      emit(HomeLoading()); 
+    }
 
     final result = await homeRepo.fetchMyCourses(role: role);
 
     result.fold(
-      (failure) => emit(HomeFailure(failure)),
+      (failure) {
+        if (state is HomeSuccess) {
+          emitMessage(failure);
+        } else {
+          emit(HomeFailure(failure));
+        }
+      },
       (courses) => emit(HomeSuccess(courses)),
     );
   }
-  
+
   //* Creates a new course as an Instructor.
   ///
   /// Takes a [CreateCourseModel] containing course details.
