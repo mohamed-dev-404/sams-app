@@ -56,7 +56,8 @@ class ImagePreviewDialog extends StatelessWidget {
       ),
     );
   }
- static void open(BuildContext context, String imageUrl) {
+
+  static void open(BuildContext context, String imageUrl) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,

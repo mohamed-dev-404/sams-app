@@ -86,7 +86,8 @@ class ProfileInfoCard extends StatelessWidget {
 
     return Center(
       child: Container(
-        width: cardWidth,
+       // width: double.infinity,
+       width: cardWidth,
         margin: const EdgeInsets.symmetric(horizontal: 16),
         // Reduced vertical padding for a more compact look
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -95,10 +96,8 @@ class ProfileInfoCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: AppColors.secondary),
         ),
-        child: Column(
-          // Uses minimum height required by children data
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Text(
               'Personal Data',
