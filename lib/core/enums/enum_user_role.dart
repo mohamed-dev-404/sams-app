@@ -1,22 +1,16 @@
-import 'package:sams_app/core/utils/constants/api_endpoints.dart';
-
 enum UserRole {
-  teacher,
-  student,
-}
+  instructor,
+  student
+  ;
 
-
-extension UserRoleEndpointExtension on UserRole {
-  String get myCoursesEndpoint {
-    switch (this) {
-      case UserRole.teacher:
-        return EndPoints.getMyCreatedCourses;
-      case UserRole.student:
-        return EndPoints.getMyJoinedCourses;
-    }
+  static UserRole fromString(String role) {
+    return UserRole.values.firstWhere(
+      (e) => e.name.toLowerCase() == role.toLowerCase(),
+      orElse: () => UserRole.student, // Default value when no match is found
+    );
   }
 }
 
 class CurrentRole {
-  static const role = UserRole.teacher;
+  static const role = UserRole.instructor;
 }

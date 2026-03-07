@@ -48,7 +48,7 @@ class CourseCardMenu extends StatelessWidget {
   }
 
   List<PopupMenuEntry<String>> _buildItems(BuildContext context) {
-    if (role == UserRole.teacher) {
+    if (role == UserRole.instructor) {
       return [
         CustomPopupMenuItem(
           value: 'edit',

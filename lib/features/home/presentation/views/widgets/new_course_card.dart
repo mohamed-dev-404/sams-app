@@ -58,7 +58,7 @@ class NewCourseCard extends StatelessWidget {
 
   void _handleOnTap(BuildContext context) {
     final homeCubit = context.read<HomeCubit>();
-    if (role == UserRole.teacher) {
+    if (role == UserRole.instructor) {
       context.pushNamed(RoutesName.createCourse, extra: homeCubit);
     } else {
       showDialog(
