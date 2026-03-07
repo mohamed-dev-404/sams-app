@@ -184,8 +184,9 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
           child: AspectRatio(
             aspectRatio: 1,
             child: CachedNetworkImage(
-              imageUrl:
-                  '${displayUser.profilePic}?t=${DateTime.now().millisecondsSinceEpoch}',
+              // imageUrl:
+              //     '${displayUser.profilePic}?t=${DateTime.now().millisecondsSinceEpoch}',
+              imageUrl: displayUser.profilePic!,
               fit: BoxFit.cover,
               key: ValueKey(displayUser.profilePic),
               placeholder: (context, url) => const Center(

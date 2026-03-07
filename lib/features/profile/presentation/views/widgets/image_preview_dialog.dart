@@ -64,7 +64,7 @@ class ImagePreviewDialog extends StatelessWidget {
       barrierLabel: '',
       barrierColor: AppColors.black.withValues(alpha: 0.7),
       transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (_, __, ___) => ImagePreviewDialog(imageUrl: imageUrl),
+      pageBuilder: (_, _, _) => ImagePreviewDialog(imageUrl: imageUrl),
     );
   }
 }
