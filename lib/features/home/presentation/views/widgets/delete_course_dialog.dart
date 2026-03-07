@@ -55,14 +55,18 @@ class DeleteCourseDialog extends StatelessWidget {
       actions: [
         BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
-            if (state is RemoveCourseSuccess ||
-                state is RemoveCourseFailure) {
-              if (state is RemoveCourseSuccess) {
-                AppSnackBar.success(context, state.message);
-              } else if (state is RemoveCourseFailure) {
-                AppSnackBar.error(context, state.errMessage);
-              }
-              Navigator.pop(context);
+            if (state is RemoveCourseSuccess || state is RemoveCourseFailure) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+
+                  if (state is RemoveCourseSuccess) {
+                    AppSnackBar.success(context, state.message);
+                  } else if (state is RemoveCourseFailure) {
+                    AppSnackBar.error(context, state.errMessage);
+                  }
+                }
+              });
             }
           },
           builder: (context, state) {
