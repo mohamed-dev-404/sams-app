@@ -1,3 +1,5 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class SaveProfilePicRequest{
   final String key;
 
@@ -5,7 +7,7 @@ class SaveProfilePicRequest{
 
   Map<String, dynamic> toJson() {
     return {
-      'key': key,
+      ApiKeys.key: key,
     };
   }
 }

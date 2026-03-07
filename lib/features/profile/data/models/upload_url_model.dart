@@ -1,3 +1,5 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class UploadUrlModel {
   final String key;
   final String uploadUrl;
@@ -6,8 +8,8 @@ class UploadUrlModel {
 
   factory UploadUrlModel.fromJson(Map<String, dynamic> json) {
     return UploadUrlModel(
-      key: json['key'] ?? '',
-      uploadUrl: json['uploadUrl'] ?? '',
+      key: json[ApiKeys.key] ?? '',
+      uploadUrl: json[ApiKeys.uploadUrl] ?? '',
     );
   }
 }

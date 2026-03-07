@@ -1,4 +1,6 @@
 //! Course Model Class For Home Screen 
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class CourseModel {
   final String id;
   final String name;
@@ -16,21 +18,21 @@ class CourseModel {
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: (json['_id'] as String?) ?? '',
-      name: (json['name'] as String?) ?? '',
-      academicCourseCode: (json['academicCourseCode'] as String?) ?? '',
-      instructor: (json['instructor'] as String?) ?? '',
-      courseInvitationCode: json['courseInvitationCode'] as String?,
+      id: (json[ApiKeys.id] as String?) ?? '',
+      name: (json[ApiKeys.name] as String?) ?? '',
+      academicCourseCode: (json[ApiKeys.academicCourseCode] as String?) ?? '',
+      instructor: (json[ApiKeys.instructor] as String?) ?? '',
+      courseInvitationCode: json[ApiKeys.courseInvitationCode] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
-      'name': name,
-      'academicCourseCode': academicCourseCode,
-      'instructor': instructor,
-      'courseInvitationCode': courseInvitationCode,
+      ApiKeys.id: id,
+      ApiKeys.name: name,
+      ApiKeys.academicCourseCode: academicCourseCode,
+      ApiKeys.instructor: instructor,
+      ApiKeys.courseInvitationCode: courseInvitationCode,
     };
   }
   

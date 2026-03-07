@@ -1,3 +1,5 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class ClassworkModel {
   final String name;
   final double points;
@@ -9,15 +11,15 @@ class ClassworkModel {
 
   factory ClassworkModel.fromJson(Map<String, dynamic> json) {
     return ClassworkModel(
-      name: json['name'] ?? '',
-      points: (json['points'] ?? 0).toDouble(),
+      name: json[ApiKeys.name] ?? '',
+      points: (json[ApiKeys.points] ?? 0).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'points': points,
+      ApiKeys.name: name,
+      ApiKeys.points: points,
     };
   }
 }

@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sams_app/core/errors/exceptions/api_exception.dart';
-import 'package:sams_app/core/errors/models/error_model.dart'; 
+import 'package:sams_app/core/errors/models/error_model.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart'; 
 
 class S3UploadService {
   final Dio _dio = Dio();
@@ -18,11 +19,11 @@ class S3UploadService {
       
 
       final Map<String, dynamic> headers = {
-        'Content-Type': contentType,
+        ApiKeys.contentTypeHeader: contentType,
       };
 
       if (!kIsWeb) {
-        headers['Content-Length'] = fileBytes.length.toString();
+        headers[ApiKeys.contentLengthHeader] = fileBytes.length.toString();
       }
 
       await _dio.put(

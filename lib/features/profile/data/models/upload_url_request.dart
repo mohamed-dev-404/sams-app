@@ -1,3 +1,5 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class UploadUrlRequest {
   final String originalFileName;
   final String contentType;
@@ -11,9 +13,9 @@ class UploadUrlRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'originalFileName': originalFileName,
-      'contentType': contentType,
-      'fileSize': fileSize,
+      ApiKeys.originalFileName: originalFileName,
+      ApiKeys.contentType: contentType,
+      ApiKeys.fileSize: fileSize,
     };
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
 
 class UserModel extends Equatable {
   final String? id;
@@ -17,19 +18,19 @@ class UserModel extends Equatable {
   });
 
   factory UserModel.fromMap(Map<String, dynamic> data) => UserModel(
-    id: data['_id'] as String?,
-    name: data['name'] as String?,
-    academicEmail: data['academicEmail'] as String?,
-    academicId: data['academicId'] as String?,
-    profilePic: data['profilePic'] as String?,
+    id: data[ApiKeys.id] as String?,
+    name: data[ApiKeys.name] as String?,
+    academicEmail: data[ApiKeys.academicEmail] as String?,
+    academicId: data[ApiKeys.academicId] as String?,
+    profilePic: data[ApiKeys.profilePic] as String?,
   );
 
   Map<String, dynamic> toMap() => {
-    '_id': id,
-    'name': name,
-    'academicEmail': academicEmail,
-    'academicId': academicId,
-    'profilePic': profilePic,
+    ApiKeys.id: id,
+    ApiKeys.name: name,
+    ApiKeys.academicEmail: academicEmail,
+    ApiKeys.academicId: academicId,
+    ApiKeys.profilePic: profilePic,
   };
 
   factory UserModel.fromJson(String data) {

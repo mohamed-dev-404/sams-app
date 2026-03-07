@@ -1,3 +1,5 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
 class S3UploadHeaders {
   final String contentType;
   final int contentLength;
@@ -5,7 +7,7 @@ class S3UploadHeaders {
   S3UploadHeaders({required this.contentType, required this.contentLength});
 
   Map<String, dynamic> toMap() => {
-    'Content-Type': contentType,
-    'Content-Length': contentLength,
+    ApiKeys.contentTypeHeader: contentType,
+    ApiKeys.contentLengthHeader: contentLength,
   };
 }

@@ -1,3 +1,4 @@
+import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/features/home/data/models/classwork_model.dart';
 
 class CreateCourseModel {
@@ -17,12 +18,12 @@ class CreateCourseModel {
 
   factory CreateCourseModel.fromJson(Map<String, dynamic> json) {
     return CreateCourseModel(
-      name: json['name'] ?? '',
-      academicCode: json['academicCourseCode'] ?? '',
-      totalGrades: (json['totalGrades'] ?? 0).toDouble(),
-      finalExam: (json['finalExam'] ?? 0).toDouble(),
+      name: json[ApiKeys.name] ?? '',
+      academicCode: json[ApiKeys.academicCourseCode] ?? '',
+      totalGrades: (json[ApiKeys.totalGrades] ?? 0).toDouble(),
+      finalExam: (json[ApiKeys.finalExam] ?? 0).toDouble(),
       classwork:
-          (json['classwork'] as List?)
+          (json[ApiKeys.classwork] as List?)
               ?.map((item) => ClassworkModel.fromJson(item))
               .toList() ??
           [],
@@ -31,11 +32,11 @@ class CreateCourseModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'academicCourseCode': academicCode,
-      'totalGrades': totalGrades,
-      'finalExam': finalExam,
-      'classwork': classwork.map((e) => e.toJson()).toList(),
+      ApiKeys.name: name,
+      ApiKeys.academicCourseCode: academicCode,
+      ApiKeys.totalGrades: totalGrades,
+      ApiKeys.finalExam: finalExam,
+      ApiKeys.classwork: classwork.map((e) => e.toJson()).toList(),
     };
   }
 }
