@@ -8,6 +8,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/home/presentation/views/widgets/delete_course_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 
@@ -51,14 +52,6 @@ class CourseCardMenu extends StatelessWidget {
     if (role == UserRole.instructor) {
       return [
         CustomPopupMenuItem(
-          value: 'edit',
-          title: 'Edit',
-          onTap: () {
-            context.pop();
-            debugPrint('Edit Course');
-          },
-        ),
-        CustomPopupMenuItem(
           value: 'share',
           title: 'Share Invitation Link',
           onTap: () {
@@ -72,6 +65,32 @@ class CourseCardMenu extends StatelessWidget {
               ),
             );
             // debugPrint('Share Course'),
+          },
+        ),
+        CustomPopupMenuItem(
+          value: 'edit',
+          title: 'Edit',
+          onTap: () {
+            context.pop();
+            debugPrint('Edit Course');
+          },
+        ),
+        CustomPopupMenuItem(
+          value: 'delete',
+          title: 'Delete',
+          onTap: () {
+            context.pop();
+            final homeCubit = context.read<HomeCubit>();
+            showDialog(
+              context: context,
+              builder: (_) => BlocProvider.value(
+                value: homeCubit,
+                child: DeleteCourseDialog(
+                  courseId: course.id,
+                  courseName: course.name,
+                ),
+              ),
+            );
           },
         ),
       ];

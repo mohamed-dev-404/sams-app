@@ -8,8 +8,8 @@ import 'package:sams_app/core/widgets/custom_app_button.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 
-class UnenrollCourseDialog extends StatelessWidget {
-  const UnenrollCourseDialog({
+class DeleteCourseDialog extends StatelessWidget {
+  const DeleteCourseDialog({
     super.key,
     required this.courseId,
     required this.courseName,
@@ -40,14 +40,14 @@ class UnenrollCourseDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       title: Text(
-        'Unenroll from $courseName?',
+        'Delete $courseName?',
         // textAlign: TextAlign.center,
       ),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
         color: AppColors.primaryDarkHover,
       ),
       content: Text(
-        'You will be removed from this class.\n\nAll your files will remain in Google Drive.',
+        'Are you sure you want to delete this course? All data and progress will be permanently removed.',
         style: AppStyles.mobileBodyMediumRg.copyWith(
           color: AppColors.primaryDark,
         ),
@@ -91,12 +91,12 @@ class UnenrollCourseDialog extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: CustomAppButton(
-                    label: 'Unenroll',
+                    label: 'Delete',
                     height: 40,
                     textColor: AppColors.primaryDark,
                     backgroundColor: AppColors.secondaryLight,
                     onPressed: () {
-                      context.read<HomeCubit>().removeCourse(
+                       context.read<HomeCubit>().removeCourse(
                         courseId: courseId,
                       );
                     },
