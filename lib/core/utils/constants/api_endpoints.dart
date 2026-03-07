@@ -3,14 +3,15 @@ class EndPoints {
 
   //? EndPoints
 
-   //! --- Home  --- ;
-   //* Instructor endpoints
+  //! --- Home  --- ;
+  //* Instructor endpoints
   static const String createCourse = 'instructor/courses';
   static const String getMyCreatedCourses = 'instructor/courses/me';
+  static String deleteCourse(String courseId) => 'instructor/courses/$courseId';
 
   //* Enrollment endpoints
   static const String getMyJoinedCourses = 'enrollments/me';
-  static const String joinCourse = 'enrollments'; 
+  static const String joinCourse = 'enrollments';
   static String unenrollCourse(String courseId) =>
       'enrollments/my-courses/$courseId';
 
@@ -19,5 +20,4 @@ class EndPoints {
   static const String updateProfile = 'users/profile';
   static const String createUploadUrl = 'users/profile-picture/presigned-url';
   static const String saveProfilePic = 'users/profile-picture';
-
 }
