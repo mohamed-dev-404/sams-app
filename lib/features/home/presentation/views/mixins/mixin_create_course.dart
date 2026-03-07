@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/features/home/data/models/classwork_model.dart';
 import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
@@ -111,19 +110,7 @@ mixin CreateCourseLogic<T extends StatefulWidget> on State<T> {
 
   // ! Error Snackbar - Shows grade distribution error
   void _showDistributionError(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.redAccent,
-        content: Text(
-          remainingPoints > 0
-              ? 'Still have ${remainingPoints.toStringAsFixed(0)} points left!'
-              : 'Exceeded by ${remainingPoints.abs().toStringAsFixed(0)} points!',
-          style: AppStyles.mobileBodySmallRg.copyWith(
-            color: AppColors.whiteLight,
-          ),
-        ),
-      ),
-    );
+    AppSnackBar.error(context,(remainingPoints > 0) ? 'Still have ${remainingPoints.toStringAsFixed(0)} points left!' : 'Exceeded by ${remainingPoints.abs().toStringAsFixed(0)} points!'); 
   }
 
   // ! Dispose - Prevent memory leaks

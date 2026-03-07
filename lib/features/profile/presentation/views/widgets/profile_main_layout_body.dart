@@ -57,32 +57,15 @@ class _ProfileMainLayoutBodyState extends State<ProfileMainLayoutBody> {
           current is UploadProfilePicFailure,
       listener: (context, state) {
         if (state is ProfileFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
-              backgroundColor: AppColors.red,
-              duration: const Duration(seconds: 2),
-            ),
-          );
+          AppSnackBar.error(context, state.errMessage);
         }
 
         if (state is UploadProfilePicSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('the image uploaded successfully ✓ '),
-              backgroundColor: AppColors.greenDark,
-              duration: Duration(seconds: 1),
-            ),
-          );
+          AppSnackBar.success(context, 'Your profile picture Updated successfully ✓' );
         }
 
         if (state is UploadProfilePicFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
-              backgroundColor: Colors.red,
-            ),
-          );
+          AppSnackBar.error(context, state.errMessage);
         }
       },
       buildWhen: (previous, current) => current is! ProfileActionState,

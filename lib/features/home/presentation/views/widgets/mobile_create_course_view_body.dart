@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/features/home/presentation/views/mixins/mixin_create_course.dart';
@@ -36,20 +36,10 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
       listenWhen: (previous, current) => current is CourseActionState,
       listener: (context, state) {
         if (state is CreateCourseSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.green,
-            ),
-          );
+          AppSnackBar.success(context,state.message);
           Navigator.pop(context);
         } else if (state is CreateCourseFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errMessage),
-              backgroundColor: AppColors.red,
-            ),
-          );
+          AppSnackBar.error(context,state.errMessage);
         }
       },
       builder: (context, state) {
