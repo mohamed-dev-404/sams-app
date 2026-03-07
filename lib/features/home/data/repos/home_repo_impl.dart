@@ -98,12 +98,13 @@ class HomeRepoImpl implements HomeRepo {
   /// Returns success message if unenrolling succeeds,
   /// otherwise returns an error message.
   @override
-  Future<Either<String, String>> unEnrollCourse({
+  Future<Either<String, String>> removeCourse({
+    required UserRole role,
     required String courseId,
   }) async {
     try {
 
-      final response = await api.delete(EndPoints.unenrollCourse(courseId));
+      final response = await api.delete(role.removeCourseEndpoint(courseId));
 
       return right(response[ApiKeys.message] ?? 'Unenrolled successfully');
     } on ApiException catch (e) {

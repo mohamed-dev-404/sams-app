@@ -18,7 +18,8 @@ abstract class HomeRepo {
     required JoinCourseModel model,
   });
 
-  Future<Either<String, String>> unEnrollCourse({
+  Future<Either<String, String>> removeCourse({
+    required UserRole role,
     required String courseId,
   });
 }

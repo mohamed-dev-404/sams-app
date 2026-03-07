@@ -77,19 +77,19 @@ class HomeCubit extends Cubit<HomeState> with CubitMessageMixin {
     );
   }
 
-  //! Unenrolls from a course as a Student.
+  //! removes a course unenroll as a student or delete as an instructor.
   ///
   /// Sends the course ID to the repository.
-  /// If successful, re-fetches the user's courses and emits [UnEnrollCourseSuccess].
-  Future<void> unEnrollCourse({required String courseId}) async {
-    emit(UnEnrollCourseLoading());
+  /// If successful, re-fetches the user's courses and emits [RemoveCourseSuccess].
+  Future<void> removeCourse({required String courseId}) async {
+    emit(RemoveCourseLoading());
 
-    final result = await homeRepo.unEnrollCourse(courseId: courseId);
+    final result = await homeRepo.removeCourse(courseId: courseId, role: role);
 
     result.fold(
-      (errMessage) => emit(UnEnrollCourseFailure(errMessage)),
+      (errMessage) => emit(RemoveCourseFailure(errMessage)),
       (successMessage) {
-        emit(UnEnrollCourseSuccess(successMessage));
+        emit(RemoveCourseSuccess(successMessage));
 
         fetchMyCourses(role: role);
       },
