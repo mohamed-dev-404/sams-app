@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_state.dart';
 
-class ProfileCubit extends HydratedCubit<ProfileState> with  CubitMessageMixin
+class ProfileCubit extends HydratedCubit<ProfileState> with  CubitMessageMixin,SafeEmitMixin
  {
   final ProfileRepo profileRepo;
 
@@ -24,6 +25,8 @@ class ProfileCubit extends HydratedCubit<ProfileState> with  CubitMessageMixin
     }
 
     final result = await profileRepo.getUserProfile();
+    
+    if (isClosed) return;
 
     result.fold(
       (failure) {
@@ -67,6 +70,8 @@ class ProfileCubit extends HydratedCubit<ProfileState> with  CubitMessageMixin
   /// updated user's profile or [UploadProfilePicFailure] with an error message.
   Future<void> uploadProfileImage(XFile imageFile) async {
     emit(UploadProfilePicLoading(0)); 
+
+    if (isClosed) return;
 
     final result = await profileRepo.uploadProfilePicture(imageFile);
 

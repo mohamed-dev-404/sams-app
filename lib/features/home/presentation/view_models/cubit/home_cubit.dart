@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 
-class HomeCubit extends Cubit<HomeState> with CubitMessageMixin {
+class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
   HomeCubit(this.homeRepo, {required this.role}) : super(HomeInitial());
 
   final HomeRepo homeRepo;
