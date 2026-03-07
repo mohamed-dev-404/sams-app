@@ -137,8 +137,6 @@ mixin CreateCourseLogic<T extends StatefulWidget> on State<T> {
       field['nameController'].dispose();
       field['gradeController'].dispose();
     }
-
-    super.dispose();
   }
 
   // ! Default Fields - Initial predefined classwork items
