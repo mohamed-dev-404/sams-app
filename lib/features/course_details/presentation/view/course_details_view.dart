@@ -22,17 +22,18 @@ class CourseDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      //TODO form auth
       create: (context) => CourseNavigationCubit(userRole: UserRole.student),
       child: AdaptiveLayout(
         mobileLayout: (context) => TabBarMobileLayout(
-          child: child,
           headerModel: headerModel,
           courseId: courseId,
+          child: child,
         ),
         webLayout: (context) => TabBarWebLayout(
-          child: child,
           courseId: courseId,
           headerModel: headerModel,
+          child: child,
         ),
       ),
     );

@@ -43,8 +43,16 @@ class TabBarWebLayout extends StatelessWidget {
               currentIndex: currentIndex == -1 ? 0 : currentIndex,
               onTap: (index) {
                 final targetPath = cubit.visibleTabs[index].path;
-                // Navigate and pass the headerModel to prevent it from turning null
-                context.pushReplacement('/course/$courseId/$targetPath', extra: headerModel);
+                // Use Uri to safely encode spaces and special characters
+                final path = Uri(
+                  path: '/course/$courseId/$targetPath',
+                  queryParameters: {
+                    'title': headerModel.title,
+                    'instructor': headerModel.instructor,
+                  },
+                ).toString();
+
+                context.go(path);
               },
             ),
           ),

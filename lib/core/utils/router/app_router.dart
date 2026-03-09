@@ -36,9 +36,19 @@ class AppRouter {
       ShellRoute(
         builder: (context, state, child) {
           final courseId = state.pathParameters['courseId'] ?? '';
+
+          // 1. Try to get from extra (Mobile navigation)
+          final extraModel = state.extra as CourseHeaderCardModel?;
+
+          // 2. Fallback to queryParams (Web refresh)
           final headerModel =
-              state.extra as CourseHeaderCardModel? ??
-              CourseHeaderCardModel(title: 'Course');
+              extraModel ??
+              CourseHeaderCardModel(
+                title: state.uri.queryParameters['title'] ?? 'Unknown Course',
+                instructor:
+                    state.uri.queryParameters['instructor'] ??
+                    'Unknown Instructor',
+              );
 
           return CourseDetailsView(
             courseId: courseId,
