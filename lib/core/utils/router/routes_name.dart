@@ -5,8 +5,6 @@ class RoutesName {
 
   static const String courses = '/courses';
 
-  static const String courseDetails = '/courseDetails/:courseId';
-
   static const String materials = 'materials';
   static const String assignments = 'assignments';
   static const String announcements = 'announcements';

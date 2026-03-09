@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -22,7 +23,8 @@ class HomeView extends StatelessWidget {
                 const courseId = 'cs1010';
 
                 final path = Uri(
-                  path: '/course/$courseId/materials',
+                  path:
+                      '${RoutesName.courses}/$courseId/${RoutesName.materials}',
                   queryParameters: {
                     'title': myCourseData.title,
                     'instructor': myCourseData.instructor,
@@ -41,7 +43,7 @@ class HomeView extends StatelessWidget {
                 final courseId = 'cs1010'; //? ID from API
 
                 context.push(
-                  '/course/$courseId/materials',
+                  '${RoutesName.courses}/$courseId/${RoutesName.materials}',
                   extra: myCourseData,
                 );
               },

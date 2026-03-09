@@ -99,7 +99,7 @@ class AppRouter {
     Widget Function(String courseId) viewBuilder,
   ) {
     return GoRoute(
-      path: '/course/:courseId/$path',
+      path: '${RoutesName.courses}/:courseId/$path',
       builder: (context, state) =>
           viewBuilder(state.pathParameters['courseId'] ?? ''),
     );

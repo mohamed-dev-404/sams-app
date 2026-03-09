@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/widgets/mobile_coures_header_card.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/mobile/custom_mobile_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
@@ -43,7 +44,7 @@ class TabBarMobileLayout extends StatelessWidget {
                     final targetPath = cubit.visibleTabs[index].path;
                     // Navigate and pass the headerModel
                     context.pushReplacement(
-                      '/course/$courseId/$targetPath',
+                      '${RoutesName.courses}/$courseId/$targetPath',
                       extra: headerModel,
                     );
                   },
