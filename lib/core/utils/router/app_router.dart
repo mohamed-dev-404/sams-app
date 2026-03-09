@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/utils/router/build_route.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
+import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/widgets/general_error_page.dart';
+import 'package:sams_app/features/home/data/repos/home_repo.dart';
+import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/home/presentation/views/create_course/create_course_view.dart';
+import 'package:sams_app/features/home/presentation/views/home/home_view.dart';
+import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
+import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
+import 'package:sams_app/features/profile/presentation/views/profile/profile_view.dart';
 import 'package:sams_app/features/Grades/presentation/view/grades_tab_view.dart';
 import 'package:sams_app/features/announcements/presentation/view/announcements_tab_view.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignments_tab_view.dart';
 import 'package:sams_app/features/course_code/presentation/view/course_code_tab_view.dart';
 import 'package:sams_app/features/course_details/presentation/view/course_details_view.dart';
-import 'package:sams_app/features/home/presentation/views/home_view.dart';
+
 import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
 import 'package:sams_app/features/materials/presentation/view/materials_tab_view.dart';
 import 'package:sams_app/features/members_list/presentation/view/members_list_tab_view.dart';
@@ -18,14 +28,70 @@ import 'package:sams_app/features/quizzes/presentation/view/quizzes_tab_view.dar
 class AppRouter {
   AppRouter._();
 
-  static final GlobalKey<NavigatorState> _rootNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'root');
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   static final appRouter = GoRouter(
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: RoutesName.courses,
+    navigatorKey: navigatorKey,
+    initialLocation: '/authTOHome',
     errorBuilder: (context, state) => const GeneralErrorPage(),
     routes: [
+      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      buildRoute(
+        name: 'authTOHome',
+        path: '/authTOHome',
+        builder: (context, state) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+              onPressed: () {
+                context.goNamed(RoutesName.home);
+              },
+              child: const Text('Auth to Home'),
+            ),
+          ),
+        ),
+      ),
+      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      //* HOME ROUTES
+      // Home view
+      buildRoute(
+        name: RoutesName.home,
+        path: RoutesName.home,
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              HomeCubit(getIt.get<HomeRepo>(), role: CurrentRole.role)
+                ..fetchMyCourses(role: CurrentRole.role),
+          child: const HomeView(),
+        ),
+      ),
+      // Create course view
+      buildRoute(
+        name: RoutesName.createCourse,
+        path: RoutesName.createCourse,
+        builder: (context, state) {
+          final homeCubit = state.extra as HomeCubit;
+
+          return BlocProvider.value(
+            value: homeCubit,
+            child: const CreateCourseView(),
+          );
+        },
+      ),
+
+      //*PROFILE ROUTES
+      // Profile view
+      buildRoute(
+        name: RoutesName.profile,
+        path: RoutesName.profile,
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              ProfileCubit(getIt.get<ProfileRepo>())..getUserProfile(),
+          child: const ProfileView(),
+        ),
+      ),
+
       buildRoute(
         name: RoutesName.courses,
         path: RoutesName.courses,
