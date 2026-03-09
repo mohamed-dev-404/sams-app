@@ -7,11 +7,11 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
-import 'package:sams_app/features/home/presentation/views/create_course_view.dart';
-import 'package:sams_app/features/home/presentation/views/home_view.dart';
+import 'package:sams_app/features/home/presentation/views/create_course/create_course_view.dart';
+import 'package:sams_app/features/home/presentation/views/home/home_view.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
-import 'package:sams_app/features/profile/presentation/views/profile_view/profile_view.dart';
+import 'package:sams_app/features/profile/presentation/views/profile/profile_view.dart';
 
 class AppRouter {
   AppRouter._();
