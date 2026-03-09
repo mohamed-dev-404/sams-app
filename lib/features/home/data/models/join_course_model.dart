@@ -1,5 +1,6 @@
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 
+//* Request body for joining a course via invitation code
 class JoinCourseModel {
   final String invitationCode;
 

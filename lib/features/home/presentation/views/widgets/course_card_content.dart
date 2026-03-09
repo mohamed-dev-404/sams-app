@@ -3,6 +3,7 @@ import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/course_title_row.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/instructor_row.dart';
 
+//* Positioned overlay for the course card text data
 class CourseCardContent extends StatelessWidget {
   final double cardWidth;
   final double cardHeight;
@@ -20,6 +21,7 @@ class CourseCardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
+      //? Dynamic padding to ensure text doesn't overlap background graphics
       left: cardWidth * 0.10,
       right: cardWidth * 0.05,
       top: cardHeight * 0.2,

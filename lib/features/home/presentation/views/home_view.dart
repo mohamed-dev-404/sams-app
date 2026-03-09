@@ -3,6 +3,7 @@ import 'package:sams_app/core/widgets/adaptive_layout.dart';
 import 'package:sams_app/features/home/presentation/views/layouts/mobile_home_view.dart';
 import 'package:sams_app/features/home/presentation/views/layouts/web_home_view.dart';
 
+//* The main home screen for both instructors and students
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 

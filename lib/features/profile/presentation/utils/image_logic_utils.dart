@@ -3,6 +3,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class ImageLogicUtils {
+  // On web, read bytes directly since path isn't a real file path
   static Future<XFile> convertToXFile({
     required CroppedFile croppedFile,
     required String originalName,

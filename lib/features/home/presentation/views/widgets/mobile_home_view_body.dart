@@ -6,6 +6,7 @@ import 'package:sams_app/features/home/presentation/views/widgets/course_sliver_
 import 'package:sams_app/features/home/presentation/views/widgets/new_course_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/section_title.dart';
 
+//* The main layout for the mobile home screen, organizing course summaries and the role-based 'NewCourseCard' in a scrollable view.
 class MobileHomeViewBody extends StatelessWidget {
   const MobileHomeViewBody({super.key});
 
@@ -16,6 +17,7 @@ class MobileHomeViewBody extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
+          // Displays the role-based 'NewCourseCard'
           const SliverPadding(padding: EdgeInsets.only(top: 20)),
           SliverToBoxAdapter(
             child: Padding(
@@ -28,11 +30,13 @@ class MobileHomeViewBody extends StatelessWidget {
               ),
             ),
           ),
+          // Displays the 'My Courses' section
           const SliverToBoxAdapter(
             child: SectionTitle(
               title: 'My Courses',
             ),
           ),
+          // Displays the role-based 'NewCourseCard'
             const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 7),
@@ -42,6 +46,7 @@ class MobileHomeViewBody extends StatelessWidget {
               ),
             ),
           ),
+          // Displays the list of courses
           const CourseSliverList(),
          ],
       ),

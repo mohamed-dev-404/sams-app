@@ -8,6 +8,7 @@ import 'package:sams_app/core/widgets/custom_app_button.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 
+//* Dialog for students to leave a course
 class UnenrollCourseDialog extends StatelessWidget {
   const UnenrollCourseDialog({
     super.key,
@@ -55,13 +56,18 @@ class UnenrollCourseDialog extends StatelessWidget {
       actions: [
         BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
+            /// Listens to 'RemoveCourseState' to show snackbar and pop dialog.
             if (state is RemoveCourseSuccess || state is RemoveCourseFailure) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                /// PostFrameCallback is used to ensure the snackbar is shown after the dialog is closed.
                 if (Navigator.canPop(context)) {
+                  //? Checks if the dialog can be popped.
                   Navigator.pop(context);
                   if (state is RemoveCourseSuccess) {
+                    //* Checks if the state is 'RemoveCourseSuccess'.
                     AppSnackBar.success(context, state.message);
                   } else if (state is RemoveCourseFailure) {
+                    //! Checks if the state is 'RemoveCourseFailure'.
                     AppSnackBar.error(context, state.errMessage);
                   }
                 }
@@ -70,6 +76,7 @@ class UnenrollCourseDialog extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is RemoveCourseLoading) {
+              //? Checks if the state is 'RemoveCourseLoading'.
               return const Center(
                 child: Padding(
                   padding: EdgeInsets.all(10),
@@ -82,6 +89,7 @@ class UnenrollCourseDialog extends StatelessWidget {
 
             return Row(
               children: [
+                //? Row of two buttons for cancel and unenroll
                 Expanded(
                   child: CustomAppButton(
                     label: 'Cancel',

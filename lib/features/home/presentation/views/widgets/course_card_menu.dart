@@ -12,6 +12,7 @@ import 'package:sams_app/features/home/presentation/views/widgets/delete_course_
 import 'package:sams_app/features/home/presentation/views/widgets/show_invitation_code_dialog.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/unenroll_course_dialog.dart';
 
+//* Role-based contextual menu for course management (Edit, Delete, Share, etc.)
 class CourseCardMenu extends StatelessWidget {
   final double cardWidth;
   final double cardHeight;
@@ -33,6 +34,7 @@ class CourseCardMenu extends StatelessWidget {
       right: cardWidth * 0.05,
       top: cardHeight * 0.05,
       child: PopupMenuButton<String>(
+        //? Adjust menu position relative to the icon
         offset: Offset(-cardWidth * 0.07, cardHeight * 0.2),
         color: AppColors.whiteLight,
         elevation: 8,
@@ -48,6 +50,7 @@ class CourseCardMenu extends StatelessWidget {
     );
   }
 
+  //! Logic to differentiate available actions between Instructors and Students
   List<PopupMenuEntry<String>> _buildItems(BuildContext context) {
     if (role == UserRole.instructor) {
       return [
@@ -95,6 +98,7 @@ class CourseCardMenu extends StatelessWidget {
         ),
       ];
     }
+    // Student view: only allowed to Unenroll
     return [
       CustomPopupMenuItem(
         value: 'unenroll',

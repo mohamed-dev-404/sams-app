@@ -5,7 +5,10 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/themes/app_theme.dart';
 import 'package:sams_app/features/profile/presentation/utils/image_logic_utils.dart';
 
+//* Handles picking and cropping an image from camera or gallery
 abstract class ImageAcquisition {
+
+  //? Pick image → crop to 1:1 → convert to XFile
   static Future<XFile?> pickImage(
     BuildContext context,
     ImageSource source,
@@ -17,6 +20,7 @@ abstract class ImageAcquisition {
     );
     if (image == null) return null;
 
+   //! Return null if context is no longer mounted
     if (!context.mounted) return null;
     final CroppedFile? croppedFile = await _cropImage(context, image.path);
     if (croppedFile == null) return null;
@@ -27,6 +31,7 @@ abstract class ImageAcquisition {
     );
   }
 
+// Force 1:1 crop with platform-specific UI settings
   static Future<CroppedFile?> _cropImage(
     BuildContext context,
     String filePath,

@@ -1,6 +1,6 @@
-//! Course Model Class For Home Screen 
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 
+//* Core course model used across the home feature
 class CourseModel {
   final String id;
   final String name;
@@ -13,7 +13,7 @@ class CourseModel {
     required this.name,
     required this.academicCourseCode,
     required this.instructor,
-    this.courseInvitationCode,
+    this.courseInvitationCode, // nullable — only available for joinable courses
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
@@ -35,7 +35,6 @@ class CourseModel {
       ApiKeys.courseInvitationCode: courseInvitationCode,
     };
   }
-  
   
   CourseModel copyWith({
     String? id,

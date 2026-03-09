@@ -12,6 +12,7 @@ import 'package:sams_app/features/home/data/models/join_course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 
+//* Dialog for students to join a course using an invitation code
 class EnrollCourseDialog extends StatefulWidget {
   const EnrollCourseDialog({super.key});
 
@@ -88,12 +89,14 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
     );
   }
 
+//! Dispose invite code controller
   @override
   void dispose() {
     _inviteCodeController.dispose();
     super.dispose();
   }
 
+//* Join course
   void _onJoinPressed(BuildContext context) {
     final code = _inviteCodeController.text.trim();
     if (code.isNotEmpty) {
@@ -103,6 +106,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
     }
   }
 
+//* Handle join course states
   void _handleJoinStates(BuildContext context, HomeState state) {
     if (state is JoinCourseSuccess) {
       Navigator.pop(context);
@@ -126,6 +130,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
     }
   }
 
+//? Show result dialog
   void _showResultDialog(BuildContext context, {required Widget dialog}) {
     showDialog(context: context, builder: (context) => dialog);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/widgets/general_arrow_back.dart';
 
+//* A standardized AppBar implementation for mobile screens providing custom navigation and flexible styling.
 class MobileCustomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   const MobileCustomAppBar({
@@ -19,6 +20,7 @@ class MobileCustomAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    //* AppBar implementation
     return AppBar(
       backgroundColor: Colors.transparent,
       title: Text(title, style: titleStyle),

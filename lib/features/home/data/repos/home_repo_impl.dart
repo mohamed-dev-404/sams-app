@@ -11,23 +11,19 @@ import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/data/models/join_course_model.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 
+//* Handles all home-related API calls and local caching
 class HomeRepoImpl implements HomeRepo {
   final ApiConsumer api;
   final HomeLocalDataSource localDataSource;
 
-  HomeRepoImpl({required this.api,required this.localDataSource});
+  HomeRepoImpl({required this.api, required this.localDataSource});
 
-  //? Fetches courses based on the user role.
-  ///
-  /// Uses the role-specific endpoint to get the user's courses
-  /// and converts the response into a list of [CourseModel].
-  /// Returns either a failure message or a list of courses.
+  //* GET courses by role → cache locally → return list
   @override
   Future<Either<String, List<CourseModel>>> fetchMyCourses({
     required UserRole role,
   }) async {
     try {
-
       var response = await api.get(role.myCoursesEndpoint);
 
       List<CourseModel> courses =
@@ -39,7 +35,6 @@ class HomeRepoImpl implements HomeRepo {
       await localDataSource.cacheCourses(courses);
 
       return right(courses);
-
     } on ApiException catch (e) {
       return left(e.errorModel.errorMessage);
     } catch (e) {
@@ -47,11 +42,7 @@ class HomeRepoImpl implements HomeRepo {
     }
   }
 
-  //! Creates a new course.
-  ///
-  /// Sends [CreateCourseModel] data to the API.
-  /// Returns success message if created successfully,
-  /// otherwise returns an error message.
+  //? POST → create course and return success message
   @override
   Future<Either<String, String>> createCourse({
     required CreateCourseModel course,
@@ -69,11 +60,7 @@ class HomeRepoImpl implements HomeRepo {
     }
   }
 
-  //* Joins a course using an invitation code.
-  ///
-  /// Sends [JoinCourseModel] data to the API.
-  /// Returns success message if joining succeeds,
-  /// otherwise returns an error message.
+  //? POST → join course via invitation code and return success message
   @override
   Future<Either<String, String>> joinCourse({
     required JoinCourseModel model,
@@ -92,18 +79,13 @@ class HomeRepoImpl implements HomeRepo {
     }
   }
 
-  //! Unenrolls from a course.
-  ///
-  /// Sends the course ID to the API.
-  /// Returns success message if unenrolling succeeds,
-  /// otherwise returns an error message.
+  //! DELETE → unenroll from course by role and course ID
   @override
   Future<Either<String, String>> removeCourse({
     required UserRole role,
     required String courseId,
   }) async {
     try {
-
       final response = await api.delete(role.removeCourseEndpoint(courseId));
 
       return right(response[ApiKeys.message] ?? 'Unenrolled successfully');
@@ -113,9 +95,10 @@ class HomeRepoImpl implements HomeRepo {
       return left(e.toString());
     }
   }
-  
+
+  //* Returns courses from local cache without network call
   @override
   List<CourseModel> getCachedCourses() {
-   return localDataSource.getCachedCourses();
+    return localDataSource.getCachedCourses();
   }
 }

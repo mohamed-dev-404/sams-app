@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 
+//* Dialog to preview an profile picture after updated 
 class ImagePreviewDialog extends StatelessWidget {
   final String imageUrl;
 
@@ -27,7 +28,9 @@ class ImagePreviewDialog extends StatelessWidget {
           color: Colors.transparent,
           child: Stack(
             children: [
+              // Background blur
               GestureDetector(
+                // Dismiss on tap
                 onTap: () => Navigator.pop(context),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
@@ -35,6 +38,7 @@ class ImagePreviewDialog extends StatelessWidget {
                 ),
               ),
               Center(
+                // Interactive viewer to zoom
                 child: InteractiveViewer(
                   minScale: 0.5,
                   maxScale: 4.0,

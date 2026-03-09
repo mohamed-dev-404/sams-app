@@ -22,10 +22,11 @@ class AppInitializer {
       // GetStorage, SharedPreferences, SecureStorage
       await _initAppStorage();
 
+      // (3) Initialize hydrated bloc storage
+      // Persists bloc state across app restarts
       await _initHydratedBloc();
 
-      
-      // (3) Setup service locator (GetIt)
+      // (4) Setup service locator (GetIt)
       // Registers all app services and dependencies
       _initServiceLocator();
 
@@ -97,12 +98,12 @@ class AppInitializer {
     AppLogger.success('Service locator initialized successfully', tag: 'GetIt');
   }
 
-
- static Future<void> _initHydratedBloc() async {
+  /// Initializes hydrated bloc storage
+  /// Web uses in-memory storage — mobile uses app documents directory
+  static Future<void> _initHydratedBloc() async {
     HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: kIsWeb
-          ? HydratedStorageDirectory
-                .web 
+          ? HydratedStorageDirectory.web
           : HydratedStorageDirectory(
               (await getApplicationDocumentsDirectory()).path,
             ),

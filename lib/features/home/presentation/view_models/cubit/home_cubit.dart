@@ -7,23 +7,21 @@ import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 
+//* Manages home state — fetch, create, join, and remove courses
 class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
   HomeCubit(this.homeRepo, {required this.role}) : super(HomeInitial());
 
   final HomeRepo homeRepo;
   final UserRole role;
 
-  //? Fetches the list of courses for the current user based on their [role].
-  ///
-  /// Emits [HomeLoading] while fetching, and either [HomeSuccess] with the courses
-  /// or [HomeFailure] with an error message.
+  //* Load cached courses first, then fetch fresh data from API
+  //* Shows cached data instantly while waiting for network response
   Future<void> fetchMyCourses({required UserRole role}) async {
-     
-     final cachedCourses = homeRepo.getCachedCourses();
-     if (cachedCourses.isNotEmpty) {
-      emit(HomeSuccess(cachedCourses)); 
+    final cachedCourses = homeRepo.getCachedCourses();
+    if (cachedCourses.isNotEmpty) {
+      emit(HomeSuccess(cachedCourses));
     } else {
-      emit(HomeLoading()); 
+      emit(HomeLoading());
     }
 
     final result = await homeRepo.fetchMyCourses(role: role);
@@ -31,7 +29,7 @@ class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
     result.fold(
       (failure) {
         if (state is HomeSuccess) {
-          emitMessage(failure);
+          emitMessage(failure); // show error without clearing cached data
         } else {
           emit(HomeFailure(failure));
         }
@@ -40,10 +38,7 @@ class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
     );
   }
 
-  //* Creates a new course as an Instructor.
-  ///
-  /// Takes a [CreateCourseModel] containing course details.
-  /// If successful, re-fetches the courses list and emits [CreateCourseSuccess].
+  //? POST new course → refresh courses list on success
   Future<void> createCourse({required CreateCourseModel course}) async {
     emit(CreateCourseLoading());
 
@@ -59,10 +54,7 @@ class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
     );
   }
 
-  //* Joins an existing course as a Student using an invitation code.
-  ///
-  /// Sends [JoinCourseModel] data to the repository.
-  /// If successful, re-fetches the user's courses and emits [JoinCourseSuccess].
+  //? POST join course via invitation code → refresh courses list on success
   Future<void> joinCourse({required JoinCourseModel model}) async {
     emit(JoinCourseLoading());
 
@@ -78,10 +70,7 @@ class HomeCubit extends Cubit<HomeState> with CubitMessageMixin, SafeEmitMixin {
     );
   }
 
-  //! removes a course unenroll as a student or delete as an instructor.
-  ///
-  /// Sends the course ID to the repository.
-  /// If successful, re-fetches the user's courses and emits [RemoveCourseSuccess].
+  //! DELETE → unenroll (student) or delete (instructor) then refresh list
   Future<void> removeCourse({required String courseId}) async {
     emit(RemoveCourseLoading());
 

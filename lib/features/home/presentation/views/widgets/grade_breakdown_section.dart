@@ -5,6 +5,7 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/app_text_field.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/create_course_form_section.dart';
 
+//* Dynamic section for defining how classwork grades are distributed
 class GradeBreakdownSection extends StatelessWidget {
   final List<Map<String, dynamic>> fields;
   final double remaining;
@@ -26,6 +27,7 @@ class GradeBreakdownSection extends StatelessWidget {
     return CreatecourseFormSection(
       title: 'Classwork Grade Breakdown',
       children: [
+        //? Visual indicator of how many points are left to assign
         _totalClasswork(remaining, limit),
 
         ...List.generate(fields.length, (index) {
@@ -45,7 +47,7 @@ class GradeBreakdownSection extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-
+                      //! Remove field button
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -65,6 +67,7 @@ class GradeBreakdownSection extends StatelessWidget {
                         ),
                       ),
                     ),
+                    //* Label and grade
                     AppTextField(
                       controller: field['nameController'],
                       hintText: 'Label',
@@ -82,7 +85,7 @@ class GradeBreakdownSection extends StatelessWidget {
             ),
           );
         }),
-
+        //? Add field button
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
@@ -106,6 +109,7 @@ class GradeBreakdownSection extends StatelessWidget {
     );
   }
 
+  //* Visual indicator of how many points are left to assign
   Widget _totalClasswork(double remaining, double limit) {
     return Align(
       alignment: Alignment.center,

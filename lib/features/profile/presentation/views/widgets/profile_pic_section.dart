@@ -15,6 +15,7 @@ import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_
 import 'package:sams_app/features/profile/presentation/views/widgets/image_preview_dialog.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/image_source_sheet.dart';
 
+//* Profile picture section
 class ProfilePicSection extends StatefulWidget {
   const ProfilePicSection({super.key, required this.userModel});
   final UserModel userModel;
@@ -98,6 +99,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
+// Pick image
   Future<void> _pickImage(ImageSource source) async {
     final XFile? processedImage = await ImageAcquisition.pickImage(
       context,
@@ -115,6 +117,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     }
   }
 
+// Show image source sheet
   void _showImageSourceSheet() {
     showModalBottomSheet(
       context: context,
@@ -127,6 +130,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
+// Build edit icon
   Widget _buildEditIcon(bool isMobile, double screenWidth) {
     return Container(
       width: isMobile ? screenWidth * .8 : 30,
@@ -150,6 +154,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
+// Build loading overlay
   Widget _buildLoadingOverlay() {
     return Container(
       decoration: BoxDecoration(
@@ -162,6 +167,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
+// Build profile image
   Widget _buildProfileImage(ProfileState state) {
     if (state is UploadProfilePicLoading && _pickedImage != null) {
       return kIsWeb
@@ -202,6 +208,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     return _buildDefaultProfileIcon();
   }
 
+// Build default profile icon
   Widget _buildDefaultProfileIcon() {
     return FittedBox(
       child: SvgPicture.asset(

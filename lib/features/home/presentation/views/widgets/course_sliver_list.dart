@@ -9,6 +9,7 @@ import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
 
+//* Scrollable Sliver list for mobile home screen to display enrolled courses
 class CourseSliverList extends StatefulWidget {
   const CourseSliverList({
     super.key,
@@ -24,7 +25,10 @@ class _CourseSliverListState extends State<CourseSliverList> {
   @override
   void initState() {
     super.initState();
-    _messageSubscription = context.read<HomeCubit>().messageStream.listen((msg) {
+    //* Listen to global cubit messages (e.g., success/error alerts)
+    _messageSubscription = context.read<HomeCubit>().messageStream.listen((
+      msg,
+    ) {
       if (mounted) {
         AppSnackBar.warning(context, msg);
       }
@@ -36,7 +40,7 @@ class _CourseSliverListState extends State<CourseSliverList> {
 
   @override
   void dispose() {
-    _messageSubscription?.cancel(); 
+    _messageSubscription?.cancel();
     super.dispose();
   }
 
@@ -50,6 +54,7 @@ class _CourseSliverListState extends State<CourseSliverList> {
       },
       builder: (context, state) {
         if (state is HomeSuccess) {
+          //* Displays courses
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) => Padding(
@@ -64,6 +69,7 @@ class _CourseSliverListState extends State<CourseSliverList> {
             ),
           );
         } else if (state is HomeFailure) {
+          //! Fallback UI if data fetching fails
           return SliverToBoxAdapter(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -78,6 +84,7 @@ class _CourseSliverListState extends State<CourseSliverList> {
             ),
           );
         } else {
+          //? Shows loading animation while waiting for data
           return const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20),

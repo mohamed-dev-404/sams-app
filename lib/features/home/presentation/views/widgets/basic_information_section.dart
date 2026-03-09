@@ -3,6 +3,7 @@ import 'package:sams_app/core/enums/text_field_type.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/create_course_form_section.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/input_field_title.dart';
 
+//* Form section specifically for gathering essential course details
 class BasicInformationSection extends StatelessWidget {
   const BasicInformationSection({
     super.key,
@@ -12,6 +13,7 @@ class BasicInformationSection extends StatelessWidget {
     required this.courseCodeController,
   });
 
+  //? Controllers to manage state and validation for course inputs
   final TextEditingController totalController;
   final TextEditingController finalController;
   final TextEditingController courseNameController;

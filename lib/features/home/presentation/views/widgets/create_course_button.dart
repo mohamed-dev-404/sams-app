@@ -3,6 +3,7 @@ import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/app_button.dart';
 
+//* Reusable submission button for course creation
 class CreateCourseButton extends StatelessWidget {
   const CreateCourseButton({
     super.key,
@@ -16,6 +17,7 @@ class CreateCourseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
+      //? Toggle between indicator and button based on loading state
       child: isLoading
           ? const CircularProgressIndicator()
           : AppButton(

@@ -10,6 +10,7 @@ import 'package:sams_app/features/home/presentation/views/widgets/create_course_
 import 'package:sams_app/features/home/presentation/views/widgets/grade_breakdown_section.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/web_home_header.dart';
 
+//* The core course creation form for instructors, utilizing a mixin for logic separation and a BlocConsumer for state-driven UI updates
 class WebCreateCourseViewBody extends StatefulWidget {
   const WebCreateCourseViewBody({super.key});
 
@@ -20,6 +21,7 @@ class WebCreateCourseViewBody extends StatefulWidget {
 
 class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
     with CreateCourseLogic {
+
   @override
   void initState() {
     super.initState();
@@ -48,9 +50,9 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
         return CustomScrollView(
           slivers: [
             const SliverToBoxAdapter(
-              child: WebHomeHeader(),
+              child: WebHomeHeader(),// Header
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),// Spacing
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -62,7 +64,7 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
                 ),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),// Spacing
             // Forms Side by Side
             SliverToBoxAdapter(
               child: Padding(
@@ -71,6 +73,7 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      //* Basic Information Section
                       Expanded(
                         child: BasicInformationSection(
                           totalController: totalGradeController,
@@ -81,6 +84,7 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
                       ),
                       const SizedBox(width: 20),
                       Expanded(
+                        //* Grade Breakdown Section
                         child: GradeBreakdownSection(
                           fields: classworkFields,
                           remaining: remainingPoints,
@@ -95,14 +99,15 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
               ),
             ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),
+            const SliverToBoxAdapter(child: SizedBox(height: 40)),// Spacing
             SliverToBoxAdapter(
+              // Create Course Button
               child: CreateCourseButton(
                 isLoading: state is CreateCourseLoading,
                 onPressed: () => submitCourse(context),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),
+            const SliverToBoxAdapter(child: SizedBox(height: 40)),// Spacing
           ],
         );
       },

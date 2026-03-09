@@ -72,6 +72,7 @@ import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/logout_item.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/profile_info_item.dart';
 
+//* A card containing user profile information, including name, email, and ID.
 class ProfileInfoCard extends StatelessWidget {
   const ProfileInfoCard({super.key, required this.userModel});
   final UserModel userModel;

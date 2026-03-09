@@ -4,6 +4,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* Dialog for instructors to show an invitation code to students
 class ShowInvitationCodeDialog extends StatefulWidget {
   const ShowInvitationCodeDialog({
     super.key,
@@ -18,9 +19,11 @@ class ShowInvitationCodeDialog extends StatefulWidget {
       _ShowInvitationCodeDialogState();
 }
 
+//* State for the dialog
 class _ShowInvitationCodeDialogState extends State<ShowInvitationCodeDialog> {
-  bool isCopied = false;
+  bool isCopied = false;// indicates if the code has been copied
 
+//* Copies the invitation code to the clipboard
   void _handleCopy() {
     Clipboard.setData(ClipboardData(text: widget.invitationCode));
     setState(() {

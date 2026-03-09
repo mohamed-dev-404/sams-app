@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//** A widget representing a profile information item, including an icon, label, and value.
 class ProfileInfoItem extends StatelessWidget {
   final String svgPath;
   final String label;
@@ -22,6 +23,7 @@ class ProfileInfoItem extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Row(
+          // Align items to center
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(

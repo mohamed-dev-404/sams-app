@@ -11,6 +11,7 @@ import 'package:sams_app/features/home/presentation/view_models/cubit/home_state
 import 'package:sams_app/features/home/presentation/views/widgets/custom_course_card.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/new_course_card.dart';
 
+//* Grid layout optimized for Web/Tablet home screens
 class CoursesSliverGrid extends StatefulWidget {
   const CoursesSliverGrid({super.key});
 
@@ -19,7 +20,7 @@ class CoursesSliverGrid extends StatefulWidget {
 }
 
 class _CoursesSliverGridState extends State<CoursesSliverGrid> {
-    StreamSubscription? _messageSubscription;
+  StreamSubscription? _messageSubscription;
 
   @override
   void initState() {
@@ -42,7 +43,6 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
@@ -52,11 +52,13 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
           current is HomeLoading,
       builder: (context, state) {
         if (state is HomeSuccess) {
+          //* Displays courses
           return SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             sliver: SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
+                  //? The last item in the grid is always the "Create New Course" button
                   if (index == state.courses.length) {
                     return const NewCourseCard(role: CurrentRole.role);
                   }
@@ -68,6 +70,7 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
                 },
                 childCount: state.courses.length + 1,
               ),
+              //? dynamic Grid layout optimized for Web/Tablet
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 320,
                 mainAxisSpacing: 16,
@@ -77,6 +80,7 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
             ),
           );
         } else if (state is HomeFailure) {
+          //! Fallback UI if data fetching fails
           return SliverToBoxAdapter(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -92,6 +96,7 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
             ),
           );
         } else {
+          //? Loading states
           return const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 40),

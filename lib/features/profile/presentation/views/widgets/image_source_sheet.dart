@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* Bottom sheet to select image source
 class ImageSourceBottomSheet extends StatelessWidget {
   final Function(ImageSource) onSourceSelected;
 
@@ -19,6 +20,7 @@ class ImageSourceBottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Title
             Text(
               'Update Profile Picture',
               style: AppStyles.mobileBodyLargeSb.copyWith(
@@ -26,6 +28,7 @@ class ImageSourceBottomSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Options
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -49,6 +52,7 @@ class ImageSourceBottomSheet extends StatelessWidget {
     );
   }
 
+// build source option
   Widget _buildSourceOption(
     BuildContext context, {
     required IconData icon,

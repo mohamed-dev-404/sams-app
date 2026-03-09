@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 
+//* Main User Entity with Equatable for optimized state rebuilds
 class UserModel extends Equatable {
   final String? id;
   final String? name;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/web_create_course_view_body.dart';
 
+//* The web layout for the course creation form
 class WebCreateCourseView extends StatelessWidget {
   static String routName = 'createCourseView';
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* Styled wrapper container for course form sections
 class CreatecourseFormSection extends StatelessWidget {
   const CreatecourseFormSection({
     super.key,
@@ -25,6 +26,7 @@ class CreatecourseFormSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //* Section Title (e.g., Basic Info, Grade Distribution)
             Text(
               title,
               style: AppStyles.mobileBodyLargeSb.copyWith(

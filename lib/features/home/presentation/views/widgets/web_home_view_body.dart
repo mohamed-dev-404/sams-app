@@ -12,8 +12,9 @@ class WebHomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
+        // Displays the header
         const SliverToBoxAdapter(child: WebHomeHeader()),
-
+        // Displays the course header
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
           sliver: SliverToBoxAdapter(
@@ -26,18 +27,18 @@ class WebHomeViewBody extends StatelessWidget {
             ),
           ),
         ),
-
+        // Displays the 'My Courses' section
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           sliver: SliverToBoxAdapter(
             child: Text('My Courses', style: AppStyles.webTitleMediumSb),
           ),
         ),
-
+        // Spacing
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-
+        // Displays the grid of courses
         const CoursesSliverGrid(),
-
+       // spacing 
         const SliverToBoxAdapter(child: SizedBox(height: 50)),
       ],
     );

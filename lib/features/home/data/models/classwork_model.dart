@@ -1,5 +1,6 @@
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 
+//* Represents a single classwork item with its grade points
 class ClassworkModel {
   final String name;
   final double points;

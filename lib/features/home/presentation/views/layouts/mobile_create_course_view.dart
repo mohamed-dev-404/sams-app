@@ -4,6 +4,7 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/mobile_create_course_view_body.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/mobile_custom_app_bar.dart';
 
+//* The mobile layout for the course creation form.
 class MobileCreateCourseView extends StatelessWidget {
   const MobileCreateCourseView({super.key});
 

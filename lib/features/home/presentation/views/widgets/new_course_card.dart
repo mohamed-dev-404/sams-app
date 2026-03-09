@@ -11,6 +11,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/enroll_course_dialog.dart';
 
+//* A ghost-style card used for adding/joining courses
 class NewCourseCard extends StatelessWidget {
   const NewCourseCard({super.key, required this.role, this.isMobile = false});
 
@@ -23,7 +24,7 @@ class NewCourseCard extends StatelessWidget {
       builder: (context, constraints) {
         final double cardWidth = constraints.maxWidth;
         final double cardHeight = isMobile ? cardWidth * 0.37 : cardWidth * 0.8;
-
+        //? Aspect ratios defined to match design specs for different platforms
         return GestureDetector(
           onTap: () => _handleOnTap(context),
           child: Opacity(
@@ -56,7 +57,9 @@ class NewCourseCard extends StatelessWidget {
     );
   }
 
+  //! Handle onTap
   void _handleOnTap(BuildContext context) {
+    //! Role-based navigation: Instructors go to a new page, Students open a dialog
     final homeCubit = context.read<HomeCubit>();
     if (role == UserRole.instructor) {
       context.pushNamed(RoutesName.createCourse, extra: homeCubit);
@@ -71,6 +74,7 @@ class NewCourseCard extends StatelessWidget {
     }
   }
 
+//! Build add icon in the center 
   Widget _buildAddIcon(double cardHeight, bool isMobile) {
     return Center(
       child: isMobile
@@ -93,6 +97,7 @@ class NewCourseCard extends StatelessWidget {
     );
   }
 
+//! Build top corner decoration
   Widget _buildTopCornerDecoration(double cardHeight) {
     return Positioned(
       top: 0,

@@ -6,6 +6,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* The main header for the web home screen, containing the logo and navigation links.
 class WebHomeHeader extends StatelessWidget {
   const WebHomeHeader({super.key});
   @override
@@ -37,6 +38,7 @@ class WebHomeHeader extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
+              // Notification Icon
               CircleAvatar(
                 radius: 16,
                 backgroundColor: const Color.fromARGB(255, 51, 148, 167),
@@ -57,6 +59,7 @@ class WebHomeHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 9),
+              
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

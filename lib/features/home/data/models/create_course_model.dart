@@ -1,6 +1,7 @@
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/features/home/data/models/classwork_model.dart';
 
+//* Request model for creating a new course with grade structure
 class CreateCourseModel {
   final String name;
   final String academicCode;

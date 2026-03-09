@@ -6,6 +6,7 @@ import 'package:sams_app/features/home/presentation/views/widgets/course_card_co
 import 'package:sams_app/features/home/presentation/views/widgets/course_card_decoration.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/course_card_menu.dart';
 
+//* Main entry point for the Course Card UI component
 class CustomCourseCard extends StatelessWidget {
   final UserRole role;
   final CourseModel course;
@@ -20,6 +21,7 @@ class CustomCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //? Aspect ratios defined to match design specs for different platforms
     final double aspectRatio = isMobile ? (343 / 135) : (301 / 240);
     final double borderRadius = isMobile ? 15 : 20;
 
@@ -38,14 +40,14 @@ class CustomCourseCard extends StatelessWidget {
 
             return Stack(
               children: [
-                /// Background Decorative Elements
+                /// Layer 1: Background Decorations
                 CourseCardDecorations(
                   cardWidth: cardWidth,
                   h: cardHeight,
                   isMobile: isMobile,
                 ),
 
-                /// Management Menu Button
+                /// Layer 2: Management Menu (Share, Delete, etc.)
                 CourseCardMenu(
                   cardWidth: cardWidth,
                   cardHeight: cardHeight,
@@ -54,7 +56,7 @@ class CustomCourseCard extends StatelessWidget {
                   course: course,
                 ),
 
-                /// Primary Course Information
+                /// Layer 3: Course Text Content
                 CourseCardContent(
                   cardWidth: cardWidth,
                   cardHeight: cardHeight,

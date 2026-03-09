@@ -8,6 +8,7 @@ import 'package:sams_app/features/home/presentation/views/widgets/basic_informat
 import 'package:sams_app/features/home/presentation/views/widgets/create_course_button.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/grade_breakdown_section.dart';
 
+//* The core course creation form for instructors, utilizing a mixin for logic separation and a BlocConsumer for state-driven UI updates.
 class MobileCreateCourseViewBody extends StatefulWidget {
   const MobileCreateCourseViewBody({super.key});
 
@@ -16,14 +17,17 @@ class MobileCreateCourseViewBody extends StatefulWidget {
       _MobileCreateCourseViewBodyState();
 }
 
+//* State class for MobileCreateCourseViewBody with CreateCourseLogic mixin
 class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
     with CreateCourseLogic {
+  //* Initialization of the controllers
   @override
   void initState() {
     super.initState();
     initCourseLogic();
   }
 
+  //! Dispose the controllers
   @override
   void dispose() {
     disposeControllers();
@@ -33,13 +37,14 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
+      //? Optimized to only trigger listeners on 'CourseActionState' to avoid unnecessary snackbar rebuilds or pops.
       listenWhen: (previous, current) => current is CourseActionState,
       listener: (context, state) {
         if (state is CreateCourseSuccess) {
-          AppSnackBar.success(context,state.message);
+          AppSnackBar.success(context, state.message);
           Navigator.pop(context);
         } else if (state is CreateCourseFailure) {
-          AppSnackBar.error(context,state.errMessage);
+          AppSnackBar.error(context, state.errMessage);
         }
       },
       builder: (context, state) {
@@ -48,9 +53,11 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
           child: Form(
             key: formKey,
             child: CustomScrollView(
+              //? CustomScrollView is used to ensure the form remains accessible even when the keyboard is visible or fields are dynamically added.
               slivers: [
                 const SliverToBoxAdapter(child: SizedBox(height: 20)),
                 SliverToBoxAdapter(
+                  //? Displays the basic information section
                   child: BasicInformationSection(
                     totalController: totalGradeController,
                     finalController: finalExamController,
@@ -61,6 +68,7 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
                 const SliverToBoxAdapter(child: SizedBox(height: 20)),
                 SliverToBoxAdapter(
                   child: GradeBreakdownSection(
+                    //? Manages dynamic fields for classwork; allowing instructors to customize grading criteria beyond the final exam.
                     fields: classworkFields,
                     remaining: remainingPoints,
                     limit: totalClassworkLimit,
@@ -70,6 +78,7 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 40)),
                 SliverToBoxAdapter(
+                  //? Displays the create course button
                   child: CreateCourseButton(
                     isLoading: state is CreateCourseLoading,
                     onPressed: () => submitCourse(context),

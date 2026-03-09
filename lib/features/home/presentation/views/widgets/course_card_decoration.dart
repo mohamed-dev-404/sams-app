@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 
+//* Decorative SVG elements that give the course card its unique look
 class CourseCardDecorations extends StatelessWidget {
   final double cardWidth;
   final double h;
@@ -18,7 +19,7 @@ class CourseCardDecorations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        /// Top Corner Decoration
+        //! Top Corner SVG: Uses ClipRect and Align to show only a part of the asset
         Positioned(
           top: 0,
           left: 0,
@@ -40,7 +41,7 @@ class CourseCardDecorations extends StatelessWidget {
           ),
         ),
 
-        /// Bottom Corner Decoration
+        //! Bottom Corner SVG: Decoration for the right-hand side of the card
         Positioned(
           bottom: 0,
           right: 0,

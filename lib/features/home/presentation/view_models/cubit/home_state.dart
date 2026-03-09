@@ -58,16 +58,16 @@ final class JoinCourseFailure extends CourseActionState {
   JoinCourseFailure(this.errMessage);
 }
 
-//? Emitted while unenrolling a course.
+//? Emitted while unenrolling (student) or deleting (instructor) a course
 final class RemoveCourseLoading extends CourseActionState {}
 
-//* Emitted when unenrolled successfully and emits success message.
+//* Emitted when course removed successfully
 final class RemoveCourseSuccess extends CourseActionState {
   final String message;
   RemoveCourseSuccess(this.message);
 }
 
-//! Emitted when unenrolling fails and emits error message.
+//! Emitted when removing course fails
 final class RemoveCourseFailure extends CourseActionState {
   final String errMessage;
   RemoveCourseFailure(this.errMessage);

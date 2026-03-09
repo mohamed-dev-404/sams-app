@@ -6,6 +6,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* The main layout for the mobile home screen, organizing course summaries and the role-based 'NewCourseCard' in a scrollable view.
 class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
 
@@ -38,6 +39,7 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Row(
                 children: [
+                  //? Profile Icon
                   SizedBox(
                     width: profileIconSize,
                     height: profileIconSize,
@@ -52,6 +54,7 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   SizedBox(width: spaceBetweenAvatarAndText),
+                  //? User Name
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,6 +83,7 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
+              //? Notification Icon
               IconButton(
                 padding: EdgeInsets.zero,
                 icon: SvgPicture.asset(

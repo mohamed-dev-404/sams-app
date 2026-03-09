@@ -15,14 +15,17 @@ class WebProfileViewBody extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return CustomScrollView(
       slivers: [
+        // Sliver app bar
         const SliverToBoxAdapter(
           child: WebHomeHeader(),
         ),
-
+        
+        // Spacing
         const SliverToBoxAdapter(
           child: SizedBox(height: 5),
         ),
 
+        // Title
         SliverToBoxAdapter(
           child: Center(
             child: Text(
@@ -34,10 +37,13 @@ class WebProfileViewBody extends StatelessWidget {
             ),
           ),
         ),
+
+        // Spacing
         const SliverToBoxAdapter(
           child: SizedBox(height: 10),
         ),
 
+        // Body
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(

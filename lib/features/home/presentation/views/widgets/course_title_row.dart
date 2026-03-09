@@ -3,6 +3,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 
+//* Displays course name and code using RichText for mixed styling
 class CourseTitleRow extends StatelessWidget {
   final CourseModel course;
   final bool isMobile;
@@ -39,6 +40,7 @@ class CourseTitleRow extends StatelessWidget {
               TextSpan(
                 text: course.name,
               ),
+              //? Visual distinction for the academic code
               TextSpan(
                 text: '(${course.academicCourseCode})',
                 style: AppStyles.mobileBodySmallRg.copyWith(

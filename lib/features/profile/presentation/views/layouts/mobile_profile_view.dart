@@ -4,6 +4,7 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/presentation/views/widgets/mobile_custom_app_bar.dart';
 import 'package:sams_app/features/profile/presentation/views/widgets/profile_main_layout_body.dart';
 
+//* The mobile layout for the profile page.
 class MobileProfileView extends StatelessWidget {
   const MobileProfileView({super.key});
 

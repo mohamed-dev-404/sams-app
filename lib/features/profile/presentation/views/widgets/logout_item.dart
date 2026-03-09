@@ -4,6 +4,7 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* A widget representing a logout option in the profile page.
 class LogoutSection extends StatelessWidget {
   const LogoutSection({
     super.key,

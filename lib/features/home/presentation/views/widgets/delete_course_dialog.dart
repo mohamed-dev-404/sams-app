@@ -8,6 +8,7 @@ import 'package:sams_app/core/widgets/custom_app_button.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_state.dart';
 
+//* Confirmation dialog to prevent accidental course deletion
 class DeleteCourseDialog extends StatelessWidget {
   const DeleteCourseDialog({
     super.key,
@@ -55,14 +56,17 @@ class DeleteCourseDialog extends StatelessWidget {
       actions: [
         BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
+            /// Close dialog and notify user on successful deletion
             if (state is RemoveCourseSuccess || state is RemoveCourseFailure) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                /// check if the dialog can be popped
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
-
                   if (state is RemoveCourseSuccess) {
+                    //* Show success snackbar
                     AppSnackBar.success(context, state.message);
                   } else if (state is RemoveCourseFailure) {
+                    //! Show error snackbar
                     AppSnackBar.error(context, state.errMessage);
                   }
                 }
@@ -70,6 +74,7 @@ class DeleteCourseDialog extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            //? Show loading indicator
             if (state is RemoveCourseLoading) {
               return const Center(
                 child: Padding(
@@ -83,6 +88,7 @@ class DeleteCourseDialog extends StatelessWidget {
 
             return Row(
               children: [
+                //* Cancel button
                 Expanded(
                   child: CustomAppButton(
                     label: 'Cancel',
@@ -94,6 +100,7 @@ class DeleteCourseDialog extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
+                  //! Delete course button
                   child: CustomAppButton(
                     label: 'Delete',
                     height: 40,

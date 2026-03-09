@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* Generic section title
 class SectionTitle extends StatelessWidget {
   const SectionTitle({super.key, required this.title});
   final String title;

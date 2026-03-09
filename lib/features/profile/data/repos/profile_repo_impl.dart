@@ -12,16 +12,14 @@ import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/data/services/image_processor.dart';
 
+//* Handles all profile-related API calls and S3 upload logic
 class ProfileRepoImpl extends ProfileRepo {
   ProfileRepoImpl({required this.api, required this.s3Service, required this.imageProcessor});
   final ApiConsumer api;
   final S3UploadService s3Service;
   final ImageProcessor imageProcessor;
 
-  //* Fetches user profile data.
-  ///
-  /// Sends a GET request to [EndPoints.getProfile].
-  /// Handles [ApiException] and returns a failure message if caught.
+  //* GET /profile → returns current user data
   @override
   Future<Either<String, UserModel>> getUserProfile() async {
     try {
@@ -37,12 +35,7 @@ class ProfileRepoImpl extends ProfileRepo {
     }
   }
 
-  //! Uploads a profile picture.
-  ///
-  /// Sends a POST request to [EndPoints.createUploadUrl].
-  /// Uploads the image file to S3 using [S3UploadService].
-  /// Sends a POST request to [EndPoints.saveProfilePic] with the S3 key.
-  /// Handles [ApiException] and returns a failure message if caught.
+ // POST → get presigned S3 URL and object key
   @override
   Future<Either<String, UserModel>> uploadProfilePicture(XFile imageFile) async {
     try {
@@ -76,6 +69,7 @@ class ProfileRepoImpl extends ProfileRepo {
   }
 }
 
+// POST → returns presigned S3 URL and object key
   Future<UploadUrlModel> _getPresignedUrl(
     String name,
     int size,
@@ -94,7 +88,7 @@ class ProfileRepoImpl extends ProfileRepo {
     return UploadUrlModel.fromJson(response[ApiKeys.data]);
   }
 
-
+  // PATCH → updates profile pic with the uploaded S3 key
   Future<UserModel> _savePictureToProfile(String key) async {
     final response = await api.patch(
       EndPoints.saveProfilePic,
