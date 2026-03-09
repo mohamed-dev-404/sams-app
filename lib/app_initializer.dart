@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sams_app/core/cache/secure_storage.dart';
 import 'package:sams_app/core/cache/shared_pref_helper.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
@@ -20,7 +22,11 @@ class AppInitializer {
       // GetStorage, SharedPreferences, SecureStorage
       await _initAppStorage();
 
-      // (3) Setup service locator (GetIt)
+      // (3) Initialize hydrated bloc storage
+      // Persists bloc state across app restarts
+      await _initHydratedBloc();
+
+      // (4) Setup service locator (GetIt)
       // Registers all app services and dependencies
       _initServiceLocator();
 
@@ -90,5 +96,17 @@ class AppInitializer {
     setupServiceLocator();
 
     AppLogger.success('Service locator initialized successfully', tag: 'GetIt');
+  }
+
+  /// Initializes hydrated bloc storage
+  /// Web uses in-memory storage — mobile uses app documents directory
+  static Future<void> _initHydratedBloc() async {
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: kIsWeb
+          ? HydratedStorageDirectory.web
+          : HydratedStorageDirectory(
+              (await getApplicationDocumentsDirectory()).path,
+            ),
+    );
   }
 }
