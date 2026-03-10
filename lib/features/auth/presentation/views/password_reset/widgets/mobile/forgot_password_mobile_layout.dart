@@ -132,7 +132,7 @@ class _ForgotPasswordMobileLayoutState
       label: 'Academic Email',
       child: AppTextField(
         controller: _emailController,
-        prefixIcon: const SvgIcon(
+        prefixIcon: const CustomSvg(
           AppIcons.iconsProfileEmail,
         ),
         hintText: '202220202@o6u.edu.eg',

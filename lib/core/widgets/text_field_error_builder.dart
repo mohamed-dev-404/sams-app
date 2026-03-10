@@ -22,7 +22,7 @@ class TextFieldErrorBuilder extends StatelessWidget {
           padding: EdgeInsets.only(
             top: 1,
           ), // Tiny offset to align icon with first line of text
-          child: SvgIcon(
+          child: CustomSvg(
             AppIcons.iconsTextFieldError,
             color: AppColors.red,
           ),

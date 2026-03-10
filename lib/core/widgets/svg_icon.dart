@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 
-class SvgIcon extends StatelessWidget {
+class CustomSvg extends StatelessWidget {
   final String assetName;
   final Color? color;
   final double? width;
   final double? height;
 
-  const SvgIcon(
+  const CustomSvg(
     this.assetName, {
     this.color = AppColors.whiteDarkHover,
     this.height,

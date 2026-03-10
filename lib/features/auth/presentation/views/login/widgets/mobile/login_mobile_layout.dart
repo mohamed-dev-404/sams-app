@@ -144,7 +144,7 @@ class _LoginMobileLayoutState extends State<LoginMobileLayout> {
           label: 'Academic Email',
           child: AppTextField(
             controller: _emailController,
-            prefixIcon: const SvgIcon(
+            prefixIcon: const CustomSvg(
               AppIcons.iconsProfileEmail,
             ),
             hintText: '2022202020@o6u.edu.eg',

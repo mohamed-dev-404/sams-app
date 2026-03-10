@@ -86,13 +86,13 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
                 .copyWith(
                   color: AppColors.whiteDarkHover,
                 ),
-        prefixIcon: const SvgIcon(AppIcons.iconsPasswordLock),
+        prefixIcon: const CustomSvg(AppIcons.iconsPasswordLock),
 
         // Eye toggle icon for showing/hiding password characters
         suffixIcon: IconButton(
           icon: _isPasswordVisible
-              ? const SvgIcon(AppIcons.iconsOpenedEyeVisible)
-              : const SvgIcon(AppIcons.iconsClosedEye),
+              ? const CustomSvg(AppIcons.iconsOpenedEyeVisible)
+              : const CustomSvg(AppIcons.iconsClosedEye),
           onPressed: () {
             setState(() {
               _isPasswordVisible = !_isPasswordVisible;

@@ -178,7 +178,7 @@ class _SignUpMobileLayoutState extends State<SignUpMobileLayout> {
           label: 'Full Name',
           child: AppTextField(
             controller: _nameController,
-            prefixIcon: const SvgIcon(
+            prefixIcon: const CustomSvg(
               AppIcons.iconsAuthName,
             ),
             hintText: 'John Doe',
@@ -194,7 +194,7 @@ class _SignUpMobileLayoutState extends State<SignUpMobileLayout> {
           child: AppTextField(
             controller: _emailController,
             focusNode: _emailFocusNode,
-            prefixIcon: const SvgIcon(
+            prefixIcon: const CustomSvg(
               AppIcons.iconsProfileEmail,
             ),
             hintText: '2022202020@o6u.edu.eg',
@@ -210,7 +210,7 @@ class _SignUpMobileLayoutState extends State<SignUpMobileLayout> {
           child: AppTextField(
             controller: _idController,
             focusNode: _idFocusNode,
-            prefixIcon: const SvgIcon(
+            prefixIcon: const CustomSvg(
               AppIcons.iconsProfileId,
             ),
             hintText: '2022202020',
