@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sams_app/core/cache/get_storage.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/presentation/logic/image_acquisition.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
@@ -85,7 +87,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
                 Positioned(
                   bottom: 5,
                   right: 0,
-                  left: 85 ,
+                  left: 85,
                   child: GestureDetector(
                     onTap: _showImageSourceSheet,
                     child: _buildEditIcon(isMobile, screenWidth),
@@ -99,7 +101,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
-// Pick image
+  // Pick image
   Future<void> _pickImage(ImageSource source) async {
     final XFile? processedImage = await ImageAcquisition.pickImage(
       context,
@@ -117,7 +119,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     }
   }
 
-// Show image source sheet
+  // Show image source sheet
   void _showImageSourceSheet() {
     showModalBottomSheet(
       context: context,
@@ -126,11 +128,17 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
       ),
       builder: (context) => ImageSourceBottomSheet(
         onSourceSelected: _pickImage,
+        onRemoveSelected: () {
+          // GetStorageHelper.remove(
+          //   CacheKeys.profilePic,
+          // );
+          //TODO remove image
+        },
       ),
     );
   }
 
-// Build edit icon
+  // Build edit icon
   Widget _buildEditIcon(bool isMobile, double screenWidth) {
     return Container(
       width: isMobile ? screenWidth * .8 : 30,
@@ -154,7 +162,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
-// Build loading overlay
+  // Build loading overlay
   Widget _buildLoadingOverlay() {
     return Container(
       decoration: BoxDecoration(
@@ -167,7 +175,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     );
   }
 
-// Build profile image
+  // Build profile image
   Widget _buildProfileImage(ProfileState state) {
     if (state is UploadProfilePicLoading && _pickedImage != null) {
       return kIsWeb
@@ -180,6 +188,11 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
       displayUser = state.userModel;
     } else if (state is UploadProfilePicSuccess) {
       displayUser = state.userModel;
+      //* cache profile pic after success to display it in home
+      GetStorageHelper.write(
+        CacheKeys.profilePic,
+        displayUser.profilePic,
+      );
     }
 
     if (displayUser.profilePic != null && displayUser.profilePic!.isNotEmpty) {
@@ -208,7 +221,7 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
     return _buildDefaultProfileIcon();
   }
 
-// Build default profile icon
+  // Build default profile icon
   Widget _buildDefaultProfileIcon() {
     return FittedBox(
       child: SvgPicture.asset(

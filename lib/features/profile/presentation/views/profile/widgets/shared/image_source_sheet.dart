@@ -6,10 +6,12 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 //* Bottom sheet to select image source
 class ImageSourceBottomSheet extends StatelessWidget {
   final Function(ImageSource) onSourceSelected;
+  final Function() onRemoveSelected;
 
   const ImageSourceBottomSheet({
     super.key,
     required this.onSourceSelected,
+    required this.onRemoveSelected,
   });
 
   @override
@@ -44,6 +46,20 @@ class ImageSourceBottomSheet extends StatelessWidget {
                   label: 'Camera',
                   source: ImageSource.camera,
                 ),
+                // (!kIsWeb)
+                //     ? _buildSourceOption(
+                //         context,
+                //         icon: Icons.camera_alt,
+                //         label: 'Camera',
+                //         source: ImageSource.camera,
+                //       )
+                //     : const SizedBox.shrink(),
+                // _buildRemoveOption(
+                //   context,
+                //   icon: Icons.delete_forever_outlined,
+                //   label: 'Remove',
+                //   onTap: onRemoveSelected,
+                // ),
               ],
             ),
           ],
@@ -52,7 +68,7 @@ class ImageSourceBottomSheet extends StatelessWidget {
     );
   }
 
-// build source option
+  // build source option
   Widget _buildSourceOption(
     BuildContext context, {
     required IconData icon,
@@ -68,8 +84,8 @@ class ImageSourceBottomSheet extends StatelessWidget {
             child: Icon(icon, color: AppColors.secondary, size: 30),
           ),
           onPressed: () {
-            Navigator.pop(context); 
-            onSourceSelected(source); 
+            Navigator.pop(context);
+            onSourceSelected(source);
           },
         ),
         const SizedBox(height: 8),
@@ -82,4 +98,35 @@ class ImageSourceBottomSheet extends StatelessWidget {
       ],
     );
   }
+
+  // build remove option
+  // Widget _buildRemoveOption(
+  //   BuildContext context, {
+  //   required IconData icon,
+  //   required String label,
+  //   required Function() onTap,
+  // }) {
+  //   return Column(
+  //     children: [
+  //       IconButton(
+  //         icon: CircleAvatar(
+  //           radius: 30,
+  //           backgroundColor: AppColors.redLightActive.withValues(alpha: 0.9),
+  //           child: Icon(icon, color: AppColors.redHover, size: 30),
+  //         ),
+  //         onPressed: () {
+  //           Navigator.pop(context);
+  //           onTap();
+  //         },
+  //       ),
+  //       const SizedBox(height: 8),
+  //       Text(
+  //         label,
+  //         style: AppStyles.mobileBodySmallMd.copyWith(
+  //           color: AppColors.redHover,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
