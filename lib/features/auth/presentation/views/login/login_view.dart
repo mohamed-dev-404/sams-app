@@ -29,7 +29,7 @@ class LoginView extends StatelessWidget {
           // log(name);
           // log(role);
           // log(isStudent.toString());
-          context.go(RoutesName.test); //todo: should navigate to home
+          context.goNamed(RoutesName.courses); //todo: should navigate to home
         }
       },
       builder: (context, state) {

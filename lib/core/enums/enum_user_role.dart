@@ -1,3 +1,6 @@
+import 'package:sams_app/core/cache/get_storage.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
+
 enum UserRole {
   instructor,
   student
@@ -12,6 +15,12 @@ enum UserRole {
 }
 
 class CurrentRole {
-  //TODO form auth
-  static const role = UserRole.student;
+  CurrentRole._();
+
+  static UserRole get role {
+    final roleString = GetStorageHelper.read<String>(CacheKeys.role);
+
+    // If roleString is null, fromString will return the default (student)
+    return UserRole.fromString(roleString ?? '');
+  }
 }
