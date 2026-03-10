@@ -9,8 +9,12 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 //* The main layout for the mobile home screen, organizing course summaries and the role-based 'NewCourseCard' in a scrollable view.
 class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
-
-  const MobileHomeAppBar({super.key, required this.userName});
+  final String? imagePath;
+  const MobileHomeAppBar({
+    super.key,
+    required this.userName,
+    this.imagePath,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -46,11 +50,14 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: GestureDetector(
                       onTap: () {
                         context.pushNamed(RoutesName.profile);
-                        debugPrint('Profile');
                       },
-                      child: SvgPicture.asset(
-                        AppIcons.iconsHomeProfileHeader,
-                      ),
+                      child: imagePath == null
+                          ? SvgPicture.asset(
+                              AppIcons.iconsHomeProfileHeader,
+                            )
+                          : CircleAvatar(
+                              backgroundImage: NetworkImage(imagePath!),
+                            ),
                     ),
                   ),
                   SizedBox(width: spaceBetweenAvatarAndText),

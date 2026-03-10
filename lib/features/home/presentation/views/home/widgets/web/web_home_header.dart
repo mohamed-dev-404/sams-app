@@ -20,7 +20,7 @@ class WebHomeHeader extends StatelessWidget {
         children: [
           /// Logo + Name
           GestureDetector(
-            onTap: () => context.goNamed(RoutesName.home),
+            onTap: () => context.goNamed(RoutesName.courses),
             child: Row(
               children: [
                 SvgPicture.asset(AppIcons.iconsLogo, height: 28),
@@ -48,18 +48,30 @@ class WebHomeHeader extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   context.pushNamed(RoutesName.profile);
-                  debugPrint('Profile');
                 },
-                child: SvgPicture.asset(
-                  AppIcons.iconsHomeProfileHeader,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.whiteLight,
-                    BlendMode.srcIn,
-                  ),
-                ),
+                child:
+                    //TODO Add image path
+                    // imagePath == null
+                    //     ? SvgPicture.asset(
+                    //         AppIcons.iconsHomeProfileHeader,
+                    //         colorFilter: const ColorFilter.mode(
+                    //           AppColors.whiteLight,
+                    //           BlendMode.srcIn,
+                    //         ),
+                    //       )
+                    //     : CircleAvatar(
+                    //         backgroundImage: NetworkImage(imagePath!),
+                    //       ),
+                    SvgPicture.asset(
+                      AppIcons.iconsHomeProfileHeader,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.whiteLight,
+                        BlendMode.srcIn,
+                      ),
+                    ),
               ),
               const SizedBox(width: 9),
-              
+
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,6 +83,7 @@ class WebHomeHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
+                    //TODO add name
                     'John Doe',
                     style: AppStyles.webBodySmallSb.copyWith(
                       color: AppColors.whiteLight,

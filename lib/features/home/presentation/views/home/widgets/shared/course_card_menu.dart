@@ -67,7 +67,6 @@ class CourseCardMenu extends StatelessWidget {
                 courseName: course.name, // pass the name from course model
               ),
             );
-            // debugPrint('Share Course'),
           },
         ),
         CustomPopupMenuItem(
@@ -75,7 +74,6 @@ class CourseCardMenu extends StatelessWidget {
           title: 'Edit',
           onTap: () {
             context.pop();
-            debugPrint('Edit Course');
           },
         ),
         CustomPopupMenuItem(

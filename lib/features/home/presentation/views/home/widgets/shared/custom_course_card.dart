@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/shared/course_card_content.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/shared/course_card_decoration.dart';
@@ -11,7 +15,6 @@ class CustomCourseCard extends StatelessWidget {
   final UserRole role;
   final CourseModel course;
   final bool isMobile;
-
   const CustomCourseCard({
     super.key,
     required this.course,
@@ -25,47 +28,73 @@ class CustomCourseCard extends StatelessWidget {
     final double aspectRatio = isMobile ? (343 / 135) : (301 / 240);
     final double borderRadius = isMobile ? 15 : 20;
 
-    return AspectRatio(
-      aspectRatio: aspectRatio,
-      child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: AppColors.primaryLightHover,
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final cardWidth = constraints.maxWidth;
-            final cardHeight = constraints.maxHeight;
+    return InkWell(
+      //! nav to course details
+      onTap: () {
+        final courseId = course.id; //? ID from API
 
-            return Stack(
-              children: [
-                /// Layer 1: Background Decorations
-                CourseCardDecorations(
-                  cardWidth: cardWidth,
-                  h: cardHeight,
-                  isMobile: isMobile,
-                ),
+        if (isMobile) {
+          context.push(
+            '${RoutesName.courses}/$courseId/${RoutesName.materials}',
+            extra: CourseHeaderCardModel(
+              title: course.name,
+              instructor: course.instructor,
+            ),
+          );
+        } else {
+          final path = Uri(
+            path: '${RoutesName.courses}/$courseId/${RoutesName.materials}',
+            queryParameters: {
+              ApiKeys.name: course.name,
+              ApiKeys.instructor: course.instructor,
+            },
+          ).toString();
 
-                /// Layer 2: Management Menu (Share, Delete, etc.)
-                CourseCardMenu(
-                  cardWidth: cardWidth,
-                  cardHeight: cardHeight,
-                  role: role,
-                  isMobile: isMobile,
-                  course: course,
-                ),
+          context.go(path);
+        }
+      },
+      child: AspectRatio(
+        aspectRatio: aspectRatio,
+        child: Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: AppColors.primaryLightHover,
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final cardWidth = constraints.maxWidth;
+              final cardHeight = constraints.maxHeight;
 
-                /// Layer 3: Course Text Content
-                CourseCardContent(
-                  cardWidth: cardWidth,
-                  cardHeight: cardHeight,
-                  course: course,
-                  isMobile: isMobile,
-                ),
-              ],
-            );
-          },
+              return Stack(
+                children: [
+                  /// Layer 1: Background Decorations
+                  CourseCardDecorations(
+                    cardWidth: cardWidth,
+                    h: cardHeight,
+                    isMobile: isMobile,
+                  ),
+
+                  /// Layer 2: Management Menu (Share, Delete, etc.)
+                  CourseCardMenu(
+                    cardWidth: cardWidth,
+                    cardHeight: cardHeight,
+                    role: role,
+                    isMobile: isMobile,
+                    course: course,
+                  ),
+
+                  /// Layer 3: Course Text Content
+                  CourseCardContent(
+                    cardWidth: cardWidth,
+                    cardHeight: cardHeight,
+                    course: course,
+                    isMobile: isMobile,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

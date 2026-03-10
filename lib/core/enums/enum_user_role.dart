@@ -12,5 +12,6 @@ enum UserRole {
 }
 
 class CurrentRole {
-  static const role = UserRole.instructor;
+  //TODO form auth
+  static const role = UserRole.student;
 }
