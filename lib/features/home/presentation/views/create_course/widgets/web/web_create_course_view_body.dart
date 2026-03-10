@@ -21,7 +21,6 @@ class WebCreateCourseViewBody extends StatefulWidget {
 
 class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
     with CreateCourseLogic {
-
   @override
   void initState() {
     super.initState();
@@ -47,31 +46,32 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
         }
       },
       builder: (context, state) {
-        return CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: WebHomeHeader(),// Header
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),// Spacing
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Center(
-                  child: Text(
-                    'Create Course',
-                    style: AppStyles.webTitleMediumMd,
+        return Form(
+          key: formKey,
+          child: CustomScrollView(
+            slivers: [
+              const SliverToBoxAdapter(
+                child: WebHomeHeader(), // Header
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)), // Spacing
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Center(
+                    child: Text(
+                      'Create Course',
+                      style: AppStyles.webTitleMediumMd,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),// Spacing
-            // Forms Side by Side
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: IntrinsicHeight(
+              const SliverToBoxAdapter(child: SizedBox(height: 24)), // Spacing
+              // Forms Side by Side
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //* Basic Information Section
                       Expanded(
@@ -97,18 +97,18 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
                   ),
                 ),
               ),
-            ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),// Spacing
-            SliverToBoxAdapter(
-              // Create Course Button
-              child: CreateCourseButton(
-                isLoading: state is CreateCourseLoading,
-                onPressed: () => submitCourse(context),
+              const SliverToBoxAdapter(child: SizedBox(height: 40)), // Spacing
+              SliverToBoxAdapter(
+                // Create Course Button
+                child: CreateCourseButton(
+                  isLoading: state is CreateCourseLoading,
+                  onPressed: () => submitCourse(context),
+                ),
               ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),// Spacing
-          ],
+              const SliverToBoxAdapter(child: SizedBox(height: 40)), // Spacing
+            ],
+          ),
         );
       },
     );

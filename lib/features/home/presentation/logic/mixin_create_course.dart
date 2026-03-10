@@ -129,9 +129,7 @@ mixin CreateCourseLogic<T extends StatefulWidget> on State<T> {
   // ! Default Fields - Initial predefined classwork items
   void _addDefaultFields() {
     addDynamicField(label: 'Midterm');
-    addDynamicField(label: 'Assignment');
-    addDynamicField(label: 'Attendance');
+    addDynamicField(label: 'Assignment 1');
     addDynamicField(label: 'Quiz 1');
-    addDynamicField(label: 'Bonus');
   }
 }
