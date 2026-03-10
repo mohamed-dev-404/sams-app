@@ -57,7 +57,7 @@ class WebCourseHeaderCard extends StatelessWidget {
                       ? const SizedBox()
                       : Row(
                           children: [
-                            const SvgIcon(
+                            const CustomSvg(
                               width: 20,
                               height: 20,
                               AppIcons.iconsPerson,

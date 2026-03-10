@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sams_app/core/cache/get_storage.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/mobile/mobile_home_app_bar.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/mobile/mobile_home_view_body.dart';
 
@@ -8,13 +10,15 @@ class MobileHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      //TODO add name and imagePath
+    final name = GetStorageHelper.read<String>(CacheKeys.name);
+    final profilePicPath = GetStorageHelper.read<String>(CacheKeys.profilePic);
+
+    return Scaffold(
       appBar: MobileHomeAppBar(
-        userName: 'Mohamed Mustafa',
-        imagePath: 'https://d2hxnekkydd0t2.cloudfront.net/profiles/6999cca059fa76e5255bf86d_9b33a4.png',
+        userName: name ?? 'UnKnown',
+        imagePath: profilePicPath,
       ),
-      body: MobileHomeViewBody(),
+      body: const MobileHomeViewBody(),
     );
   }
 }

@@ -5,13 +5,16 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class AppTheme {
   AppTheme._();
-  static final _borderRadius = BorderRadius.circular(15.r);
+  static final _borderRadius = BorderRadius.circular(15);
   static ThemeData getAppTheme() {
     return ThemeData(
-      useMaterial3: true, 
+      useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.whiteLight,
-      colorSchemeSeed: AppColors.primary,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.light,
+      ),
 
       textTheme: _buildTextTheme(),
       appBarTheme: _buildAppBarTheme(),
@@ -22,13 +25,9 @@ class AppTheme {
   }
 
   static TextTheme _buildTextTheme() {
-    return TextTheme(
-      displayLarge: AppStyles.mobileTitleLargeMd.copyWith(
-        color: AppColors.primaryDark,
-      ),
-      bodyMedium: AppStyles.mobileLabelMediumRg.copyWith(
-        color: AppColors.primaryDarkHover,
-      ),
+    return ThemeData.light().textTheme.apply(
+      bodyColor: AppColors.primaryDarkHover,
+      displayColor: AppColors.primaryDark,
     );
   }
 
@@ -49,18 +48,23 @@ class AppTheme {
     return ElevatedButtonThemeData(
       style:
           ElevatedButton.styleFrom(
+            elevation: 4,
             padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
             backgroundColor: AppColors.secondary,
             foregroundColor: AppColors.whiteLight,
-            disabledBackgroundColor: AppColors.primaryLight,
-            shape: RoundedRectangleBorder(borderRadius: _borderRadius),
+            disabledBackgroundColor: AppColors.whiteHover,
+            disabledForegroundColor: AppColors.whiteDarker,
+            shape: RoundedRectangleBorder(
+              borderRadius: _borderRadius,
+            ),
             textStyle: AppStyles.mobileButtonMediumSb,
           ).copyWith(
             side: WidgetStateProperty.resolveWith(
               (states) => BorderSide(
+                width: .8,
                 color: states.contains(WidgetState.disabled)
-                    ? AppColors.secondaryLightActive
-                    : AppColors.secondary,
+                    ? AppColors.whiteActive
+                    : AppColors.secondaryLightActive,
               ),
             ),
           ),

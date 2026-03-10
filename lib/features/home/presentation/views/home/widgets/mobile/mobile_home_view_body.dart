@@ -37,9 +37,9 @@ class MobileHomeViewBody extends StatelessWidget {
             ),
           ),
           // Displays the role-based 'NewCourseCard'
-            const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 7),
+              padding: const EdgeInsets.symmetric(vertical: 7),
               child: NewCourseCard(
                 role: CurrentRole.role,
                 isMobile: true,
@@ -48,7 +48,7 @@ class MobileHomeViewBody extends StatelessWidget {
           ),
           // Displays the list of courses
           const CourseSliverList(),
-         ],
+        ],
       ),
     );
   }

@@ -1,0 +1,237 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:sams_app/core/functions/mask_email.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
+import 'package:sams_app/core/models/app_button_style_model.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/app_animated_loading_indicator.dart';
+import 'package:sams_app/core/widgets/app_button.dart';
+import 'package:sams_app/features/auth/presentation/view_models/password_reset_cubit/password_reset_cubit.dart';
+import 'package:sams_app/features/auth/presentation/view_models/password_reset_cubit/password_reset_state.dart';
+import 'package:sams_app/features/auth/presentation/views/widgets/custom_pinput_field.dart';
+import 'package:sams_app/features/auth/presentation/views/widgets/mobile_auth_header.dart';
+import 'package:sams_app/features/auth/presentation/views/widgets/otp_timer.dart';
+
+class VerifyOtpMobileLayout extends StatefulWidget {
+  const VerifyOtpMobileLayout({super.key});
+
+  @override
+  State<VerifyOtpMobileLayout> createState() => _VerifyOtpMobileLayoutState();
+}
+
+class _VerifyOtpMobileLayoutState extends State<VerifyOtpMobileLayout> {
+  late PasswordResetCubit cubit;
+
+  late final TextEditingController _otpController;
+  final _formKey = GlobalKey<FormState>();
+
+  int _timerKey = 0; // Increment this to restart the timer
+  bool _canResend = false;
+
+  final ValueNotifier<bool> _isOtpValid = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    _otpController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    cubit = context.read<PasswordResetCubit>();
+
+    final maskedEmail = maskEmail(cubit.state.email ?? '');
+
+    return BlocConsumer<PasswordResetCubit, PasswordResetState>(
+      listener: (context, state) {
+        if (state.status == PasswordResetStatus.codeResent) {
+          setState(() {
+            _canResend = false;
+            _timerKey++; // This forces the OtpTimer to restart
+          });
+          AppSnackBar.success(
+            context,
+            'Code successfully resent! Please check your inbox and spam folder.',
+            duration: const Duration(seconds: 4),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                spacing: 20,
+                children: [
+                  const MobileAuthHeader(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        //* Header Section
+                        _buildHeaderSection(maskedEmail),
+
+                        const Gap(32),
+
+                        //* OTP Field
+                        _buildOtpField(),
+
+                        const Gap(24),
+
+                        //* Resend Column
+                        _buildResendColumn(),
+
+                        const Gap(60),
+
+                        //* Submit Button or Loading Indicator
+                        (state.status == PasswordResetStatus.loading)
+                            ? const AppAnimatedLoadingIndicator()
+                            : _buildSubmitButton(screenWidth),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeaderSection(String email) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Check your email',
+          style: AppStyles.mobileTitleLargeMd.copyWith(
+            color: AppColors.primaryDarkHover,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Text.rich(
+          textAlign: TextAlign.center,
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'We sent an OTP to ',
+                style: AppStyles.mobileBodySmallRg.copyWith(
+                  color: AppColors.primaryDark,
+                ),
+              ),
+              TextSpan(
+                text: email,
+                style: AppStyles.mobileBodySmallRg.copyWith(
+                  color: AppColors.primaryDark,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOtpField() {
+    return CustomPinputField(
+      controller: _otpController,
+      onValidationChanged: (isValid) {
+        setState(() {
+          _isOtpValid.value = isValid; // Only rebuilds the listener
+        });
+      },
+    );
+  }
+
+  Widget _buildResendColumn() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Adding a Key makes the timer restart when _timerKey changes
+        OtpTimer(
+          key: ValueKey(_timerKey),
+          durationInSeconds: 60,
+          onTimerFinished: () => setState(() => _canResend = true),
+        ),
+        const Gap(4),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'Didn’t get a code? ',
+                style: AppStyles.mobileBodyMediumRg.copyWith(
+                  color: AppColors.primaryDark,
+                ),
+              ),
+              WidgetSpan(
+                child: GestureDetector(
+                  onTap: _canResend ? _handleResend : null,
+                  child: Text(
+                    'Resend',
+                    style: AppStyles.mobileBodyMediumRg.copyWith(
+                      color: _canResend ? AppColors.primaryDark : Colors.grey,
+                      fontWeight: FontWeight.w600, //
+                      decoration: _canResend
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _handleResend() {
+    cubit.resendCode();
+  }
+
+  Widget _buildSubmitButton(double screenWidth) {
+    // ValueListenableBuilder prevents the whole page from rebuilding
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isOtpValid,
+      builder: (context, isValid, child) {
+        return AppButton(
+          model: AppButtonStyleModel(
+            label: 'Continue',
+            width: screenWidth * .56,
+            onPressed: isValid
+                ? () {
+                    // Trigger Cubit with _otpController.text
+                    _submitForm();
+                  }
+                : null,
+          ),
+        );
+      },
+    );
+  }
+
+  void _submitForm() {
+    final bool isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      cubit.verifyOtp(otp: _otpController.text.trim());
+    }
+  }
+}

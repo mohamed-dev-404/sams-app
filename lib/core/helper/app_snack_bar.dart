@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
 
 /// Available SnackBar message types.
 /// Each type controls the color and icon.
@@ -27,7 +28,7 @@ class AppSnackBar {
     // Resolve style based on SnackBar type
     switch (type) {
       case SnackBarType.error:
-        color = Colors.redAccent;
+        color = AppColors.redActive;
         icon = Icons.error_outline;
         break;
       case SnackBarType.warning:
@@ -39,7 +40,7 @@ class AppSnackBar {
         icon = Icons.info_outline;
         break;
       case SnackBarType.success:
-        color = Colors.green;
+        color = AppColors.greenActive;
         icon = Icons.check_circle_outline;
         break;
     }
@@ -69,10 +70,9 @@ class AppSnackBar {
                   Expanded(
                     child: Text(
                       text,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.white),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.white),
                     ),
                   ),
                 ],
@@ -88,32 +88,28 @@ class AppSnackBar {
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
-  }) =>
-      show(context, message, type: SnackBarType.success, duration: duration);
+  }) => show(context, message, type: SnackBarType.success, duration: duration);
 
   /// Shows an error SnackBar
   static Future<void> error(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
-  }) =>
-      show(context, message, type: SnackBarType.error, duration: duration);
+  }) => show(context, message, type: SnackBarType.error, duration: duration);
 
   /// Shows a warning SnackBar
   static Future<void> warning(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
-  }) =>
-      show(context, message, type: SnackBarType.warning, duration: duration);
+  }) => show(context, message, type: SnackBarType.warning, duration: duration);
 
   /// Shows an info SnackBar
   static Future<void> info(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
-  }) =>
-      show(context, message, type: SnackBarType.info, duration: duration);
+  }) => show(context, message, type: SnackBarType.info, duration: duration);
 }
 
 /*

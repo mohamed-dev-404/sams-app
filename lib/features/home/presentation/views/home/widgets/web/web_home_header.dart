@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/cache/get_storage.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
@@ -12,6 +14,8 @@ class WebHomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    final name = GetStorageHelper.read<String>(CacheKeys.name);
+    final profilePicPath = GetStorageHelper.read<String>(CacheKeys.profilePic);
     return Container(
       height: height * 0.12,
       padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -49,26 +53,17 @@ class WebHomeHeader extends StatelessWidget {
                 onTap: () {
                   context.pushNamed(RoutesName.profile);
                 },
-                child:
-                    //TODO Add image path
-                    // imagePath == null
-                    //     ? SvgPicture.asset(
-                    //         AppIcons.iconsHomeProfileHeader,
-                    //         colorFilter: const ColorFilter.mode(
-                    //           AppColors.whiteLight,
-                    //           BlendMode.srcIn,
-                    //         ),
-                    //       )
-                    //     : CircleAvatar(
-                    //         backgroundImage: NetworkImage(imagePath!),
-                    //       ),
-                    SvgPicture.asset(
-                      AppIcons.iconsHomeProfileHeader,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.whiteLight,
-                        BlendMode.srcIn,
+                child: profilePicPath == null
+                    ? SvgPicture.asset(
+                        AppIcons.iconsHomeProfileHeader,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.whiteLight,
+                          BlendMode.srcIn,
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(profilePicPath),
                       ),
-                    ),
               ),
               const SizedBox(width: 9),
 
@@ -83,8 +78,7 @@ class WebHomeHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    //TODO add name
-                    'John Doe',
+                    name ?? 'UnKnown',
                     style: AppStyles.webBodySmallSb.copyWith(
                       color: AppColors.whiteLight,
                     ),
