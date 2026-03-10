@@ -1,17 +1,17 @@
+  //! --- JSON KEYS (The names that Dio sends and receives) ---
+
 abstract class ApiKeys {
   ApiKeys._();
 
-  //! --- JSON KEYS (The names that Dio sends and receives) ---
-
-  //? Common Keys
-  static const String status = 'status';
+  //? --- Common Response & General Keys ---
   static const String data = 'data';
-  static const String message = 'message';
-  static const String validationErrors = 'validationErrors';
+  static const String message = 'message';  
+  static const String id = '_id';
+  static const String status = 'status';
+  static const String validationErrors = 'validationErrors'; 
+  static const String name = 'name';
 
   //? User Model Keys
-  static const String id = '_id';
-  static const String name = 'name';
   static const String academicEmail = 'academicEmail';
   static const String academicId = 'academicId';
   static const String password = 'password';
@@ -35,6 +35,24 @@ abstract class ApiKeys {
   static const String roleId = 'roleId';
   static const String search = 'search';
 
+  //? --- Image & S3 Upload Keys ---
+  static const String originalFileName = 'originalFileName';
+  static const String contentType = 'contentType';
+  static const String fileSize = 'fileSize';
+  static const String key = 'key';
+  static const String uploadUrl = 'uploadUrl';
+  static const String contentTypeHeader = 'Content-Type';
+  static const String contentLengthHeader = 'Content-Length';
+
+  //? --- Course & Home Keys ---
+  static const String academicCourseCode = 'academicCourseCode';
+  static const String instructor = 'instructor';
+  static const String courseInvitationCode = 'courseInvitationCode';
+  static const String totalGrades = 'totalGrades';
+  static const String finalExam = 'finalExam';
+  static const String classwork = 'classwork';
+  static const String points = 'points';
+
   //? Auth Keys
   static const String authorization = 'Authorization';
   static const String user = 'user';
@@ -50,23 +68,7 @@ abstract class ApiKeys {
   static const String student = 'student';
   static const String confirmPassword = 'confirmPassword';
 
-  // static String errorMessage = 'businessErrorDescription';
-  // static String email = 'email';
-  // static String password = 'password';
-  // static String confirmPassword = 'confirmPassword';
-  // static String newPassword = 'newPassword';
-  // static String firstName = 'firstName';
-  // static String lastName = 'lastName';
-  // static String phone = 'phone';
-  // static String token = 'token';
-  // static String tempToken = 'tempToken';
-  // static String authorities = 'authorities';
-  // static String authorization = 'Authorization';
-  // static String name = 'name';
-  // static String category = 'category';
-  // static String description = 'description';
-  // static String file = 'file';
-  // ... more keys
+
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---

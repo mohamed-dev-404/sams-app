@@ -8,6 +8,7 @@ class CustomPopupMenuItem extends PopupMenuItem<String> {
     required String value,
     required String title,
     required VoidCallback onTap,
+    TextStyle? textStyle,
   }) : super(
          value: value,
          enabled: false,
@@ -20,13 +21,15 @@ class CustomPopupMenuItem extends PopupMenuItem<String> {
              width: double.infinity,
              padding: const EdgeInsets.symmetric(
                horizontal: 12,
-               vertical: 16,
+               vertical: 10,
              ),
              child: Text(
                title,
-               style: AppStyles.mobileBodySmallMd.copyWith(
-                 color: AppColors.primaryDarkHover,
-               ),
+               style:
+                   textStyle ??
+                   AppStyles.mobileBodySmallMd.copyWith(
+                     color: AppColors.primaryDarkHover,
+                   ),
              ),
            ),
          ),

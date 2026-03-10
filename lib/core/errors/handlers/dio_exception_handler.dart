@@ -56,7 +56,7 @@ void handleDioExceptions(DioException e) {
 
 //? handle Connection Error type
 String _handleConnectionError(DioException e) {
-  if (e.message?.contains('SocketException') ?? false) {
+  if (e.error?.toString().contains('SocketException') ?? false) {
     return 'No internet connection. Please check your network';
   }
   return 'Connection error. Please try again';
@@ -65,12 +65,11 @@ String _handleConnectionError(DioException e) {
 
 //? handle Unknown Error type
 String _handleUnknownError(DioException e) {
-  if (e.message?.contains('SocketException') ?? false) {
+  if (e.error?.toString().contains('SocketException') ?? false) {
     return 'No internet connection. Please check your network';
   }
-  return e.message ?? 'Unknown error occurred';
+  return e.error?.toString() ?? 'An unexpected error occurred. Please try again';
 }
-
 
 //? handle Bad Response type
 String _handleBadResponse(DioException e) {
