@@ -113,7 +113,7 @@ class AppStyles {
   );
 
   static TextStyle get mobileBodyXlargeRg => TextStyle(
-    fontSize: 20.sp.clamp(16, 22),
+    fontSize: 20.sp.clamp(13, 22),
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
   );

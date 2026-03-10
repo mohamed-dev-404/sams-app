@@ -25,7 +25,7 @@ class CourseCardContent extends StatelessWidget {
       left: cardWidth * 0.10,
       right: cardWidth * 0.05,
       top: cardHeight * 0.2,
-      bottom: cardHeight * 0.08,
+      bottom: cardHeight * 0.25,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +37,6 @@ class CourseCardContent extends StatelessWidget {
             w: cardWidth,
             h: cardHeight,
           ),
-          SizedBox(height: cardHeight * (isMobile ? 0.08 : 0.04)),
           InstructorRow(
             course: course,
             w: cardWidth,

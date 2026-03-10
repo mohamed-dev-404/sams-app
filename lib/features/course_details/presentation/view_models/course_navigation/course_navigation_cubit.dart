@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:sams_app/features/home/presentation/views/widgets/web_home_course_card.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 
 part 'course_navigation_state.dart';
 
@@ -17,14 +18,14 @@ class CourseNavigationCubit extends Cubit<int> {
   CourseNavigationCubit({required this.userRole}) : super(0);
 
   final List<CourseTabItem> _allTabs = [
-    CourseTabItem(title: 'Materials', path: 'materials'),
-    CourseTabItem(title: 'Assignments', path: 'assignments'),
-    CourseTabItem(title: 'Announcements', path: 'announcements'),
-    CourseTabItem(title: 'Grades', path: 'grades'),
-    CourseTabItem(title: 'Quizzes', path: 'quizzes'),
-    CourseTabItem(title: 'Live Sessions', path: 'liveSessions'),
-    CourseTabItem(title: 'Course Code', path: 'courseCode'),
-    CourseTabItem(title: 'Members List', path: 'membersList'),
+    CourseTabItem(title: 'Materials', path: RoutesName.materials),
+    CourseTabItem(title: 'Assignments', path: RoutesName.assignments),
+    CourseTabItem(title: 'Announcements', path: RoutesName.announcements),
+    CourseTabItem(title: 'Grades', path: RoutesName.grades),
+    CourseTabItem(title: 'Quizzes', path: RoutesName.quizzes),
+    CourseTabItem(title: 'Live Sessions', path: RoutesName.liveSessions),
+    CourseTabItem(title: 'Course Code', path: RoutesName.courseCode),
+    CourseTabItem(title: 'Members List', path: RoutesName.membersList),
   ];
 
   List<CourseTabItem> get visibleTabs {

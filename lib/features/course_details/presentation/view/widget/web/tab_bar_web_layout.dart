@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
-import 'package:sams_app/core/widgets/web_coures_header_card.dart';
+import 'package:sams_app/core/widgets/web_course_header_card.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
@@ -48,8 +49,8 @@ class TabBarWebLayout extends StatelessWidget {
                 final path = Uri(
                   path: '${RoutesName.courses}/$courseId/$targetPath',
                   queryParameters: {
-                    'title': headerModel.title,
-                    'instructor': headerModel.instructor,
+                    ApiKeys.name: headerModel.title,
+                    ApiKeys.instructor: headerModel.instructor,
                   },
                 ).toString();
 

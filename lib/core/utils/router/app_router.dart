@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/core/utils/router/build_route.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
@@ -45,7 +46,7 @@ class AppRouter {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
               onPressed: () {
-                context.goNamed(RoutesName.home);
+                context.goNamed(RoutesName.courses);
               },
               child: const Text('Auth to Home'),
             ),
@@ -57,8 +58,8 @@ class AppRouter {
       //* HOME ROUTES
       // Home view
       buildRoute(
-        name: RoutesName.home,
-        path: RoutesName.home,
+        name: RoutesName.courses,
+        path: RoutesName.courses,
         builder: (context, state) => BlocProvider(
           create: (context) =>
               HomeCubit(getIt.get<HomeRepo>(), role: CurrentRole.role)
@@ -92,12 +93,6 @@ class AppRouter {
         ),
       ),
 
-      buildRoute(
-        name: RoutesName.courses,
-        path: RoutesName.courses,
-        builder: (context, state) => const HomeView(),
-      ),
-
       // The ShellRoute wraps the layout around the changing tabs
       ShellRoute(
         builder: (context, state, child) {
@@ -110,9 +105,10 @@ class AppRouter {
           final headerModel =
               extraModel ??
               CourseHeaderCardModel(
-                title: state.uri.queryParameters['title'] ?? 'Unknown Course',
+                title:
+                    state.uri.queryParameters[ApiKeys.name] ?? 'Unknown Course',
                 instructor:
-                    state.uri.queryParameters['instructor'] ??
+                    state.uri.queryParameters[ApiKeys.instructor] ??
                     'Unknown Instructor',
               );
 
