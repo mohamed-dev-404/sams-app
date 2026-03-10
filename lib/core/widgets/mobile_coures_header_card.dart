@@ -50,7 +50,7 @@ class MobileCoursesHeaderCard extends StatelessWidget {
                 )
               : Row(
                   children: [
-                    const SvgIcon(
+                    const CustomSvg(
                       width: 19,
                       height: 19,
                       AppIcons.iconsPerson,
