@@ -4,10 +4,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_state.dart';
@@ -15,9 +17,8 @@ import 'package:sams_app/features/profile/presentation/views/profile/widgets/sha
 import 'package:sams_app/features/profile/presentation/views/profile/widgets/shared/profile_pic_section.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-//* 
+//*
 class ProfileMainLayoutBody extends StatefulWidget {
-
   const ProfileMainLayoutBody({
     super.key,
   });
@@ -27,10 +28,9 @@ class ProfileMainLayoutBody extends StatefulWidget {
 }
 
 class _ProfileMainLayoutBodyState extends State<ProfileMainLayoutBody> {
-  
   StreamSubscription? _messageSubscription;
 
- @override
+  @override
   void initState() {
     super.initState();
     _messageSubscription = context.read<ProfileCubit>().messageStream.listen((
@@ -55,14 +55,29 @@ class _ProfileMainLayoutBodyState extends State<ProfileMainLayoutBody> {
       listenWhen: (previous, current) =>
           current is ProfileFailure ||
           current is UploadProfilePicSuccess ||
-          current is UploadProfilePicFailure,
+          current is UploadProfilePicFailure ||
+          current is LogoutSuccess ||
+          current is LogoutFailure,
+
       listener: (context, state) {
+        if (state is LogoutSuccess) {
+          context.goNamed(RoutesName.login);
+        }
+
+        if (state is LogoutFailure) {
+
+          AppSnackBar.error(context, state.errMessage);
+        }
+
         if (state is ProfileFailure) {
           AppSnackBar.error(context, state.errMessage);
         }
 
         if (state is UploadProfilePicSuccess) {
-          AppSnackBar.success(context, 'Your profile picture Updated successfully ✓' );
+          AppSnackBar.success(
+            context,
+            'Your profile picture Updated successfully ✓',
+          );
         }
 
         if (state is UploadProfilePicFailure) {
@@ -71,7 +86,7 @@ class _ProfileMainLayoutBodyState extends State<ProfileMainLayoutBody> {
       },
       buildWhen: (previous, current) => current is! ProfileActionState,
       builder: (context, state) {
-         final bool isLoading = state is! ProfileSuccess;
+        final bool isLoading = state is! ProfileSuccess;
         final user = state is ProfileSuccess ? state.userModel : _dummyUser;
         if (state is ProfileSuccess) {
           return Stack(
@@ -178,14 +193,14 @@ class _ProfileMainLayoutBodyState extends State<ProfileMainLayoutBody> {
         );
       },
     );
-  } 
+  }
 
   /// Dummy model used only to let Skeletonizer draw UI bones
   UserModel get _dummyUser => const UserModel(
-        id: 'dummy-id',
-        name: 'User Full Name', 
-        academicEmail: 'username@academic.edu.eg', 
-        academicId: '202XXXXXXX', 
-        profilePic: '',
-      );
+    id: 'dummy-id',
+    name: 'User Full Name',
+    academicEmail: 'username@academic.edu.eg',
+    academicId: '202XXXXXXX',
+    profilePic: '',
+  );
 }
