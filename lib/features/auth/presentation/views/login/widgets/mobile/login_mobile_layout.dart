@@ -90,7 +90,7 @@ class _LoginMobileLayoutState extends State<LoginMobileLayout> {
                       BlocBuilder<LoginCubit, LoginState>(
                         builder: (context, state) {
                           if (state is LoginLoading) {
-                            return const AppAnimatedLoadingIndicator();
+                            return const AppAnimatedLoadingIndicator(size: 35);
                           }
                           return _buildButtons(screenWidth);
                         },
