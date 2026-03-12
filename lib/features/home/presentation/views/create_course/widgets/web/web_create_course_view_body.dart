@@ -91,6 +91,11 @@ class _WebCreateCourseViewBodyState extends State<WebCreateCourseViewBody>
                           limit: totalClassworkLimit,
                           onAddField: addDynamicField,
                           onRemoveField: removeDynamicField,
+                          status: gradeStatus,
+                          totalInput:
+                              double.tryParse(totalGradeController.text) ?? 0,
+                          finalInput:
+                              double.tryParse(finalExamController.text) ?? 0,
                         ),
                       ),
                     ],

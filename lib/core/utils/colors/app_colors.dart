@@ -88,3 +88,46 @@ class AppColors {
   static const Color greenDarkActive = Color(0xFF09574A);
   static const Color greenDarker = Color(0xFF074439);
 }
+
+
+//! ───────────────────────── Status Colors ─────────────────────────
+
+class StatusColors {
+  StatusColors._();
+
+  //? Grey (Neutral / Missing Data)
+  static const Color greyLight = Color(0xFFF2F2F2);
+  static const Color grey = Color(0xFF9E9E9E); // Colors.grey
+  static const Color greyDark = Color(0xFF616161);
+  static final Color greyTransparent = const Color(0xFF9E9E9E).withAlpha(20);
+
+  //? Orange (Warning / Pending)
+  static const Color orangeLight = Color(0xFFFFF3E0);
+  static const Color orange = Color(0xFFFF9800); // Colors.orange
+  static const Color orangeDark = Color(0xFFF57C00);
+  static final Color orangeTransparent = const Color(0xFFFF9800).withAlpha(20);
+
+  //? Green (Success / Done)
+  static const Color greenLight = AppColors.greenLight;
+  static const Color green = Color(0xFF4CAF50); // Colors.green
+  static const Color greenDark = AppColors.greenDark;
+  static final Color greenTransparent = const Color(0xFF4CAF50).withAlpha(20);
+
+  //? Red (Error / Exceeded)
+  static const Color redLight = AppColors.redLight;
+  static const Color red = Color(0xFFF44336); // Colors.red
+  static const Color redDark = AppColors.redDark;
+  static final Color redTransparent = const Color(0xFFF44336).withAlpha(20);
+
+  //? Blue (Info / Active)
+  static const Color blueLight = Color(0xFFE3F2FD);
+  static const Color blue = Color(0xFF2196F3);
+  static const Color blueDark = Color(0xFF1976D2);
+  static final Color blueTransparent = const Color(0xFF2196F3).withAlpha(20);
+
+  //? Yellow (Attention / Note)
+  static const Color yellowLight = Color(0xFFFFFDE7);
+  static const Color yellow = Color(0xFFFFEB3B);
+  static const Color yellowDark = Color(0xFFFBC02D);
+  static final Color yellowTransparent = const Color(0xFFFFEB3B).withAlpha(20);
+}
