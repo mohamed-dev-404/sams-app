@@ -49,3 +49,18 @@ final class UploadProfilePicFailure extends ProfileActionState {
   final String errMessage;
   UploadProfilePicFailure(this.errMessage);
 }
+
+//? Emitted while logging out.
+final class LogoutLoading extends ProfileActionState {}
+
+//* Emitted when logout is successful.
+final class LogoutSuccess extends ProfileActionState {
+  final String message;
+  LogoutSuccess(this.message);
+}
+
+//! Emitted when logout fails.
+final class LogoutFailure extends ProfileActionState {
+  final String errMessage;
+  LogoutFailure(this.errMessage);
+}

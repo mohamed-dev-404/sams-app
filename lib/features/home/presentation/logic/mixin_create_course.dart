@@ -5,6 +5,7 @@ import 'package:sams_app/features/home/data/models/classwork_model.dart';
 import 'package:sams_app/features/home/data/models/create_course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 
+//* Mixin for handling course creation logic
 mixin CreateCourseLogic<T extends StatefulWidget> on State<T> {
   // ! Controllers - Main form controllers
   final TextEditingController totalGradeController = TextEditingController();
@@ -129,9 +130,34 @@ mixin CreateCourseLogic<T extends StatefulWidget> on State<T> {
   // ! Default Fields - Initial predefined classwork items
   void _addDefaultFields() {
     addDynamicField(label: 'Midterm');
-    addDynamicField(label: 'Assignment');
-    addDynamicField(label: 'Attendance');
+    addDynamicField(label: 'Assignment 1');
     addDynamicField(label: 'Quiz 1');
-    addDynamicField(label: 'Bonus');
   }
+
+//! Grade Status - Determines the current state of grade distribution for UI feedback
+GradeStatus get gradeStatus {
+  final double total = double.tryParse(totalGradeController.text) ?? 0;
+  final double finalExam = double.tryParse(finalExamController.text) ?? 0;
+
+  // 1. Initial State: Missing core grade information
+  if (total <= 0 || finalExam <= 0) return GradeStatus.remaining;
+
+  // 2. Edge Case: Final exam equals total grade and no classwork points assigned yet
+  if (total == finalExam &&
+      classworkFields.every(
+        (f) => (double.tryParse(f['gradeController'].text) ?? 0) == 0,
+      )) {
+    return GradeStatus.remaining;
+  }
+
+  // 3. Normal Distribution States
+  if (remainingPoints > 0) return GradeStatus.remaining; // Still points left to assign
+  if (remainingPoints.abs() <= 0.001) return GradeStatus.done; // Perfectly balanced
+
+  // 4. Error State: Points exceeded total limit
+  return GradeStatus.exceeded;
 }
+}
+
+//* Grade Status Enum - Represents the state of grade distribution for UI feedback
+enum GradeStatus { remaining, done, exceeded }

@@ -52,6 +52,7 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: formKey,
+           // autovalidateMode: AutovalidateMode.onUserInteraction,
             child: CustomScrollView(
               //? CustomScrollView is used to ensure the form remains accessible even when the keyboard is visible or fields are dynamically added.
               slivers: [
@@ -74,6 +75,9 @@ class _MobileCreateCourseViewBodyState extends State<MobileCreateCourseViewBody>
                     limit: totalClassworkLimit,
                     onAddField: addDynamicField,
                     onRemoveField: removeDynamicField,
+                    status: gradeStatus,
+                    totalInput: double.tryParse(totalGradeController.text) ?? 0,
+                    finalInput: double.tryParse(finalExamController.text) ?? 0,
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 40)),

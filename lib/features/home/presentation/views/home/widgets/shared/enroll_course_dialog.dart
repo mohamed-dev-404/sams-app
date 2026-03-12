@@ -22,7 +22,7 @@ class EnrollCourseDialog extends StatefulWidget {
 
 class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
   final TextEditingController _inviteCodeController = TextEditingController();
-
+  final GlobalKey<FormState> _enrollformKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final bool isMobile = SizeConfig.isMobile(context);
@@ -46,23 +46,27 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
         color: AppColors.primaryDarkHover,
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppTextField(
-            prefixIcon: const Icon(Icons.fact_check),
-            hintText: 'D3dfx5',
-            textFieldType: TextFieldType.normal,
-            controller: _inviteCodeController,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'to sign in with a course code\n\n• Instructor must share the course code with you.\n\n• Use a class code with ( 6 ) letters or numbers without spaces or symbols.',
-            style: AppStyles.mobileBodyMediumRg.copyWith(
-              color: AppColors.primaryDark,
+      content: Form(
+        key: _enrollformKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextField(
+              prefixIcon: const Icon(Icons.fact_check),
+              hintText: 'D3dfx5',
+              textFieldType: TextFieldType.normal,
+              controller: _inviteCodeController,
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              'to sign in with a course code\n\n• Instructor must share the course code with you.\n\n• Use a class code with ( 6 ) letters or numbers without spaces or symbols.',
+              style: AppStyles.mobileBodyMediumRg.copyWith(
+                color: AppColors.primaryDark,
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         Center(
@@ -98,6 +102,7 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
 
   //* Join course
   void _onJoinPressed(BuildContext context) {
+    if (!_enrollformKey.currentState!.validate()) return;
     final code = _inviteCodeController.text.trim();
     if (code.isNotEmpty) {
       context.read<HomeCubit>().joinCourse(

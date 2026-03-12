@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/cache/get_storage.dart';
+import 'package:sams_app/core/extentions/split_first_two_strings.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/constants/cache_keys.dart';
@@ -53,7 +54,7 @@ class WebHomeHeader extends StatelessWidget {
                 onTap: () {
                   context.pushNamed(RoutesName.profile);
                 },
-                child: profilePicPath == null
+                child: (profilePicPath == null || profilePicPath.isEmpty)
                     ? SvgPicture.asset(
                         AppIcons.iconsHomeProfileHeader,
                         colorFilter: const ColorFilter.mode(
@@ -78,7 +79,7 @@ class WebHomeHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    name ?? 'UnKnown',
+                    name == null ? 'unknown' : name.firstTwoNames,
                     style: AppStyles.webBodySmallSb.copyWith(
                       color: AppColors.whiteLight,
                     ),

@@ -27,14 +27,23 @@ class WebMainCard extends StatelessWidget {
                     Positioned(
                       top: h * 0.05,
                       right: w * 0.05,
-                      child: GestureDetector(
-                        onTap: model.onTap,
-                        child: SvgPicture.asset(
+                      child: IconButton(
+                        onPressed: model.onTap,
+                        splashRadius: 24,
+                        icon: SvgPicture.asset(
                           AppIcons.iconsMore,
                           width: w * 0.1,
                           height: h * 0.1,
                         ),
                       ),
+                      // child: GestureDetector(
+                      //   onTap: model.onTap,
+                      //   child: SvgPicture.asset(
+                      //     AppIcons.iconsMore,
+                      //     width: w * 0.1,
+                      //     height: h * 0.1,
+                      //   ),
+                      // ),
                     ),
 
                     Positioned(

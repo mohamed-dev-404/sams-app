@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sams_app/core/cache/get_storage.dart';
+import 'package:sams_app/core/cache/secure_storage.dart';
 import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
@@ -76,6 +78,26 @@ class ProfileCubit extends HydratedCubit<ProfileState>
       },
       (user) {
         emit(UploadProfilePicSuccess(user));
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    emit(LogoutLoading());
+
+    final result = await profileRepo.logout();
+
+    await result.fold(
+      (failure) async {
+        emit(LogoutFailure(failure));
+      },
+      (successMsg) async {
+        //  Clear all cached data and tokens on logout
+        await SecureStorageService.instance.clearAll();
+        await GetStorageHelper.erase();
+
+        
+        emit(LogoutSuccess(successMsg));
       },
     );
   }

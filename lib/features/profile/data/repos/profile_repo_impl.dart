@@ -97,4 +97,18 @@ class ProfileRepoImpl extends ProfileRepo {
   
     return UserModel.fromMap(response[ApiKeys.data]);
   }
+
+// POST → logout user and invalidate session
+  @override
+  Future<Either<String, String>> logout() async {
+    try {
+      final response = await api.post(EndPoints.logout);
+
+      return Right(response[ApiKeys.message] ?? 'Logged out successfully');
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }

@@ -170,7 +170,10 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
         shape: BoxShape.circle,
       ),
       child: const Center(
-        child: CircularProgressIndicator(color: Colors.white),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: AppColors.white,
+        ),
       ),
     );
   }
@@ -217,7 +220,6 @@ class _ProfilePicSectionState extends State<ProfilePicSection> {
         ),
       );
     }
-
     return _buildDefaultProfileIcon();
   }
 

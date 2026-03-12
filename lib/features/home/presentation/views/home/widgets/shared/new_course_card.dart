@@ -36,8 +36,8 @@ class NewCourseCard extends StatelessWidget {
               borderType: BorderType.RRect,
               radius: Radius.circular(isMobile ? 15 : 20),
               child: Container(
-                width: cardWidth,
-                height: cardHeight,
+                width: double.infinity,
+                height: double.infinity,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                   color: AppColors.primaryLightHover,
@@ -74,7 +74,7 @@ class NewCourseCard extends StatelessWidget {
     }
   }
 
-//! Build add icon in the center 
+  //! Build add icon in the center
   Widget _buildAddIcon(double cardHeight, bool isMobile) {
     return Center(
       child: isMobile
@@ -97,7 +97,7 @@ class NewCourseCard extends StatelessWidget {
     );
   }
 
-//! Build top corner decoration
+  //! Build top corner decoration
   Widget _buildTopCornerDecoration(double cardHeight) {
     return Positioned(
       top: 0,

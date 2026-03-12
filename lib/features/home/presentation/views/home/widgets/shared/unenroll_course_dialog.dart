@@ -42,13 +42,13 @@ class UnenrollCourseDialog extends StatelessWidget {
       ),
       title: Text(
         'Unenroll from $courseName?',
-        // textAlign: TextAlign.center,
+        textAlign: TextAlign.center,
       ),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
         color: AppColors.primaryDarkHover,
       ),
       content: Text(
-        'You will be removed from this class.\n\nAll your files will remain in Google Drive.',
+        'Are you sure you want to unenroll from $courseName?\n\n You will lose access to all course materials and progress.',
         style: AppStyles.mobileBodyMediumRg.copyWith(
           color: AppColors.primaryDark,
         ),

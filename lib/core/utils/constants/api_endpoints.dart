@@ -1,7 +1,6 @@
 class EndPoints {
   EndPoints._();
 
-
   //! EndPoints
 
   //? --- Auth  --- ;
@@ -12,6 +11,7 @@ class EndPoints {
   static String verifyOTP = 'auth/verify-otp';
   static String resetPassword = 'auth/reset-password';
   static String resendOTP = 'auth/resend-code';
+  static const String logout = 'auth/logout';
 
   //? --- Home  --- ;
   //* Instructor endpoints

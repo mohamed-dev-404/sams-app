@@ -72,7 +72,7 @@ class _CoursesSliverGridState extends State<CoursesSliverGrid> {
               ),
               //? dynamic Grid layout optimized for Web/Tablet
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 320,
+                maxCrossAxisExtent: 350,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 mainAxisExtent: 200,
