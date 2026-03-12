@@ -19,17 +19,7 @@ class LoginView extends StatelessWidget {
         if (state is LoginFailure) {
           AppSnackBar.error(context, state.errorMessage);
         } else if (state is LoginSuccess) {
-          // final at = await SecureStorageService.instance.getAccessToken();
-          // final email = await GetStorageHelper.read(CacheKeys.academicEmail);
-          // final name = await GetStorageHelper.read(CacheKeys.name);
-          // final role = await GetStorageHelper.read(CacheKeys.role);
-          // final isStudent = await GetStorageHelper.read(CacheKeys.isStudent);
-          // log(at!);
-          // log(email);
-          // log(name);
-          // log(role);
-          // log(isStudent.toString());
-          context.goNamed(RoutesName.courses); //todo: should navigate to home
+          context.goNamed(RoutesName.courses);
         }
       },
       builder: (context, state) {

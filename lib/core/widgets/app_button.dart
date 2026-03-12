@@ -1,4 +1,3 @@
-//todo shared button widget used in the app
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
