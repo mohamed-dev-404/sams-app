@@ -88,7 +88,7 @@ class _CourseSliverListState extends State<CourseSliverList> {
           return const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(child: AppAnimatedLoadingIndicator(size: 35)),
+              child: Center(child: AppAnimatedLoadingIndicator()),
             ),
           );
         }
