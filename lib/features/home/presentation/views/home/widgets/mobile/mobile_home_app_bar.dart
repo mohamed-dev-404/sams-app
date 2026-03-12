@@ -51,7 +51,7 @@ class MobileHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onTap: () {
                         context.pushNamed(RoutesName.profile);
                       },
-                      child: imagePath == null
+                      child: (imagePath == null || imagePath!.isEmpty)
                           ? SvgPicture.asset(
                               AppIcons.iconsHomeProfileHeader,
                             )
