@@ -54,6 +54,7 @@ class LogoutDialog extends StatelessWidget {
           children: [
             Expanded(
               child: CustomAppButton(
+                height:40,
                 label: 'Cancel',
                 textColor: AppColors.primaryDark,
                 backgroundColor: AppColors.white,
@@ -67,6 +68,7 @@ class LogoutDialog extends StatelessWidget {
 
             Expanded(
               child: CustomAppButton(
+                height:40,
                 label: 'Logout',
                 textColor: AppColors.whiteLight,
                 backgroundColor: AppColors.red,

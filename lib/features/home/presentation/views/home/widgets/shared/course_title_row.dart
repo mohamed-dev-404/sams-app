@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 
@@ -8,6 +9,7 @@ class CourseTitleRow extends StatelessWidget {
   final CourseModel course;
   final bool isMobile;
   final double w, h;
+   
 
   const CourseTitleRow({
     super.key,
@@ -18,14 +20,15 @@ class CourseTitleRow extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+   final int titleMaxLength = SizeConfig.isMobile(context) ? 30 : 24;
     return Flexible(
-      flex: isMobile ? 2 : 3,
+      flex: 2,
       child: Container(
         width: w * 0.79,
         height: h,
-        alignment: Alignment.centerLeft,
+        alignment: isMobile ? Alignment.centerLeft : Alignment.topLeft,
         child: RichText(
-          maxLines: isMobile ? 2 : 3,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
             style: isMobile
@@ -38,7 +41,7 @@ class CourseTitleRow extends StatelessWidget {
                   ),
             children: [
               TextSpan(
-                text: course.name,
+                text: course.name.length > titleMaxLength ? '${course.name.substring(0, titleMaxLength)}...' : course.name,
               ),
               //? Visual distinction for the academic code
               TextSpan(
