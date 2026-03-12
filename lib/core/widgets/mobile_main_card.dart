@@ -79,7 +79,7 @@ class MobileMainCard extends StatelessWidget {
                 text: cardModel.title,
                 cardWidth: cardWidth,
                 cardHeight: cardHeight,
-                maxLines: 1,
+                maxLines: 2,
                 fontSizeFactor: 0.22,
                 fontStyle: AppStyles.mobileBodyLargeSb,
                 color: AppColors.primaryDarkHover,

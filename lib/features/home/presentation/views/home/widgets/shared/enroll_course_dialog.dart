@@ -22,7 +22,7 @@ class EnrollCourseDialog extends StatefulWidget {
 
 class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
   final TextEditingController _inviteCodeController = TextEditingController();
-  GlobalKey<FormState> _enrollformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _enrollformKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final bool isMobile = SizeConfig.isMobile(context);
@@ -95,7 +95,6 @@ class _EnrollCourseDialogState extends State<EnrollCourseDialog> {
 
   //! Dispose invite code controller
   @override
-
   void dispose() {
     _inviteCodeController.dispose();
     super.dispose();
