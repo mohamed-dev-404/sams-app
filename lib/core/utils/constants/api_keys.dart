@@ -74,6 +74,16 @@ abstract class ApiKeys {
   static const String timeLimit = 'timeLimit';
   static const String options = 'options';
   static const String isCorrect = 'isCorrect';
+
+  //? Quiz Model Keys
+  static const String title = 'title';
+  static const String description = 'description';
+  static const String startTime = 'startTime';
+  static const String endTime = 'endTime';
+  static const String totalTime = 'totalTime';
+  static const String totalScore = 'totalScore';
+  static const String numberOfQuestions = 'numberOfQuestions';
+  static const String isPublished = 'isPublished';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---

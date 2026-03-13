@@ -1,0 +1,90 @@
+import 'package:intl/intl.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+
+enum QuizState { upcoming, active, ended }
+
+class QuizModel {
+  final String id;
+  final String title;
+  final String? description; // Nullable to handle the empty object quirk safely
+  final DateTime startTime;
+  final DateTime endTime;
+  final int totalTime;
+  final int totalScore;
+  final int numberOfQuestions;
+  final bool isPublished;
+
+  const QuizModel({
+    required this.id,
+    required this.title,
+    this.description,
+    required this.startTime,
+    required this.endTime,
+    required this.totalTime,
+    required this.totalScore,
+    required this.numberOfQuestions,
+    required this.isPublished,
+  });
+
+  //! --- Display Getters (using intl package) ---
+
+  /// Returns format like: "13 Mar, 09:19 AM"
+  String get formattedStartTime =>
+      DateFormat('dd MMM, hh:mm a').format(startTime);
+  String get formattedEndTime => DateFormat('dd MMM, hh:mm a').format(endTime);
+
+  //! --- Logic Getters ---
+
+  bool get isStarted => DateTime.now().isAfter(startTime);
+  bool get isEnded => DateTime.now().isAfter(endTime);
+  bool get isAvailable => !isEnded && isStarted;
+
+  QuizState get state {
+    final now = DateTime.now();
+    if (now.isBefore(startTime)) return QuizState.upcoming;
+    if (now.isAfter(endTime)) return QuizState.ended;
+    return QuizState.active;
+  }
+
+  //! --- from json ---
+
+  factory QuizModel.fromJson(Map<String, dynamic> json) {
+    // Safely handle the backend quirk where description might be {} instead of a String
+    String? parsedDescription;
+    if (json[ApiKeys.description] is String) {
+      parsedDescription = json[ApiKeys.description];
+    }
+
+    return QuizModel(
+      id: json[ApiKeys.id] ?? '',
+      title: json[ApiKeys.title] ?? '',
+      description: parsedDescription,
+      // Parse the ISO 8601 strings directly into DateTime objects
+      startTime:
+          DateTime.tryParse(json[ApiKeys.startTime] ?? '') ?? DateTime.now(),
+      endTime: DateTime.tryParse(json[ApiKeys.endTime] ?? '') ?? DateTime.now(),
+      totalTime: json[ApiKeys.totalTime] ?? 0,
+      totalScore: json[ApiKeys.totalScore] ?? 0,
+      numberOfQuestions: json[ApiKeys.numberOfQuestions] ?? 0,
+      isPublished: json[ApiKeys.isPublished] ?? true,
+    );
+  }
+
+  //! --- to json ---
+
+  Map<String, dynamic> toJson() {
+    return {
+      ApiKeys.id: id,
+      ApiKeys.title: title,
+      ApiKeys.description:
+          description ??
+          {}, // Send back empty object if null, to match backend DTO
+      ApiKeys.startTime: startTime.toIso8601String(),
+      ApiKeys.endTime: endTime.toIso8601String(),
+      ApiKeys.totalTime: totalTime,
+      ApiKeys.totalScore: totalScore,
+      ApiKeys.numberOfQuestions: numberOfQuestions,
+      ApiKeys.isPublished: isPublished,
+    };
+  }
+}
