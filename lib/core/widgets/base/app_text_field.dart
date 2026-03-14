@@ -4,7 +4,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/validators/app_validators.dart';
-import 'package:sams_app/core/widgets/text_field_error_builder.dart';
+import 'package:sams_app/core/widgets/base/text_field_error_builder.dart';
 
 /// A customized [TextFormField] designed for high reusability across the app.
 /// Handles validation logic, keyboard types, and dynamic sizing automatically.

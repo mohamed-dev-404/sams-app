@@ -5,8 +5,8 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/validators/app_validators.dart';
-import 'package:sams_app/core/widgets/svg_icon.dart';
-import 'package:sams_app/core/widgets/text_field_error_builder.dart';
+import 'package:sams_app/core/widgets/base/custom_svg.dart';
+import 'package:sams_app/core/widgets/base/text_field_error_builder.dart';
 
 /// A specialized [TextFormField] for password entry with built-in
 /// visibility toggling and specific validation types.

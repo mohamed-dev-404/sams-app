@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
-import 'package:sams_app/core/widgets/adaptive_layout.dart';
+import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
 import 'package:sams_app/features/auth/presentation/view_models/sign_up_cubit/sign_up_cubit.dart';
 import 'package:sams_app/features/auth/presentation/view_models/sign_up_cubit/sign_up_state.dart';
 import 'package:sams_app/features/auth/presentation/views/sign_up/widgets/mobile/sign_up_mobile_layout.dart';

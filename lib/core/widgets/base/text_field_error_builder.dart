@@ -3,7 +3,7 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/svg_icon.dart';
+import 'package:sams_app/core/widgets/base/custom_svg.dart';
 
 class TextFieldErrorBuilder extends StatelessWidget {
   final String errorMessage;

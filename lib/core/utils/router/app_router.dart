@@ -7,7 +7,7 @@ import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/core/utils/router/build_route.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
-import 'package:sams_app/core/widgets/general_error_page.dart';
+import 'package:sams_app/core/widgets/shared/general_error_page.dart';
 import 'package:sams_app/features/Grades/presentation/view/grades_tab_view.dart';
 import 'package:sams_app/features/announcements/presentation/view/announcements_tab_view.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignments_tab_view.dart';

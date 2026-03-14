@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sams_app/core/widgets/adaptive_layout.dart';
+import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/mobile/mobile_home_view.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_view.dart';
 

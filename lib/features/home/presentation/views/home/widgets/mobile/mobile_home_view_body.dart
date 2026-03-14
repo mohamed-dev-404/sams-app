@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
-import 'package:sams_app/core/widgets/mobile_coures_header_card.dart';
-import 'package:sams_app/core/widgets/section_title.dart';
+import 'package:sams_app/core/widgets/mobile/mobile_coures_header_card.dart';
+import 'package:sams_app/core/widgets/shared/section_title.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/mobile/course_sliver_list.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/shared/new_course_card.dart';
 

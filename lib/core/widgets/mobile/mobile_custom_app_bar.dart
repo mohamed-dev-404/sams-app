@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/general_arrow_back.dart';
+import 'package:sams_app/core/widgets/shared/general_arrow_back.dart';
 
 //* A standardized AppBar implementation for mobile screens providing custom navigation and flexible styling.
 class MobileCustomAppBar extends StatelessWidget
