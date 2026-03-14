@@ -36,8 +36,8 @@ class NewCourseCard extends StatelessWidget {
               borderType: BorderType.RRect,
               radius: Radius.circular(isMobile ? 15 : 20),
               child: Container(
-                width: double.infinity,
-                height: double.infinity,
+                width: isMobile ? cardWidth : double.infinity,
+                height: isMobile ? cardHeight : double.infinity,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                   color: AppColors.primaryLightHover,
