@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/enums/text_field_type.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/app_text_field.dart';
-import 'package:sams_app/core/widgets/titled_input_field.dart';
+import 'package:sams_app/core/widgets/base/app_text_field.dart';
+import 'package:sams_app/core/widgets/shared/titled_input_field.dart';
 
 //* Generic input field with label and hint 
 class InputFieldTile extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/enums/text_field_type.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/app_text_field.dart';
+import 'package:sams_app/core/widgets/base/app_text_field.dart';
 import 'package:sams_app/features/home/presentation/logic/mixin_create_course.dart';
 import 'package:sams_app/features/home/presentation/views/create_course/widgets/shared/create_course_form_section.dart';
 

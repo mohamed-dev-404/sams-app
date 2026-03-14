@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/widgets/custom_popup_menu_item.dart';
+import 'package:sams_app/core/widgets/shared/custom_popup_menu_item.dart';
 import 'package:sams_app/features/home/data/models/course_model.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/shared/delete_course_dialog.dart';

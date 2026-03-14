@@ -7,7 +7,7 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/svg_icon.dart';
+import 'package:sams_app/core/widgets/base/custom_svg.dart';
 
 class WebCourseHeaderCard extends StatelessWidget {
   const WebCourseHeaderCard({super.key, required this.cardModel});

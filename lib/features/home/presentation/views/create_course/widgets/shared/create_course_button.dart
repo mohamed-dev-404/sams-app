@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/widgets/app_button.dart';
+import 'package:sams_app/core/widgets/base/app_button.dart';
 
 //* Reusable submission button for course creation
 class CreateCourseButton extends StatelessWidget {

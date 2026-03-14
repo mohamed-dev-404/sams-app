@@ -5,7 +5,7 @@ import 'package:sams_app/core/models/course_header_card_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
-import 'package:sams_app/core/widgets/web_course_header_card.dart';
+import 'package:sams_app/core/widgets/web/web_course_header_card.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
@@ -60,15 +60,15 @@ class TabBarWebLayout extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          children: [
-            WebCourseHeaderCard(cardModel: headerModel),
-            const SizedBox(height: 20),
-            Expanded(child: child), // Tab content changes here
-          ],
-        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
+            child: WebCourseHeaderCard(cardModel: headerModel),
+          ),
+          const SizedBox(height: 20),
+          Expanded(child: child), // Tab content changes here
+        ],
       ),
     );
   }

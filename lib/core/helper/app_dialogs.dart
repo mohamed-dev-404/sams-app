@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sams_app/core/widgets/app_error_dialog.dart';
-import 'package:sams_app/core/widgets/app_success_dialog.dart';
+import 'package:sams_app/core/widgets/shared/app_error_dialog.dart';
+import 'package:sams_app/core/widgets/shared/app_success_dialog.dart';
 
 class AppDialog {
   AppDialog._();

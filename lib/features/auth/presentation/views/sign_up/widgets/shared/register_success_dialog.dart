@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/custom_app_button.dart';
+import 'package:sams_app/core/widgets/base/custom_app_button.dart';
 
 //* helper function to show register success dialog
 void showRegisterSuccessDialog({

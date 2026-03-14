@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/core/widgets/custom_app_button.dart';
+import 'package:sams_app/core/widgets/base/custom_app_button.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 
 //* A dialog widget that confirms the user's intention to log out, providing options to cancel or proceed with the logout action.
