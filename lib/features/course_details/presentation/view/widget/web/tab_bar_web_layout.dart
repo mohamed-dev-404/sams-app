@@ -60,15 +60,15 @@ class TabBarWebLayout extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          children: [
-            WebCourseHeaderCard(cardModel: headerModel),
-            const SizedBox(height: 20),
-            Expanded(child: child), // Tab content changes here
-          ],
-        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
+            child: WebCourseHeaderCard(cardModel: headerModel),
+          ),
+          const SizedBox(height: 20),
+          Expanded(child: child), // Tab content changes here
+        ],
       ),
     );
   }
