@@ -84,6 +84,12 @@ abstract class ApiKeys {
   static const String totalScore = 'totalScore';
   static const String numberOfQuestions = 'numberOfQuestions';
   static const String isPublished = 'isPublished';
+
+  //? Submit Quiz Keys
+  static const String answers = 'answers';
+  static const String questionId = 'questionId';
+  static const String selectedOptionId = 'selectedOptionId';
+  static const String writtenAnswer = 'writtenAnswer';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---
