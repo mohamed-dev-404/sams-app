@@ -10,6 +10,10 @@ import 'package:sams_app/features/home/data/data_sources/home_local_data_sourse.
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/materials/data/data_source/material_local_data_source.dart';
+import 'package:sams_app/features/materials/data/repos/material_repo.dart';
+import 'package:sams_app/features/materials/data/repos/material_repo_impl.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubit/material_cubit.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo_impl.dart';
 import 'package:sams_app/features/profile/data/services/image_processor.dart';
@@ -47,6 +51,8 @@ void setupServiceLocator() {
     () => HomeCubit(getIt<HomeRepo>(), role: CurrentRole.role),
   );
 
+  //! Profile Feature
+
   //* register S3UploadService
   getIt.registerLazySingleton<S3UploadService>(() => S3UploadService());
 
@@ -65,5 +71,25 @@ void setupServiceLocator() {
   //* register ProfileCubit
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepo>()),
+  );
+
+  //! Materials Feature
+
+  //* register MaterialsLocalDataSource
+  getIt.registerLazySingleton<MaterialLocalDataSource>(
+    () => MaterialLocalDataSource(),
+  );
+
+  //* register MaterialsRepo
+  getIt.registerLazySingleton<MaterialRepo>(
+    () => MaterialRepoImpl(
+      api: getIt<ApiConsumer>(),
+      localDataSource: getIt<MaterialLocalDataSource>(),
+    ),
+  );
+
+  //* register MaterialsCubit (Factory to get a new instance for each course)
+  getIt.registerFactory<MaterialCubit>(
+    () => MaterialCubit(getIt<MaterialRepo>()),
   );
 }
