@@ -30,6 +30,7 @@ import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit
 import 'package:sams_app/features/home/presentation/views/create_course/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/home/home_view.dart';
 import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
+import 'package:sams_app/features/materials/presentation/view/manage_material_view.dart';
 import 'package:sams_app/features/materials/presentation/view/materials_tab_view.dart';
 import 'package:sams_app/features/members_list/presentation/view/members_list_tab_view.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
@@ -45,9 +46,14 @@ class AppRouter {
 
   static final appRouter = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: RoutesName.login,
+    initialLocation: '/test',
     errorBuilder: (context, state) => const GeneralErrorPage(),
     routes: [
+      buildRoute(
+        name: '/test',
+        path: '/test',
+        builder: (context, state) => const ManageMaterialView(),
+      ),
       //! AUTH ROUTES
 
       //* 1. LOGIN ROUTE
