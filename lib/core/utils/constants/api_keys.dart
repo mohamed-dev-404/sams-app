@@ -90,6 +90,13 @@ abstract class ApiKeys {
   static const String questionId = 'questionId';
   static const String selectedOptionId = 'selectedOptionId';
   static const String writtenAnswer = 'writtenAnswer';
+
+  //? Submission Keys
+  static const String quizId = 'quizId';
+  static const String studentName = 'studentName';
+  static const String score = 'score';
+  static const String submittedAt = 'submittedAt';
+  static const String isGraded = 'isGraded';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---
