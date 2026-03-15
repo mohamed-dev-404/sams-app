@@ -13,7 +13,7 @@ class EndPoints {
   static String resendOTP = 'auth/resend-code';
   static const String logout = 'auth/logout';
 
-  //? --- Home  --- ;
+  //? --- Home/Courses  --- ;
   //* Instructor endpoints
   static const String createCourse = 'instructor/courses';
   static const String getMyCreatedCourses = 'instructor/courses/me';
@@ -30,4 +30,14 @@ class EndPoints {
   static const String updateProfile = 'users/profile';
   static const String createUploadUrl = 'users/profile-picture/presigned-url';
   static const String saveProfilePic = 'users/profile-picture';
+
+  //? --- Materials --- ;
+  static String getMaterials(String courseId) => 'courses/$courseId/materials';
+  static String materialDetails(String materialId) => 'materials/$materialId';
+  static const String createMaterialUploadUrls = 'materials/presigned-urls';
+  static String addMaterial(String courseId) => 'courses/$courseId/materials';
+  static String deleteMaterial(String materialId) => 'materials/$materialId';
+  static String deleteMaterialItem(String materialId) => 'materials/$materialId/items';
+  static String addMaterialItems(String materialId) => 'materials/$materialId/items';
+  static String updateMaterialData(String materialId) => 'materials/$materialId';
 }
