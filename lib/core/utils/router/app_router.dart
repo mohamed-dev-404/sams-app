@@ -31,6 +31,7 @@ import 'package:sams_app/features/home/presentation/views/create_course/create_c
 import 'package:sams_app/features/home/presentation/views/home/home_view.dart';
 import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material_view.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details_view.dart';
 import 'package:sams_app/features/materials/presentation/view/materials_tab_view.dart';
 import 'package:sams_app/features/members_list/presentation/view/members_list_tab_view.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
@@ -52,7 +53,7 @@ class AppRouter {
       buildRoute(
         name: '/test',
         path: '/test',
-        builder: (context, state) => const ManageMaterialView(),
+        builder: (context, state) => const MaterialDetailsView(),
       ),
       //! AUTH ROUTES
 
