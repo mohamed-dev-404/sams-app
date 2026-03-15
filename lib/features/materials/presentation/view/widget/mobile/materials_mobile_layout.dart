@@ -4,6 +4,7 @@ import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details_view.dart';
 
 //* Displays the 'Materials' section for mobile
 class MaterialsMobileLayout extends StatelessWidget {
@@ -15,10 +16,14 @@ class MaterialsMobileLayout extends StatelessWidget {
       slivers: [
         //? Displays the role-based instructor 'AddNewMaterialCard'
         if (CurrentRole.role == UserRole.instructor)
-           SliverPadding(
-            padding:const EdgeInsets.symmetric(vertical: 7),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
             sliver: SliverToBoxAdapter(
-              child: AddNewCard(isMobile: true, title: 'Add Material', onTap: () {  },),
+              child: AddNewCard(
+                isMobile: true,
+                title: 'Add Material',
+                onTap: () {},
+              ),
             ),
           ),
 
@@ -32,7 +37,14 @@ class MaterialsMobileLayout extends StatelessWidget {
                   title: 'Materials Lec $index',
                   description: 'Materials Description',
                   image: AppImages.imagesMaterialCard,
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MaterialDetailsView(),
+                      ),
+                    ),
+                  },
                 ),
               ),
             ),

@@ -8,6 +8,6 @@ class GeneralErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ManageMaterialView();
+    return const ManageMaterialView(isEditing: false);
   }
 }

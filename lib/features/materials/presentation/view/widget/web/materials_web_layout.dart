@@ -7,6 +7,7 @@ import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/shared/app_grid_style.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details_view.dart';
 
 //! Materials_web_layout.dart
 class MaterialsWebLayout extends StatelessWidget {
@@ -25,9 +26,13 @@ class MaterialsWebLayout extends StatelessWidget {
               (context, index) {
                 if (isInstructor && index == materials.length) {
                   //&& index == state.aterials.length
-                  return AddNewCard(isMobile: isMobile, title: 'Add Material', onTap: () {  },);
+                  return AddNewCard(
+                    isMobile: isMobile,
+                    title: 'Add Material',
+                    onTap: () {},
+                  );
                 }
-      
+
                 return WebMainCard(
                   model: MainCardModel(
                     title: 'Materials Lec $index',
@@ -35,6 +40,12 @@ class MaterialsWebLayout extends StatelessWidget {
                     image: AppImages.imagesMaterialCard,
                     onTap: () {
                       //! navigate to material details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MaterialDetailsView(),
+                        ),
+                      );
                     },
                   ),
                 );

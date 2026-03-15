@@ -14,10 +14,15 @@ class MobileManageMaterialView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Edit Material' : 'Add Material'),
-        leading: const Icon(
-          Icons.arrow_circle_left_outlined,
-          color: AppColors.primaryDarkHover,
-          size: 38,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_circle_left_outlined,
+            color: AppColors.primaryDarkHover,
+            size: 38,
+          ),
         ),
       ),
       body: MobileManageMaterialViewBody(

@@ -53,7 +53,7 @@ class AppRouter {
       buildRoute(
         name: '/test',
         path: '/test',
-        builder: (context, state) => const MaterialDetailsView(),
+        builder: (context, state) => const MaterialsTabView(courseId: '',),
       ),
       //! AUTH ROUTES
 

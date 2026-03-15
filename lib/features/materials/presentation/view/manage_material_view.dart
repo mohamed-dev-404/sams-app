@@ -6,13 +6,15 @@ import 'package:sams_app/features/materials/presentation/view/widget/web/web_man
 class ManageMaterialView extends StatelessWidget {
   const ManageMaterialView({
     super.key,
+    required this.isEditing
   });
+  final bool isEditing;
 
   @override
   Widget build(BuildContext context) {
     return AdaptiveLayout(
-      mobileLayout: (context) => const MobileManageMaterialView(isEditing: true),
-      webLayout: (context) => const WebManageMaterialView(isEditing: true),
+      mobileLayout: (context) =>  MobileManageMaterialView(isEditing: isEditing),
+      webLayout: (context) =>  WebManageMaterialView(isEditing: isEditing),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/features/materials/presentation/view/manage_material_view.dart';
 import 'package:sams_app/features/materials/presentation/view/widget/shared/material_sliver_list.dart';
 
 class MobileMaterialsDetailsViewBody extends StatelessWidget {
@@ -32,7 +33,11 @@ class MobileMaterialsDetailsViewBody extends StatelessWidget {
                         color: AppColors.primaryDarkHover,
                       ),
                     ),
-                    SvgPicture.asset(AppIcons.iconsEditMaterial),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ManageMaterialView(isEditing: true,)));
+                      },
+                      child: SvgPicture.asset(AppIcons.iconsEditMaterial)),
                   ],
                 ),
                 const SizedBox(
