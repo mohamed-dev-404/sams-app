@@ -1,5 +1,5 @@
 part of 'browse_quiz_cubit.dart';
 
-sealed class QuizState {}
+abstract class BrowseQuizState {}
 
-final class QuizInitial extends QuizState {}
+class QuizInitial extends BrowseQuizState {}
