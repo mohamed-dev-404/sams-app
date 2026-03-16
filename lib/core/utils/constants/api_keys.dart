@@ -107,6 +107,9 @@ abstract class ApiKeys {
   //? create quiz request body model Keys
   static const String duration = 'duration';
   static const String classworkId = 'classworkId';
+
+  //? create question request body model Keys
+  static const String questions = 'questions';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---

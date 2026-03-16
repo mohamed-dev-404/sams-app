@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/helper/app_toast.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
-import 'package:sams_app/features/quizzes/data/model/quiz_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/mobile/mobile_quiz_card.dart';
 
 class QuizMobileLayout extends StatelessWidget {

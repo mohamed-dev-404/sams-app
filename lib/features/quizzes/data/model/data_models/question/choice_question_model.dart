@@ -1,6 +1,6 @@
 import 'package:sams_app/core/utils/constants/api_keys.dart';
-import 'package:sams_app/features/quizzes/data/model/question/option_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/option_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
 
 class ChoiceQuestionModel extends QuestionModel {
   final List<OptionModel> options;

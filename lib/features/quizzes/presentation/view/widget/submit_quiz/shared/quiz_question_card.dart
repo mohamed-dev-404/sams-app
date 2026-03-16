@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/features/quizzes/data/model/question/question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/choice_question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/written_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/choice_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/written_question_model.dart';
 
 import 'choice_question_widget.dart';
 import 'written_question_widget.dart';

@@ -1,10 +1,10 @@
-import 'package:sams_app/features/quizzes/data/model/all_submission_model.dart';
-import 'package:sams_app/features/quizzes/data/model/quiz_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/all_submission_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 
-import 'package:sams_app/features/quizzes/data/model/question/question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/choice_question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/written_question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/option_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/choice_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/written_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/option_model.dart';
 
 //! get all Quizes
 List<QuizModel> mockQuizzes = [

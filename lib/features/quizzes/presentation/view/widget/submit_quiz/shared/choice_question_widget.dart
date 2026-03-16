@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sams_app/features/quizzes/data/model/question/choice_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/choice_question_model.dart';
 import 'option_tile.dart';
 
 class ChoiceQuestionWidget extends StatelessWidget {

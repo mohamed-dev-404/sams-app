@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/features/quizzes/data/model/quiz_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 
 class QuizTrailingIcon extends StatelessWidget {
   final QuizState state;

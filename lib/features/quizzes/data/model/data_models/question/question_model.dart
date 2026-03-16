@@ -1,6 +1,6 @@
 import 'package:sams_app/core/utils/constants/api_keys.dart';
-import 'package:sams_app/features/quizzes/data/model/question/choice_question_model.dart';
-import 'package:sams_app/features/quizzes/data/model/question/written_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/choice_question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/written_question_model.dart';
 
 abstract class QuestionModel {
   final String id;
