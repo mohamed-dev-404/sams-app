@@ -8,6 +8,7 @@ import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubit/material_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubit/material_state.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details_view.dart';
 
 //* Displays the 'Materials' section for mobile
 class MaterialsMobileLayout extends StatelessWidget {
