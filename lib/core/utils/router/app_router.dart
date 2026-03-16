@@ -35,7 +35,20 @@ import 'package:sams_app/features/members_list/presentation/view/members_list_ta
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
 import 'package:sams_app/features/profile/presentation/views/profile/profile_view.dart';
-import 'package:sams_app/features/quizzes/presentation/view/quizzes_tab_view.dart';
+
+// Quiz Views & Cubits
+import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
+import 'package:sams_app/features/quizzes/presentation/view/shared_flow/quiz_details/quiz_details_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/shared_flow/quiz_tab/quizzes_tab_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/take_quiz/take_quiz_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/browse_quiz_cubit/browse_quiz_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/manage_quiz_cubit/manage_quiz_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/take_quiz_cubit/take_quiz_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/grading_cubit/grading_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/create_quiz/create_quiz_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/manage_questions/manage_questions_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/submissions_list/submissions_list_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/grade_submission/grade_submission_view.dart';
 
 class AppRouter {
   AppRouter._();
@@ -196,7 +209,66 @@ class AppRouter {
           ),
           _buildTabRoute(
             RoutesName.quizzes,
-            (id) => QuizzesTabView(courseId: id),
+            (id) => BlocProvider(
+              create: (context) => BrowseQuizCubit(getIt<QuizRepository>()),
+              child: QuizzesTabView(courseId: id),
+            ),
+            subRoutes: [
+              //? Quiz Details
+              GoRoute(
+                path: '${RoutesName.quizDetails}/:quizId',
+                builder: (context, state) => BlocProvider(
+                  create: (context) => BrowseQuizCubit(getIt<QuizRepository>()),
+                  child: const QuizDetailsView(),
+                ),
+                routes: [
+                  //? --- Instructor Flow (under specific quiz) ---
+                  GoRoute(
+                    path: RoutesName.manageQuestions,
+                    builder: (context, state) => BlocProvider(
+                      create: (context) =>
+                          ManageQuizCubit(getIt<QuizRepository>()),
+                      child: const ManageQuestionsView(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: RoutesName.submissionsList,
+                    builder: (context, state) => BlocProvider(
+                      create: (context) =>
+                          GradingCubit(getIt<QuizRepository>()),
+                      child: const SubmissionsListView(),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: '${RoutesName.gradeSubmission}/:submissionId',
+                        builder: (context, state) => BlocProvider(
+                          create: (context) =>
+                              GradingCubit(getIt<QuizRepository>()),
+                          child: const GradeSubmissionView(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // --- Student Flow (under specific quiz) ---
+                  GoRoute(
+                    path: RoutesName.takeQuiz,
+                    builder: (context, state) => BlocProvider(
+                      create: (context) =>
+                          TakeQuizCubit(getIt<QuizRepository>()),
+                      child: const TakeQuizView(),
+                    ),
+                  ),
+                ],
+              ),
+              // Create Quiz (Instructor)
+              GoRoute(
+                path: RoutesName.createQuiz,
+                builder: (context, state) => BlocProvider(
+                  create: (context) => ManageQuizCubit(getIt<QuizRepository>()),
+                  child: const CreateQuizView(),
+                ),
+              ),
+            ],
           ),
           _buildTabRoute(
             RoutesName.liveSessions,
@@ -218,12 +290,14 @@ class AppRouter {
   //? Helper method to build tab routes under course details
   static GoRoute _buildTabRoute(
     String path,
-    Widget Function(String courseId) viewBuilder,
-  ) {
+    Widget Function(String courseId) viewBuilder, {
+    List<RouteBase> subRoutes = const [],
+  }) {
     return GoRoute(
       path: '${RoutesName.courses}/:courseId/$path',
       builder: (context, state) =>
           viewBuilder(state.pathParameters['courseId'] ?? ''),
+      routes: subRoutes,
     );
   }
 }

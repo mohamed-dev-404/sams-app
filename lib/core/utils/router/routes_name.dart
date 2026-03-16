@@ -14,6 +14,15 @@ class RoutesName {
   static const String announcements = 'announcements';
   static const String grades = 'grades';
   static const String quizzes = 'quizzes';
+  
+  //? Quiz sub-routes
+  static const String quizDetails = 'quizDetails'; // e.g., /courses/:courseId/quizzes/:quizId
+  static const String createQuiz = 'createQuiz';
+  static const String manageQuestions = 'manageQuestions'; // e.g., .../quizzes/:quizId/questions
+  static const String takeQuiz = 'takeQuiz';
+  static const String submissionsList = 'submissionsList'; // e.g., .../quizzes/:quizId/submissions
+  static const String gradeSubmission = 'gradeSubmission'; // e.g., .../submissions/:submissionId
+
   static const String liveSessions = 'liveSessions';
   static const String courseCode = 'courseCode';
   static const String membersList = 'membersList';
