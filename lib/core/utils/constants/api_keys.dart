@@ -100,6 +100,9 @@ abstract class ApiKeys {
 
   //? Submission Details Keys
   static const String earnedPoints = 'earnedPoints';
+
+  //? classwork item model Keys
+  static const String isVisible = 'isVisible';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---
