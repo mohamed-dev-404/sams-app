@@ -103,6 +103,10 @@ abstract class ApiKeys {
 
   //? classwork item model Keys
   static const String isVisible = 'isVisible';
+
+  //? create quiz request body model Keys
+  static const String duration = 'duration';
+  static const String classworkId = 'classworkId';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---
