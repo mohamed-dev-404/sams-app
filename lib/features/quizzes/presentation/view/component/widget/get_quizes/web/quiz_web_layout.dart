@@ -3,7 +3,7 @@ import 'package:sams_app/core/helper/app_toast.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/web/web_quiz_card.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/web/web_quiz_card.dart';
 
 //! Materials_web_layout.dart
 class QuizsWebLayout extends StatelessWidget {

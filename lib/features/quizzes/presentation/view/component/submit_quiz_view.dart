@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/submit_quiz/shared/quiz_question_card.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/submit_quiz/shared/quiz_question_card.dart';
 
 class SubmitQuizView extends StatefulWidget {
   const SubmitQuizView({super.key});

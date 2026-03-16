@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/shared/quiz_card_image.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/shared/quiz_card_style.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/shared/quiz_status_badge.dart';
-import 'package:sams_app/features/quizzes/presentation/view/widget/get_quizes/shared/quiz_trailing_icon.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_card_image.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_card_style.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_status_badge.dart';
+import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_trailing_icon.dart';
 
 class WebQuizCard extends StatefulWidget {
   final QuizModel quizModel;

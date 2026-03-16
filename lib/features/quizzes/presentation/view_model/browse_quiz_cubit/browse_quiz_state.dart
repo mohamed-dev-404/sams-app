@@ -1,4 +1,4 @@
-part of 'quiz_cubit.dart';
+part of 'browse_quiz_cubit.dart';
 
 sealed class QuizState {}
 
