@@ -1,18 +1,29 @@
-//* Handles all material-related API calls and local caching
 import 'package:dartz/dartz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sams_app/core/errors/exceptions/api_exception.dart';
+import 'package:sams_app/core/extentions/filter_files_helper.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/utils/constants/api_endpoints.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/core/utils/services/s3_upload_service.dart';
 import 'package:sams_app/features/materials/data/data_source/material_local_data_source.dart';
+import 'package:sams_app/features/materials/data/model/add_material_item_request.dart';
+import 'package:sams_app/features/materials/data/model/file_upload_reference.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/data/model/presigned_url_model.dart';
 import 'package:sams_app/features/materials/data/repos/material_repo.dart';
 
+//* Implementation of materials data operations using API and local cache
 class MaterialRepoImpl implements MaterialRepo {
   final ApiConsumer api;
   final MaterialLocalDataSource localDataSource;
+  final S3UploadService s3Service;
 
-  MaterialRepoImpl({required this.api, required this.localDataSource});
+  MaterialRepoImpl({
+    required this.api,
+    required this.localDataSource,
+    required this.s3Service,
+  });
 
   //* GET materials → cache locally → return list
   @override
@@ -53,6 +64,101 @@ class MaterialRepoImpl implements MaterialRepo {
       return left(e.toString());
     }
   }
+
+  //* UPLOAD material with full workflow 
+  @override
+  Future<Either<String, MaterialModel>> uploadMaterialFullWorkflow({
+    required String courseId,
+    required String title,
+    required String description,
+    required List<XFile> selectedFiles,
+  }) async {
+    try {
+      //! Step 1: Request Presigned URLs
+      final List<PresignedUrlModel> metadataList = await _getBatchPresignedUrls(
+        selectedFiles,
+      );
+
+      //! Step 2: Parallel S3 Upload
+      await Future.wait(
+        metadataList.asMap().entries.map((entry) {
+          final index = entry.key;
+          final metadata = entry.value;
+
+          return s3Service.uploadFile(
+            url: metadata.uploadUrl,
+            xFile: selectedFiles[index],
+            fileName: metadata.originalFileName,
+            contentType: selectedFiles[index].name.fileContentType,
+          );
+        }),
+      );
+
+      //! Step 3: Confirm upload and get the created Material Object
+      final createdMaterial = await _confirmUpload(
+        courseId: courseId,
+        metadata: metadataList,
+      );
+
+      return Right(createdMaterial);
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage);
+    } catch (e) {
+      return Left('Upload failed: ${e.toString()}');
+    }
+  }
+
+  /// Final Confirmation that returns the created Material object
+  Future<MaterialModel> _confirmUpload({
+    required String courseId,
+    required List<PresignedUrlModel> metadata,
+  }) async {
+    //* Map metadata to FileUploadReference object
+    final List<FileUploadReference> items = metadata
+        .map(
+          (m) => FileUploadReference(
+            originalFileName: m.originalFileName,// original file name
+            contentType: m.originalFileName.fileContentType,// file type 
+            contentReference: m.key,// s3 key 
+          ),
+        )
+        .toList();
+
+    final requestBody = AddMaterialItemsRequest(materialItems: items);
+
+    final response = await api.post(
+      EndPoints.addMaterialItems(courseId),
+      data: requestBody.toJson(),
+    );
+
+    return MaterialModel.fromJson(response[ApiKeys.data]);
+  }
+
+  /// Requests upload URLs from the server
+  Future<List<PresignedUrlModel>> _getBatchPresignedUrls(
+    List<XFile> files,
+  ) async {
+    //* Request upload URLs from the server
+    final response = await api.post(
+      EndPoints.createMaterialUploadUrls,
+      data: {
+        'files': files
+            .map(
+              (f) => {
+                ApiKeys.originalFileName: f.name,
+                ApiKeys.contentType:
+                    f.name.fileContentType, // Using the fileContentType Extension
+              },
+            )
+            .toList(),
+      },
+    );
+
+    final List data = response[ApiKeys.data];
+    return data.map((e) => PresignedUrlModel.fromJson(e)).toList();
+  }
+
+
 
   //* Returns materials from local cache
   @override
