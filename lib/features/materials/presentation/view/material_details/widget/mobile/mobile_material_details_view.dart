@@ -7,23 +7,9 @@ class MobileMaterialDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => const ManageMaterialView(isEditing: false),
-          //   ),
-          // );
-        },
-        child: const Icon(
-          Icons.add,
-          size: 32,
-        ),
-      ),
-      appBar: const MobileCustomAppBar(title: 'Material Details'),
-      body: const MobileMaterialDetailsViewBody(),
+    return const Scaffold(
+      appBar: MobileCustomAppBar(title: 'Material Details'),
+      body: MobileMaterialDetailsViewBody(),
     );
   }
 }
