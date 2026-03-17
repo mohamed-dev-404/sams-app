@@ -8,6 +8,6 @@ class GeneralErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ManageMaterialView(isEditing: false);
+    return const Scaffold(body: Center(child: Text('404 page not found')));
   }
 }
