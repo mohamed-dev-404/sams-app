@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/helper/app_toast.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/widgets/web/web_quiz_card.dart';
 
-//! Materials_web_layout.dart
+// ! Quiz_web_layout.dart
 class QuizsWebLayout extends StatelessWidget {
   const QuizsWebLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       child: Column(
@@ -40,7 +44,14 @@ class QuizsWebLayout extends StatelessWidget {
                 quizModel: quiz,
                 onTap: () {
                   if (quiz.state == QuizState.available) {
-                    // TODO: Navigate to Quiz Screen
+                    context.goNamed(
+                      RoutesName.quizDetails,
+                      pathParameters: {
+                        'courseId':
+                            courseId, // Extracted from GoRouterState above
+                        'quizId': quiz.id,
+                      },
+                    );
                   } else if (quiz.state == QuizState.upcoming) {
                     AppToast.warning(
                       context,
