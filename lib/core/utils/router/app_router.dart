@@ -61,9 +61,9 @@ class AppRouter {
     initialLocation: RoutesName.login,
     errorBuilder: (context, state) => const GeneralErrorPage(),
     routes: [
-      //! AUTH ROUTES
+      // ! --- AUTH ROUTES ---
 
-      //* 1. LOGIN ROUTE
+      // * --- LOGIN ROUTES ---
       buildRoute(
         name: RoutesName.login,
         path: RoutesName.login,
@@ -72,15 +72,12 @@ class AppRouter {
           child: const LoginView(),
         ),
       ),
-
-      //* 2. SIGN UP FLOW SHELL
+      // * --- SIGNUP ROUTES ---
       ShellRoute(
-        builder: (context, state, child) {
-          return BlocProvider(
-            create: (context) => SignUpCubit(getIt<AuthRepo>()),
-            child: child,
-          );
-        },
+        builder: (context, state, child) => BlocProvider(
+          create: (context) => SignUpCubit(getIt<AuthRepo>()),
+          child: child,
+        ),
         routes: [
           GoRoute(
             name: RoutesName.signUp,
@@ -89,20 +86,17 @@ class AppRouter {
           ),
           GoRoute(
             name: RoutesName.activateAccount,
-            path: RoutesName.activateAccount, // The OTP screen for Sign Up
+            path: RoutesName.activateAccount,
             builder: (context, state) => const ActivateAccountView(),
           ),
         ],
       ),
-
-      //* 3. PASSWORD RESET FLOW SHELL
+      // * --- PASSWORD RESET ROUTES ---
       ShellRoute(
-        builder: (context, state, child) {
-          return BlocProvider(
-            create: (context) => PasswordResetCubit(getIt<AuthRepo>()),
-            child: child,
-          );
-        },
+        builder: (context, state, child) => BlocProvider(
+          create: (context) => PasswordResetCubit(getIt<AuthRepo>()),
+          child: child,
+        ),
         routes: [
           GoRoute(
             name: RoutesName.forgotPassword,
@@ -111,7 +105,7 @@ class AppRouter {
           ),
           GoRoute(
             name: RoutesName.verifyOtp,
-            path: RoutesName.verifyOtp, // The OTP screen for Password Reset
+            path: RoutesName.verifyOtp,
             builder: (context, state) => const VerifyOtpView(),
           ),
           GoRoute(
@@ -122,9 +116,9 @@ class AppRouter {
         ],
       ),
 
-      //! HOME ROUTES
+      // ! --- HOME & PROFILE ---
 
-      // *  Home view
+      // * --- COURSES ROUTES ---
       buildRoute(
         name: RoutesName.courses,
         path: RoutesName.courses,
@@ -135,23 +129,19 @@ class AppRouter {
           child: const HomeView(),
         ),
       ),
-      //* Create course view
+      // * --- CREATE COURSE ROUTES ---
       buildRoute(
         name: RoutesName.createCourse,
         path: RoutesName.createCourse,
         builder: (context, state) {
           final homeCubit = state.extra as HomeCubit;
-
           return BlocProvider.value(
             value: homeCubit,
             child: const CreateCourseView(),
           );
         },
       ),
-
-      //! PROFILE ROUTES
-
-      //* Profile view
+      // * --- PROFILE ROUTES ---
       buildRoute(
         name: RoutesName.profile,
         path: RoutesName.profile,
@@ -162,18 +152,11 @@ class AppRouter {
         ),
       ),
 
-      //! COuRSE DETAILS ROUTES
-
-      //* The main course details route with tabs as sub-routes
-      // The ShellRoute wraps the layout around the changing tabs
+      // ! --- COURSE DETAILS (THE TABS) ---
       ShellRoute(
         builder: (context, state, child) {
           final courseId = state.pathParameters['courseId'] ?? '';
-
-          // 1. Try to get from extra (Mobile navigation)
           final extraModel = state.extra as CourseHeaderCardModel?;
-
-          // 2. Fallback to queryParams (Web refresh)
           final headerModel =
               extraModel ??
               CourseHeaderCardModel(
@@ -187,7 +170,7 @@ class AppRouter {
           return CourseDetailsView(
             courseId: courseId,
             headerModel: headerModel,
-            child: child, // This is the tab content
+            child: child,
           );
         },
         routes: [
@@ -207,6 +190,8 @@ class AppRouter {
             RoutesName.grades,
             (id) => GradesTabView(courseId: id),
           ),
+
+          // * --- QUIZZES TAB & FULL-SCREEN SUB-ROUTES
           _buildTabRoute(
             RoutesName.quizzes,
             (id) => BlocProvider(
@@ -214,16 +199,18 @@ class AppRouter {
               child: QuizzesTabView(courseId: id),
             ),
             subRoutes: [
-              //? Quiz Details
+              // ? --- Quiz Details (Breaks out to Full Screen)
               GoRoute(
+                name: RoutesName.quizDetails,
                 path: '${RoutesName.quizDetails}/:quizId',
+                parentNavigatorKey: navigatorKey, // FULL SCREEN
                 builder: (context, state) => BlocProvider(
                   create: (context) => BrowseQuizCubit(getIt<QuizRepository>()),
                   child: const QuizDetailsView(),
                 ),
                 routes: [
-                  //? --- Instructor Flow (under specific quiz) ---
                   GoRoute(
+                    name: RoutesName.manageQuestions,
                     path: RoutesName.manageQuestions,
                     builder: (context, state) => BlocProvider(
                       create: (context) =>
@@ -232,6 +219,7 @@ class AppRouter {
                     ),
                   ),
                   GoRoute(
+                    name: RoutesName.submissionsList,
                     path: RoutesName.submissionsList,
                     builder: (context, state) => BlocProvider(
                       create: (context) =>
@@ -240,6 +228,7 @@ class AppRouter {
                     ),
                     routes: [
                       GoRoute(
+                        name: RoutesName.gradeSubmission,
                         path: '${RoutesName.gradeSubmission}/:submissionId',
                         builder: (context, state) => BlocProvider(
                           create: (context) =>
@@ -249,8 +238,8 @@ class AppRouter {
                       ),
                     ],
                   ),
-                  // --- Student Flow (under specific quiz) ---
                   GoRoute(
+                    name: RoutesName.takeQuiz,
                     path: RoutesName.takeQuiz,
                     builder: (context, state) => BlocProvider(
                       create: (context) =>
@@ -260,9 +249,11 @@ class AppRouter {
                   ),
                 ],
               ),
-              // Create Quiz (Instructor)
+              // ? --- CREATE QUIZ (Breaks out to Full Screen)
               GoRoute(
+                name: RoutesName.createQuiz,
                 path: RoutesName.createQuiz,
+                parentNavigatorKey: navigatorKey, // FULL SCREEN
                 builder: (context, state) => BlocProvider(
                   create: (context) => ManageQuizCubit(getIt<QuizRepository>()),
                   child: const CreateQuizView(),
@@ -287,13 +278,14 @@ class AppRouter {
     ],
   );
 
-  //? Helper method to build tab routes under course details
+  // ! Helper method to build tab routes under course details
   static GoRoute _buildTabRoute(
     String path,
     Widget Function(String courseId) viewBuilder, {
     List<RouteBase> subRoutes = const [],
   }) {
     return GoRoute(
+      name: path, // Ensuring the tab itself has a name
       path: '${RoutesName.courses}/:courseId/$path',
       builder: (context, state) =>
           viewBuilder(state.pathParameters['courseId'] ?? ''),
