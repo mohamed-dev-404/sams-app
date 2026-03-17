@@ -131,4 +131,74 @@ final List<AllSubmissionModel> mockSubmissions = [
     submittedAt: DateTime.now().subtract(const Duration(minutes: 5)),
     isGraded: false,
   ),
+
+  AllSubmissionModel(
+    id: 'sub_4',
+    quizId: 'q1',
+    academicId: '20113567',
+    studentName: 'Ahmed Hassan',
+    score: 9,
+    submittedAt: DateTime.now().subtract(const Duration(minutes: 30)),
+    isGraded: true,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_5',
+    quizId: 'q1',
+    academicId: '20113568',
+    studentName: 'Sara Ali',
+    score: 6,
+    submittedAt: DateTime.now().subtract(const Duration(hours: 2)),
+    isGraded: true,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_6',
+    quizId: 'q1',
+    academicId: '20113569',
+    studentName: 'Omar Khaled',
+    score: 0,
+    submittedAt: DateTime.now().subtract(const Duration(minutes: 10)),
+    isGraded: false,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_7',
+    quizId: 'q1',
+    academicId: '20113570',
+    studentName: 'Nour ElDin',
+    score: 10,
+    submittedAt: DateTime.now().subtract(const Duration(hours: 3)),
+    isGraded: true,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_8',
+    quizId: 'q1',
+    academicId: '20113571',
+    studentName: 'Laila Mahmoud',
+    score: 3,
+    submittedAt: DateTime.now().subtract(const Duration(hours: 4)),
+    isGraded: true,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_9',
+    quizId: 'q1',
+    academicId: '20113572',
+    studentName: 'Hassan Tarek',
+    score: 0,
+    submittedAt: DateTime.now().subtract(const Duration(seconds: 30)),
+    isGraded: false,
+  ),
+
+  AllSubmissionModel(
+    id: 'sub_10',
+    quizId: 'q1',
+    academicId: '20113573',
+    studentName: 'Abdelrahman Mohamed Abdelaziz',
+    score: 7,
+    submittedAt: DateTime.now().subtract(const Duration(hours: 5)),
+    isGraded: true,
+  ),
 ];
