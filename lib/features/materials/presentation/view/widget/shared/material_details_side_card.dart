@@ -12,7 +12,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double width = constraints.maxWidth;
-        
+
         return Container(
           decoration: BoxDecoration(
             color: AppColors.primaryLight,
@@ -32,7 +32,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Title and Edit Action
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +58,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Description text
                 Text(
                   'Chapter 1: Database Fundamentals and Theories. Detailed overview of core concepts.',
