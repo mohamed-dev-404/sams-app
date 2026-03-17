@@ -29,7 +29,7 @@ class QuizTrailingIcon extends StatelessWidget {
   }
 
   Widget _getTrailingIconWidget() {
-    final bool isActive = state == QuizState.active;
+    final bool isActive = state == QuizState.available;
     final bool isUpcoming = state == QuizState.upcoming;
     if (isActive) {
       return Container(

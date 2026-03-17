@@ -27,7 +27,7 @@ class _WebQuizCardState extends State<WebQuizCard> {
   @override
   Widget build(BuildContext context) {
     final style = QuizCardStyle.fromState(widget.quizModel.state);
-    final bool isEnded = widget.quizModel.state == QuizState.ended;
+    final bool isEnded = widget.quizModel.state == QuizState.closed;
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),

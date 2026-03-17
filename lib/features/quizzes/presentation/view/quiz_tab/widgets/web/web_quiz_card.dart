@@ -6,6 +6,7 @@ import 'package:sams_app/features/quizzes/presentation/view/component/widget/get
 import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_card_style.dart';
 import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_status_badge.dart';
 import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/shared/quiz_trailing_icon.dart';
+
 class WebQuizCard extends StatefulWidget {
   final QuizModel quizModel;
   final VoidCallback onTap;
@@ -26,7 +27,7 @@ class _WebQuizCardState extends State<WebQuizCard> {
   @override
   Widget build(BuildContext context) {
     final style = QuizCardStyle.fromState(widget.quizModel.state);
-    final bool isEnded = widget.quizModel.state == QuizState.ended;
+    final bool isEnded = widget.quizModel.state == QuizState.closed;
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),

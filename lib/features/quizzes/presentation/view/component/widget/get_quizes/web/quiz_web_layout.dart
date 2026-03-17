@@ -39,7 +39,7 @@ class QuizsWebLayout extends StatelessWidget {
               return WebQuizCard(
                 quizModel: quiz,
                 onTap: () {
-                  if (quiz.state == QuizState.active) {
+                  if (quiz.state == QuizState.available) {
                     // TODO: Navigate to Quiz Screen
                   } else if (quiz.state == QuizState.upcoming) {
                     AppToast.warning(

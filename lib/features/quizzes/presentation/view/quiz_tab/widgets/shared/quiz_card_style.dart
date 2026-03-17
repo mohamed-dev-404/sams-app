@@ -17,7 +17,7 @@ class QuizCardStyle {
 
   factory QuizCardStyle.fromState(QuizState state) {
     switch (state) {
-      case QuizState.active:
+      case QuizState.available:
         return const QuizCardStyle(
           backgroundColor: AppColors.primaryLight,
           borderColor: AppColors.primaryLightActive,
@@ -31,13 +31,28 @@ class QuizCardStyle {
           titleColor: AppColors.primaryDarkActive,
           descriptionColor: AppColors.primaryDark,
         );
-      case QuizState.ended:
+      case QuizState.closed:
         return const QuizCardStyle(
           backgroundColor: AppColors.white,
           borderColor: AppColors.whiteHover,
           titleColor: AppColors.whiteDarkActive,
           descriptionColor: AppColors.whiteDark,
         );
+      case QuizState.draft:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case QuizState.scheduled:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case QuizState.onGoing:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case QuizState.completed:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case QuizState.lockedDraft:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 }

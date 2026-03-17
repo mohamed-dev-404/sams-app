@@ -14,7 +14,7 @@ class QuizCardImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isActive = state == QuizState.active;
+    final bool isActive = state == QuizState.available;
     final bool isUpcoming = state == QuizState.upcoming;
     return Container(
       padding: const EdgeInsets.all(12),

@@ -1,7 +1,23 @@
 import 'package:intl/intl.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 
-enum QuizState { upcoming, active, ended }
+//! --- Quiz States ---
+
+enum QuizState {
+  //! Student States
+  upcoming, //upcoming quiz: startTime > now
+  available, //available quiz: startTime < now && endTime > now
+  closed, //closed quiz: endTime < now
+  //! Instructor States
+  draft, //draft quiz: isPublished = false && startTime > now
+  scheduled, //scheduled quiz: isPublished = true && startTime > now
+  onGoing, //on going quiz: startTime < now && endTime > now
+  completed, //completed quiz: isPublished = true && endTime < now
+  lockedDraft, //locked draft quiz: isPublished = false && endTime < now
+}
+
+//! --- Quiz Model ---
 
 class QuizModel {
   final String id;
@@ -41,9 +57,19 @@ class QuizModel {
 
   QuizState get state {
     final now = DateTime.now();
-    if (now.isBefore(startTime)) return QuizState.upcoming;
-    if (now.isAfter(endTime)) return QuizState.ended;
-    return QuizState.active;
+    if (CurrentRole.role == UserRole.student) {
+      //* student states
+      if (now.isBefore(startTime)) return QuizState.upcoming;
+      if (now.isAfter(endTime)) return QuizState.closed;
+      return QuizState.available;
+    } else {
+      //* instructor states
+      if (now.isBefore(startTime) && !isPublished) return QuizState.draft;
+      if (now.isBefore(startTime) && isPublished) return QuizState.scheduled;
+      if (now.isAfter(endTime) && isPublished) return QuizState.completed;
+      if (now.isAfter(endTime) && !isPublished) return QuizState.lockedDraft;
+      return QuizState.onGoing;
+    }
   }
 
   //! --- from json ---
