@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/all_submission_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submission_list_tile.dart';
-import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submissions_header_card.dart';
+import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/mobile/submissions_header_card.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submissions_stats_bar.dart';
 
 class SubmissionsListMobileLayout extends StatelessWidget {
@@ -53,10 +54,7 @@ class SubmissionsListMobileLayout extends StatelessWidget {
 
             //* --- UNMARKED SECTION ---
             if (unmarkedList.isNotEmpty) ...[
-              Text(
-                'Needs Review',
-                style: AppStyles.mobileBodyLargeSb,
-              ),
+              _buildSectionTitle('Needs Review', StatusColors.orangeDark),
               const SizedBox(height: 16),
               _buildSubmissionsList(unmarkedList),
               const SizedBox(height: 32),
@@ -64,10 +62,7 @@ class SubmissionsListMobileLayout extends StatelessWidget {
 
             //* --- MARKED SECTION ---
             if (markedList.isNotEmpty) ...[
-              Text(
-                'Graded',
-                style: AppStyles.mobileBodyLargeSb,
-              ),
+              _buildSectionTitle('Graded', StatusColors.green),
               const SizedBox(height: 16),
               _buildSubmissionsList(markedList),
               const SizedBox(height: 40),
@@ -86,11 +81,34 @@ class SubmissionsListMobileLayout extends StatelessWidget {
       itemCount: submissions.length,
       separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
-        return SubmissionListTile(
-          submission: submissions[index],
-          maxScore: 10, // Pass your max quiz score here
+        return SizedBox(
+          height: 110,
+          child: SubmissionListTile(
+            submission: submissions[index],
+            maxScore: 10, // Pass your max quiz score here
+            onTap: () {
+              //TODO nav to Grading
+            },
+          ),
         );
       },
+    );
+  }
+
+  Widget _buildSectionTitle(String title, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 24,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(title, style: AppStyles.mobileBodyLargeSb),
+      ],
     );
   }
 }
