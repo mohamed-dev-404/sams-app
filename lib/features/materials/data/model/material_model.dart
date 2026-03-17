@@ -27,6 +27,7 @@ class MaterialModel {
     );
   }
 
+
   Map<String, dynamic> toJson() => {
     ApiKeys.id: id,
     ApiKeys.title: title,

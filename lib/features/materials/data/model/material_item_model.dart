@@ -18,7 +18,7 @@ class MaterialItemModel {
   Color get color => originalFileName?.fileColor ?? Colors.grey;
 
   factory MaterialItemModel.fromJson(Map<String, dynamic> json) {
-    final fileName = json[ApiKeys.originalFileName] as String? ?? '';
+    final fileName = json[ApiKeys.originalFileName] as String?;
 
     return MaterialItemModel(
       originalFileName: fileName,
@@ -34,5 +34,4 @@ class MaterialItemModel {
       ApiKeys.displayUrl: displayUrl,
     };
   }
-
 }
