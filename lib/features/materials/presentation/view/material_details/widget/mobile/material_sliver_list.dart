@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'material_item_card.dart';
+
+import '../shared/material_item_card.dart';
 
 class MaterialsSliverList extends StatelessWidget {
   MaterialsSliverList({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sams_app/features/materials/presentation/view/widget/shared/material_item_card.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_item_card.dart';
 
 class MaterialContentGrid extends StatelessWidget {
   const MaterialContentGrid({super.key});

@@ -3,11 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/features/materials/presentation/view/manage_material_view.dart';
-import 'package:sams_app/features/materials/presentation/view/widget/shared/material_sliver_list.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/mobile/material_sliver_list.dart';
 
-class MobileMaterialsDetailsViewBody extends StatelessWidget {
-  const MobileMaterialsDetailsViewBody({super.key});
+class MobileMaterialDetailsViewBody extends StatelessWidget {
+  const MobileMaterialDetailsViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +34,17 @@ class MobileMaterialsDetailsViewBody extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ManageMaterialView(isEditing: true,)));
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const ManageMaterialView(
+                        //       isEditing: true,
+                        //     ),
+                        //   ),
+                        // );
                       },
-                      child: SvgPicture.asset(AppIcons.iconsEditMaterial)),
+                      child: SvgPicture.asset(AppIcons.iconsEditMaterial),
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -53,11 +60,6 @@ class MobileMaterialsDetailsViewBody extends StatelessWidget {
             ),
           ),
         ),
-        // const SliverToBoxAdapter(
-        //   child: SizedBox(
-        //     height: 8,
-        //   ),
-        // ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

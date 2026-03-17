@@ -9,8 +9,8 @@ import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/shared/app_grid_style.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubit/material_cubit.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubit/material_state.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
 //* Displays the 'Materials' section for web
 class MaterialsWebLayout extends StatelessWidget {
@@ -22,20 +22,20 @@ class MaterialsWebLayout extends StatelessWidget {
     final bool isMobile = SizeConfig.isMobile(context);
 
     return TabBodyView(
-      child: BlocBuilder<MaterialCubit, MaterialsState>(
+      child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
         builder: (context, state) {
           // 1. Loading State
-          if (state is MaterialLoading) {
+          if (state is MaterialFetchLoading) {
             return const Center(child: AppAnimatedLoadingIndicator());
           }
 
           // 2. Failure State
-          if (state is MaterialFailure) {
+          if (state is MaterialFetchFailure) {
             return Center(child: Text(state.errMessage));
           }
 
           // 3. Success State
-          if (state is MaterialSuccess) {
+          if (state is MaterialFetchSuccess) {
             final materials = state.materials;
 
             return CustomScrollView(

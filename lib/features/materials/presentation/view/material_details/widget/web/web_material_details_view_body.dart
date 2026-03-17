@@ -3,8 +3,8 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_header.dart';
-import 'package:sams_app/features/materials/presentation/view/widget/shared/material_content_grid.dart';
-import 'package:sams_app/features/materials/presentation/view/widget/shared/material_details_side_card.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_content_grid.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_details_side_card.dart';
 
 class WebMaterialDetailsViewBody extends StatelessWidget {
   const WebMaterialDetailsViewBody({super.key});
