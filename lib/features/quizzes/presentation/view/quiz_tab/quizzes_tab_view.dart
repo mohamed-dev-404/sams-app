@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
-import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/mobile/quiz_mobile_layout.dart';
-import 'package:sams_app/features/quizzes/presentation/view/component/widget/get_quizes/web/quiz_web_layout.dart';
+import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/widgets/mobile/quiz_mobile_layout.dart';
+import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/widgets/web/quiz_web_layout.dart';
 
 class QuizzesTabView extends StatelessWidget {
   final String courseId;
