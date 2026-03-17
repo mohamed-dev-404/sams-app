@@ -30,7 +30,13 @@ import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit
 import 'package:sams_app/features/home/presentation/views/create_course/create_course_view.dart';
 import 'package:sams_app/features/home/presentation/views/home/home_view.dart';
 import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
-import 'package:sams_app/features/materials/presentation/view/materials_tab_view.dart';
+import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/data/repos/material_repo.dart';
+import 'package:sams_app/features/materials/presentation/view/manage_material/manage_material_view.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/material_details_view.dart';
+import 'package:sams_app/features/materials/presentation/view/material_tab_view/materials_tab_view.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/members_list/presentation/view/members_list_tab_view.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
@@ -180,7 +186,38 @@ class AppRouter {
         routes: [
           _buildTabRoute(
             RoutesName.materials,
-            (id) => MaterialsTabView(courseId: id),
+            (id) => BlocProvider(
+              create: (context) =>
+                  getIt<MaterialFetchCubit>()..fetchMaterials(courseId: id),// MaterialFetchCubit
+              child: MaterialsTabView(courseId: id),
+            ),
+            subRoutes: [
+              // * Material Details View Route
+              GoRoute(
+                name: RoutesName.materialDetails,
+                path: '${RoutesName.materialDetails}/:materialId',
+                parentNavigatorKey: navigatorKey,
+                builder: (context, state) {
+                  return const MaterialDetailsView();
+                },
+              ),
+
+              // * Manage Material (Add/Edit) Route 
+              GoRoute(
+                name: RoutesName.manageMaterial,
+                path: RoutesName.manageMaterial,
+                parentNavigatorKey: navigatorKey,
+                builder: (context, state) {
+                  return BlocProvider(
+                    create: (context) => MaterialCrudCubit(
+                      getIt<MaterialRepo>(),
+                      initialMaterial: state.extra as MaterialModel?,
+                    ),
+                    child: const ManageMaterialView(),
+                  );
+                },
+              ),
+            ],
           ),
           _buildTabRoute(
             RoutesName.assignments,
@@ -215,15 +252,17 @@ class AppRouter {
     ],
   );
 
-  //? Helper method to build tab routes under course details
+  // ? Helper method to build tab routes under course details
   static GoRoute _buildTabRoute(
     String path,
-    Widget Function(String courseId) viewBuilder,
-  ) {
+    Widget Function(String courseId) viewBuilder, {
+    List<RouteBase> subRoutes = const [],
+  }) {
     return GoRoute(
       path: '${RoutesName.courses}/:courseId/$path',
       builder: (context, state) =>
           viewBuilder(state.pathParameters['courseId'] ?? ''),
+      routes: subRoutes,
     );
   }
 }
