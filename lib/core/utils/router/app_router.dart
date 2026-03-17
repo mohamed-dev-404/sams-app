@@ -38,17 +38,17 @@ import 'package:sams_app/features/profile/presentation/views/profile/profile_vie
 
 // Quiz Views & Cubits
 import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
-import 'package:sams_app/features/quizzes/presentation/view/shared_flow/quiz_details/quiz_details_view.dart';
-import 'package:sams_app/features/quizzes/presentation/view/shared_flow/quiz_tab/quizzes_tab_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/create_quiz/create_quiz_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/grade_submission/grade_submission_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/manage_questions/manage_questions_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/quiz_details/quiz_details_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/quizzes_tab_view.dart';
+import 'package:sams_app/features/quizzes/presentation/view/submissions_list/submissions_list_view.dart';
 import 'package:sams_app/features/quizzes/presentation/view/take_quiz/take_quiz_view.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/browse_quiz_cubit/browse_quiz_cubit.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/manage_quiz_cubit/manage_quiz_cubit.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/take_quiz_cubit/take_quiz_cubit.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/grading_cubit/grading_cubit.dart';
-import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/create_quiz/create_quiz_view.dart';
-import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/manage_questions/manage_questions_view.dart';
-import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/submissions_list/submissions_list_view.dart';
-import 'package:sams_app/features/quizzes/presentation/view/instructor_flow/grade_submission/grade_submission_view.dart';
 
 class AppRouter {
   AppRouter._();
