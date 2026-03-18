@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/mobile/mobile_material_details_view.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/web_material_details_view.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 
 class MaterialDetailsView extends StatelessWidget {
@@ -19,7 +20,7 @@ class MaterialDetailsView extends StatelessWidget {
             ..fetchMaterialDetails(materialId: materialId),
       child: AdaptiveLayout(
         mobileLayout: (context) => const MobileMaterialDetailsView(),
-        webLayout: (context) => const Placeholder(),
+        webLayout: (context) => const WebMaterialDetailsView(),
       ),
     );
   }

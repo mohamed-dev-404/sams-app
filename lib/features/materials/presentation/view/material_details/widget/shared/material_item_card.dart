@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
@@ -87,8 +88,10 @@ class _MaterialItemCardState extends State<MaterialItemCard>
         child: Stack(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ), // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.whiteLight, // Your App Color
@@ -103,36 +106,71 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                 ],
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.icon != null
-                      ? Icon(widget.icon, size: 40, color: finalIconColor)
-                      : SvgPicture.asset(
-                          iconPath,
-                          width: 44,
-                          height: 44,
-                          colorFilter: ColorFilter.mode(
-                            finalIconColor,
-                            BlendMode.srcIn,
+                      ? Expanded(
+                          flex: 1,
+                          child: AspectRatio(
+                            aspectRatio: 70 / 56,
+                            child: Icon(
+                              widget.icon,
+                              size: 40,
+                              color: finalIconColor,
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          flex: 1,
+                          child: AspectRatio(
+                            aspectRatio: 70 / 56,
+                            child: SvgPicture.asset(
+                              iconPath,
+                              width: 44,
+                              height: 44,
+                              fit: BoxFit.contain,
+                              colorFilter: ColorFilter.mode(
+                                finalIconColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ),
                   const SizedBox(width: 12),
                   Expanded(
+                    flex: 4,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          widget.fileName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyles.mobileTitleSmallSb.copyWith(
-                            color: AppColors.primaryDarkHover,
+                        Flexible(
+                          flex: 1,
+                          child: AutoSizeText(
+                            widget.fileName,
+                            minFontSize: 8,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.mobileTitleSmallSb.copyWith(
+                              color: AppColors.primaryDarkHover,
+                            ),
                           ),
                         ),
+                        const Flexible(
+                          flex: 1,
+                          child: SizedBox(height: 2),
+                        ),
                         if (widget.description.isNotEmpty)
-                          Text(
-                            widget.description,
-                            style: AppStyles.mobileBodySmallRg.copyWith(
-                              color: AppColors.primary,
+                          Flexible(
+                            flex: 4,
+                            child: AutoSizeText(
+                              maxLines: 2,
+                              minFontSize: 8,                         
+                              widget.description,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.mobileBodySmallRg.copyWith(
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
                       ],
