@@ -5,8 +5,10 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/materials/data/model/material_item_model.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/file_preview_screen.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_item_card.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/video_player_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// A SliverList that displays course materials grouped by type (Videos and Documents).
 class MaterialsSliverList extends StatelessWidget {
   final List<MaterialItemModel> materials;
 
@@ -14,6 +16,7 @@ class MaterialsSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Handle empty state
     if (materials.isEmpty) {
       return const SliverToBoxAdapter(
         child: Center(
@@ -25,11 +28,13 @@ class MaterialsSliverList extends StatelessWidget {
       );
     }
 
+    // Categorize items based on file type
     final videoItems = materials.where((item) => item.isVideoItem).toList();
     final documentItems = materials.where((item) => !item.isVideoItem).toList();
 
     return SliverMainAxisGroup(
       slivers: [
+        // Render Video Section if available
         if (videoItems.isNotEmpty) ...[
           _buildHeader('Videos'),
           SliverList(
@@ -39,9 +44,13 @@ class MaterialsSliverList extends StatelessWidget {
             ),
           ),
         ],
+
+        // Render Document Section if available
         if (documentItems.isNotEmpty) ...[
+          // Add spacing between sections if both exist
           if (videoItems.isNotEmpty)
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            
           _buildHeader('Documents'),
           SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -54,6 +63,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Builds a section header with stylized text.
   Widget _buildHeader(String title) {
     return SliverToBoxAdapter(
       child: Padding(
@@ -69,6 +79,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Builds an individual material card and manages navigation logic based on platform and file type.
   Widget _buildCard(MaterialItemModel file, BuildContext context) {
     return MaterialItemCard(
       fileName: file.originalFileName ?? 'Unknown File',
@@ -80,22 +91,36 @@ class MaterialsSliverList extends StatelessWidget {
           : CourseMaterialType.pdf,
       onTap: () async {
         final url = file.displayUrl ?? '';
+        if (url.isEmpty) return;
 
         if (kIsWeb) {
-          await launchUrl(
-            Uri.parse(url),
-            webOnlyWindowName: '_blank',
-          );
+          // For Web platform: Open the file in a new browser tab
+          await launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FilePreviewScreen(
-                url: url,
-                fileName: file.originalFileName ?? 'File',
+          // For Mobile platforms: Determine the appropriate viewer
+          if (file.isVideoItem) {
+            // Navigate to the custom video player for video files
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoPlayerScreen(
+                  videoUrl: url,
+                  videoTitle: file.originalFileName ?? 'Video',
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            // Navigate to the standard file preview for documents (PDFs, Images, etc.)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FilePreviewScreen(
+                  url: url,
+                  fileName: file.originalFileName ?? 'File',
+                ),
+              ),
+            );
+          }
         }
       },
     );

@@ -30,6 +30,7 @@ environment:
 dependencies:
   auto_size_text: ^3.0.0
   cached_network_image: ^3.4.1
+  chewie: ^1.13.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
@@ -63,6 +64,7 @@ dependencies:
   shared_preferences: ^2.5.4
   skeletonizer: ^2.1.2
   url_launcher: ^6.3.2
+  video_player: ^2.11.1
   webview_flutter: ^4.13.1
   webview_flutter_plus: ^0.4.20
 
