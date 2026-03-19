@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/shared/app_grid_style.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
+import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
 //* Displays the 'Materials' section for web
 class MaterialsWebLayout extends StatelessWidget {
-  const MaterialsWebLayout({super.key});
+  const MaterialsWebLayout({super.key, required this.courseId});
+  final String courseId;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +52,20 @@ class MaterialsWebLayout extends StatelessWidget {
                         return AddNewCard(
                           isMobile: isMobile,
                           title: 'Add Material',
-                          onTap: () {
-                            //! TODO: Logic for adding material
+                          onTap: () async {
+                            final newMaterial = await context.pushNamed(
+                              RoutesName.manageMaterial,
+                              pathParameters: {
+                                'courseId': courseId,
+                              },
+                            );
+
+                            if (newMaterial is MaterialModel &&
+                                context.mounted) {
+                              context
+                                  .read<MaterialFetchCubit>()
+                                  .addMaterialToListView(newMaterial);
+                            }
                           },
                         );
                       }
@@ -62,7 +78,18 @@ class MaterialsWebLayout extends StatelessWidget {
                           description: material.description,
                           image: AppImages.imagesMaterialCard,
                           onTap: () {
-                            //! TODO: Navigate to details with material.id
+                            //? Fetching Material details
+                            context
+                                .read<MaterialFetchCubit>()
+                                .fetchMaterialDetails(materialId: material.id);
+                            //? Navigating to Material Details
+                            context.pushNamed(
+                              RoutesName.materialDetails,
+                              pathParameters: {
+                                'courseId': courseId,
+                                'materialId': material.id,
+                              },
+                            );
                           },
                         ),
                       );

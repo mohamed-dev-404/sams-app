@@ -8,6 +8,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
+import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -34,13 +35,19 @@ class MaterialsMobileLayout extends StatelessWidget {
                   child: AddNewCard(
                     isMobile: true,
                     title: 'Add Material',
-                    onTap: () {
-                      context.pushNamed(
+                    onTap: () async {
+                      final newMaterial = await context.pushNamed(
                         RoutesName.manageMaterial,
                         pathParameters: {
                           'courseId': courseId,
                         },
                       );
+
+                      if (newMaterial is MaterialModel && context.mounted) {
+                        context
+                            .read<MaterialFetchCubit>()
+                            .addMaterialToListView(newMaterial);
+                      }
                     },
                   ),
                 ),

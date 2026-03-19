@@ -28,7 +28,9 @@ class MaterialsTabView extends StatelessWidget {
         mobileLayout: (context) => MaterialsMobileLayout(
           courseId: courseId,
         ),
-        webLayout: (context) => const MaterialsWebLayout(),
+        webLayout: (context) => MaterialsWebLayout(
+          courseId: courseId,
+        ),
       ),
     );
   }
