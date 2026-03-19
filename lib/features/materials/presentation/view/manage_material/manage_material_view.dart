@@ -6,15 +6,20 @@ import 'package:sams_app/features/materials/presentation/view/manage_material/wi
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 
 class ManageMaterialView extends StatelessWidget {
-  const ManageMaterialView({super.key});
+  const ManageMaterialView({super.key, required this.courseId});
+  final String courseId;
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<MaterialCrudCubit>();
     final bool isEditMode = cubit.initialMaterial != null;
     return AdaptiveLayout(
-      mobileLayout: (context) =>
-          MobileManageMaterialView(isEditMode: isEditMode),
-      webLayout: (context) => WebManageMaterialView(isEditMode: isEditMode,),
+      mobileLayout: (context) => MobileManageMaterialView(
+        isEditMode: isEditMode,
+        courseId: courseId,
+      ),
+      webLayout: (context) => WebManageMaterialView(
+        isEditMode: isEditMode, courseId: courseId,
+      ),
     );
   }
 }
