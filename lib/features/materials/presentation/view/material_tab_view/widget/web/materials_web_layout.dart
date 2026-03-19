@@ -24,24 +24,24 @@ class MaterialsWebLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isInstructor = CurrentRole.role == UserRole.instructor;
     final bool isMobile = SizeConfig.isMobile(context);
-
     return TabBodyView(
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
+        buildWhen: (previous, current) =>
+            current is MaterialFetchSuccess ||
+            current is MaterialFetchLoading ||
+            current is MaterialFetchFailure,
         builder: (context, state) {
           // 1. Loading State
           if (state is MaterialFetchLoading) {
             return const Center(child: AppAnimatedLoadingIndicator());
           }
-
           // 2. Failure State
           if (state is MaterialFetchFailure) {
             return Center(child: Text(state.errMessage));
           }
-
           // 3. Success State
           if (state is MaterialFetchSuccess) {
             final materials = state.materials;
-
             return CustomScrollView(
               slivers: [
                 SliverGrid(
@@ -69,9 +69,8 @@ class MaterialsWebLayout extends StatelessWidget {
                           },
                         );
                       }
-
+                      
                       final material = materials[index];
-
                       return WebMainCard(
                         model: MainCardModel(
                           title: material.title,

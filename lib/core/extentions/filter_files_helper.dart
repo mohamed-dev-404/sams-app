@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
 
 /// [FileHelper] extension on [String]
 /// This helper manages file type detection, UI icons, and brand colors based on file extensions.
@@ -57,7 +58,7 @@ extension FileHelper on String {
   Color get fileColor {
     final name = toLowerCase();
 
-    if (isVideo) return Colors.blue; // Video: Blue
+    if (isVideo) return AppColors.secondary; // Video: Blue
     if (name.endsWith('.pdf')) return Colors.red; // PDF: Red
 
     // PPT: Orange
