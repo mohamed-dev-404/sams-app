@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/web/web_manage_material_view_body.dart';
 
 class WebManageMaterialView extends StatelessWidget {
-  const WebManageMaterialView({super.key,required this.isEditMode});
-
+  const WebManageMaterialView({
+    super.key,
+    required this.isEditMode,
+    required this.courseId,
+  });
   final bool isEditMode;
+  final String courseId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WebManageMaterialViewBody(isEditMode: isEditMode,),
+      body: WebManageMaterialViewBody(
+        isEditMode: isEditMode,
+        courseId: courseId,
+      ),
     );
   }
 }

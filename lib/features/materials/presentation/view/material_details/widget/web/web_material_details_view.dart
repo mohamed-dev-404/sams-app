@@ -13,7 +13,7 @@ class WebMaterialDetailsView extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ManageMaterialView(),
+              builder: (context) => const ManageMaterialView(courseId: '',),
             ),
           );
         },
