@@ -93,36 +93,34 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
   }
 
   Widget _buildFormContent() {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Form(
-              key: formKey,
-              child: CustomBasicInformationSection(
-                sectionTitle: 'Basic Information',
-                fields: [
-                  InputFieldData(
-                    label: 'Title',
-                    hint: 'e.g. Chapter 1',
-                    controller: titleController,
-                  ),
-                  InputFieldData(
-                    label: 'Subtitle',
-                    hint: 'e.g. Overview',
-                    controller: subtitleController,
-                  ),
-                ],
-              ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Form(
+            key: formKey,
+            child: CustomBasicInformationSection(
+              sectionTitle: 'Basic Information',
+              fields: [
+                InputFieldData(
+                  label: 'Title',
+                  hint: 'e.g. Chapter 1',
+                  controller: titleController,
+                ),
+                InputFieldData(
+                  label: 'Subtitle',
+                  hint: 'e.g. Overview',
+                  controller: subtitleController,
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: CourseMaterialSection(key: materialSectionKey),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(width: 24),
+        Expanded(
+          child: CourseMaterialSection(key: materialSectionKey),
+        ),
+      ],
     );
   }
 
