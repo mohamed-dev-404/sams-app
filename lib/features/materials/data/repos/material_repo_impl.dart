@@ -65,7 +65,7 @@ class MaterialRepoImpl implements MaterialRepo {
     }
   }
 
-  //* UPLOAD material with full workflow 
+  //* UPLOAD material with full workflow
   @override
   Future<Either<String, MaterialModel>> uploadMaterialFullWorkflow({
     required String courseId,
@@ -77,6 +77,7 @@ class MaterialRepoImpl implements MaterialRepo {
       //! Step 1: Request Presigned URLs
       final List<PresignedUrlModel> metadataList = await _getBatchPresignedUrls(
         selectedFiles,
+        courseId,
       );
 
       //! Step 2: Parallel S3 Upload
@@ -98,6 +99,8 @@ class MaterialRepoImpl implements MaterialRepo {
       final createdMaterial = await _confirmUpload(
         courseId: courseId,
         metadata: metadataList,
+        title: title,
+        description: description,
       );
 
       return Right(createdMaterial);
@@ -111,23 +114,37 @@ class MaterialRepoImpl implements MaterialRepo {
   /// Final Confirmation that returns the created Material object
   Future<MaterialModel> _confirmUpload({
     required String courseId,
+    //
+    required String title,
+    required String description,
+    //
     required List<PresignedUrlModel> metadata,
   }) async {
     //* Map metadata to FileUploadReference object
     final List<FileUploadReference> items = metadata
         .map(
           (m) => FileUploadReference(
-            originalFileName: m.originalFileName,// original file name
-            contentType: m.originalFileName.fileContentType,// file type 
-            contentReference: m.key,// s3 key 
+            originalFileName: m.originalFileName, // original file name
+            contentType: m.originalFileName.fileContentType, // file type
+            contentReference: m.key, // s3 key
           ),
         )
         .toList();
 
+    final createResponse = await api.post(
+      EndPoints.addMaterial(courseId),
+      data: {
+        ApiKeys.title: title,
+        ApiKeys.description: description,
+      },
+    );
+
+    final materialId = createResponse[ApiKeys.data][ApiKeys.id];
+
     final requestBody = AddMaterialItemsRequest(materialItems: items);
 
     final response = await api.post(
-      EndPoints.addMaterialItems(courseId),
+      EndPoints.addMaterialItems(materialId),
       data: requestBody.toJson(),
     );
 
@@ -137,28 +154,28 @@ class MaterialRepoImpl implements MaterialRepo {
   /// Requests upload URLs from the server
   Future<List<PresignedUrlModel>> _getBatchPresignedUrls(
     List<XFile> files,
+    String courseId,
   ) async {
+    final filesMetadata = await Future.wait(
+      files.map((f) async {
+        final name = f.name.isNotEmpty ? f.name : f.path.split('/').last;
+        final bytes = await f.readAsBytes();
+        return {
+          ApiKeys.originalFileName: name,
+          ApiKeys.contentType: name.fileContentType,
+          ApiKeys.fileSize: bytes.length,
+        };
+      }),
+    );
     //* Request upload URLs from the server
     final response = await api.post(
-      EndPoints.createMaterialUploadUrls,
-      data: {
-        'files': files
-            .map(
-              (f) => {
-                ApiKeys.originalFileName: f.name,
-                ApiKeys.contentType:
-                    f.name.fileContentType, // Using the fileContentType Extension
-              },
-            )
-            .toList(),
-      },
+      EndPoints.createMaterialUploadUrls(courseId),
+      data: {ApiKeys.filesMetadata: filesMetadata},
     );
 
     final List data = response[ApiKeys.data];
     return data.map((e) => PresignedUrlModel.fromJson(e)).toList();
   }
-
-
 
   //* Returns materials from local cache
   @override

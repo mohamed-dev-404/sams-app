@@ -9,7 +9,10 @@ sealed class MaterialCrudState {}
 final class MaterialCrudInitial extends MaterialCrudState {}
 
 //? Emitted while performing an action (e.g., uploading to S3 & Backend).
-final class MaterialCrudLoading extends MaterialCrudState {}
+class MaterialCrudLoading extends MaterialCrudState {
+  final bool isUploadingFiles;
+  MaterialCrudLoading({this.isUploadingFiles = false});
+}
 
 //* Emitted when a material action completes successfully.
 final class MaterialCrudSuccess extends MaterialCrudState {

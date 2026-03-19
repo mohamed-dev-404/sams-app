@@ -188,7 +188,8 @@ class AppRouter {
             RoutesName.materials,
             (id) => BlocProvider(
               create: (context) =>
-                  getIt<MaterialFetchCubit>()..fetchMaterials(courseId: id),// MaterialFetchCubit
+                  getIt<MaterialFetchCubit>()
+                    ..fetchMaterials(courseId: id), // MaterialFetchCubit
               child: MaterialsTabView(courseId: id),
             ),
             subRoutes: [
@@ -198,22 +199,32 @@ class AppRouter {
                 path: '${RoutesName.materialDetails}/:materialId',
                 parentNavigatorKey: navigatorKey,
                 builder: (context, state) {
-                  return const MaterialDetailsView();
+                  final materialId = state.pathParameters['materialId'] ?? '';
+
+                  return BlocProvider(
+                    create: (context) =>
+                        getIt<MaterialFetchCubit>()
+                          ..fetchMaterialDetails(materialId: materialId),
+                    child: const MaterialDetailsView(),
+                  );
                 },
               ),
 
-              // * Manage Material (Add/Edit) Route 
+              // * Manage Material (Add/Edit) Route
               GoRoute(
                 name: RoutesName.manageMaterial,
                 path: RoutesName.manageMaterial,
                 parentNavigatorKey: navigatorKey,
                 builder: (context, state) {
+                  final courseId = state.pathParameters['courseId'] ?? '';
                   return BlocProvider(
                     create: (context) => MaterialCrudCubit(
                       getIt<MaterialRepo>(),
                       initialMaterial: state.extra as MaterialModel?,
                     ),
-                    child: const ManageMaterialView(),
+                    child:  ManageMaterialView(
+                      courseId: courseId,
+                    ),
                   );
                 },
               ),

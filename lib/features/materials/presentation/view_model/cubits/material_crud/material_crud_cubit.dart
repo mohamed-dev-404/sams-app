@@ -23,7 +23,7 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
     required List<XFile> selectedFiles,
   }) async {
     // 1. Show loading state to block UI or show progress
-    emit(MaterialCrudLoading());
+    emit(MaterialCrudLoading(isUploadingFiles: selectedFiles.isNotEmpty));
 
     // 2. Execute the full workflow in the repository
     final result = await materialsRepo.uploadMaterialFullWorkflow(

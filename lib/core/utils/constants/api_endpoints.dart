@@ -34,10 +34,10 @@ class EndPoints {
   //? --- Materials --- ;
   static String getMaterials(String courseId) => 'courses/$courseId/materials';
   static String materialDetails(String materialId) => 'materials/$materialId';
-  static const String createMaterialUploadUrls = 'materials/presigned-urls';
-  static String addMaterial(String courseId) => 'courses/$courseId/materials';
-  static String deleteMaterial(String materialId) => 'materials/$materialId';
+  static String createMaterialUploadUrls(String courseId) => 'instructor/courses/$courseId/materials/presigned-urls';
+  static String addMaterial(String courseId) => 'instructor/courses/$courseId/materials';
+  static String deleteMaterial(String materialId) => 'instructor/materials/$materialId';
   static String deleteMaterialItem(String materialId) => 'materials/$materialId/items';
-  static String addMaterialItems(String materialId) => 'materials/$materialId/items';
+  static String addMaterialItems(String materialId) => 'instructor/materials/$materialId/items';
   static String updateMaterialData(String materialId) => 'materials/$materialId';
 }
