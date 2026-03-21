@@ -1,5 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:sams_app/core/errors/exceptions/api_exception.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
+import 'package:sams_app/core/utils/constants/api_endpoints.dart';
+import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/quiz_answer_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/submit_quiz_request_body.dart';
 import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
@@ -7,10 +13,12 @@ class QuizRepositoryImpl implements QuizRepository {
 
   QuizRepositoryImpl({required this.api});
 
-  // --- Discovery Flow ---
+  // ! --- Discovery Flow ---
 
   @override
-  Future<Either<String, List<dynamic>>> getQuizzesForCourse(String courseId) async {
+  Future<Either<String, List<dynamic>>> getQuizzesForCourse(
+    String courseId,
+  ) async {
     // TODO: implement getQuizzesForCourse
     throw UnimplementedError();
   }
@@ -21,22 +29,47 @@ class QuizRepositoryImpl implements QuizRepository {
     throw UnimplementedError();
   }
 
+  // * get all questions for a quiz (/api/v1/quizzes/:quizId/questions)
   @override
-  Future<Either<String, List<dynamic>>> getQuizQuestions(String quizId) async {
-    // TODO: implement getQuizQuestions
-    throw UnimplementedError();
+  Future<Either<String, List<QuestionModel>>> getQuizQuestions(
+    String quizId,
+  ) async {
+    try {
+      // hit getAllQuestions request
+      Map<String, dynamic> response = await api.get(
+        EndPoints.getQuizQuestions(quizId),
+      );
+
+      //parsing and initialize questionsList
+      final questionsList = response[ApiKeys.data] as List<dynamic>;
+      final questions = questionsList
+          .map((e) => QuestionModel.fromJson(e))
+          .toList();
+
+      return Right(questions); // success case, return questions
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   // --- Instructor Flow: Quiz CRUD ---
 
   @override
-  Future<Either<String, String>> createQuiz(String courseId, Map<String, dynamic> data) async {
+  Future<Either<String, String>> createQuiz(
+    String courseId,
+    Map<String, dynamic> data,
+  ) async {
     // TODO: implement createQuiz
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<String, String>> updateQuiz(String quizId, Map<String, dynamic> data) async {
+  Future<Either<String, String>> updateQuiz(
+    String quizId,
+    Map<String, dynamic> data,
+  ) async {
     // TODO: implement updateQuiz
     throw UnimplementedError();
   }
@@ -56,13 +89,19 @@ class QuizRepositoryImpl implements QuizRepository {
   // --- Instructor Flow: Questions CRUD ---
 
   @override
-  Future<Either<String, String>> addQuestion(String quizId, Map<String, dynamic> data) async {
+  Future<Either<String, String>> addQuestion(
+    String quizId,
+    Map<String, dynamic> data,
+  ) async {
     // TODO: implement addQuestion
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<String, String>> updateQuestion(String questionId, Map<String, dynamic> data) async {
+  Future<Either<String, String>> updateQuestion(
+    String questionId,
+    Map<String, dynamic> data,
+  ) async {
     // TODO: implement updateQuestion
     throw UnimplementedError();
   }
@@ -73,30 +112,53 @@ class QuizRepositoryImpl implements QuizRepository {
     throw UnimplementedError();
   }
 
-  // --- Student Flow: Taking Quizzes ---
+  // ! --- Student Flow: Taking Quizzes ---
 
+  // * submit quiz (/api/v1/quizzes/:quizId/submit)
   @override
-  Future<Either<String, String>> submitQuiz(String quizId, Map<String, dynamic> data) async {
-    // TODO: implement submitQuiz
-    throw UnimplementedError();
+  Future<Either<String, String>> submitQuiz(
+    String quizId,
+    List<QuizAnswerModel> answers,
+  ) async {
+    try {
+      // hit submitQuiz request
+      Map<String, dynamic> response = await api.post(
+        EndPoints.submitQuiz(quizId),
+        data: SubmitQuizRequestBody(answers: answers).toJson(),
+      );
+
+      return Right(response[ApiKeys.message]); // success case, return message
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   // --- Instructor Flow: Grading ---
 
   @override
-  Future<Either<String, List<dynamic>>> getQuizSubmissions(String quizId) async {
+  Future<Either<String, List<dynamic>>> getQuizSubmissions(
+    String quizId,
+  ) async {
     // TODO: implement getQuizSubmissions
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<String, dynamic>> getSubmissionDetails(String submissionId) async {
+  Future<Either<String, dynamic>> getSubmissionDetails(
+    String submissionId,
+  ) async {
     // TODO: implement getSubmissionDetails
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<String, String>> gradeSubmissionQuestion(String submissionId, String questionId, Map<String, dynamic> data) async {
+  Future<Either<String, String>> gradeSubmissionQuestion(
+    String submissionId,
+    String questionId,
+    Map<String, dynamic> data,
+  ) async {
     // TODO: implement gradeSubmissionQuestion
     throw UnimplementedError();
   }
