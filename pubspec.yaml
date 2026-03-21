@@ -40,6 +40,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_countdown_timer: ^4.1.0
   flutter_image_compress: ^2.4.0
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^10.0.0

@@ -21,9 +21,7 @@ class SubmissionsListWebLayout extends StatelessWidget {
         .toList();
 
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF1F5F9,
-      ), // Slightly deeper grey for web depth
+      backgroundColor: AppColors.white,
       body: Row(
         children: [
           // Optional: Side Navigation would go here
