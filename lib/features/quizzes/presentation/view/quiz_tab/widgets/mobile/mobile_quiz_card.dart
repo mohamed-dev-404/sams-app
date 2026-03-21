@@ -32,7 +32,7 @@ class MobileQuizCard extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        onTap: quizModel.isEnded ? null : onTap,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -68,21 +68,33 @@ class MobileQuizCard extends StatelessWidget {
               children: [
                 Text(
                   quizModel.title,
-                  style: AppStyles.mobileTitleSmallSb.copyWith(
+                  style: AppStyles.web16Semibold.copyWith(
                     color: style.titleColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  quizModel.description ?? 'No description available',
-                  style: AppStyles.mobileBodySmallRg.copyWith(
-                    color: style.descriptionColor,
+
+                SizedBox(
+                  //? Calculate fixed height for 3 lines to maintain consistent card size
+                  height:
+                      (AppStyles.mobileBodyXsmallRg.fontSize ?? 12) *
+                      (AppStyles.mobileBodyXsmallRg.height ?? 1.4) *
+                      3,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      quizModel.description ?? 'No description available',
+                      style: AppStyles.mobileBodyXsmallRg.copyWith(
+                        color: style.descriptionColor,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                 ),
+
                 const SizedBox(height: 12),
                 QuizStatusBadge(
                   state: quizModel.state,

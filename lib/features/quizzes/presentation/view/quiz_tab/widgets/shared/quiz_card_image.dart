@@ -14,23 +14,52 @@ class QuizCardImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isActive = state == QuizState.available;
-    final bool isUpcoming = state == QuizState.upcoming;
+    // Determine background and border colors using a switch expression
+    final (Color bgColor, Color borderColor) = switch (state) {
+      //! --- Student States (Untouched Logic) ---
+      QuizState.available => (
+        AppColors.primaryLightActive.withValues(alpha: 0.4),
+        const Color.fromARGB(255, 92, 182, 200).withValues(alpha: 0.1),
+      ),
+      QuizState.upcoming => (
+        StatusColors.orangeTransparent,
+        StatusColors.orange.withValues(alpha: 0.2),
+      ),
+      QuizState.closed => (
+        AppColors.whiteHover.withValues(alpha: 0.5),
+        Colors.transparent,
+      ),
+
+      //! --- Instructor States ---
+      QuizState.onGoing => (
+        StatusColors.green.withValues(alpha: 0.1),
+        StatusColors.green.withValues(alpha: 0.2),
+      ),
+      QuizState.scheduled => (
+        StatusColors.blue.withValues(alpha: 0.1),
+        StatusColors.blue.withValues(alpha: 0.5),
+      ),
+      QuizState.completed => (
+        AppColors.primaryLightActive.withValues(alpha: 0.4),
+        AppColors.primary.withValues(alpha: 0.2),
+      ),
+      QuizState.draft => (
+        AppColors.whiteHover.withValues(alpha: 0.7),
+        AppColors.whiteDark.withValues(alpha: 0.7),
+      ),
+      QuizState.lockedDraft => (
+        AppColors.redLightHover.withValues(alpha: 0.6),
+        StatusColors.red.withValues(alpha: 0.2),
+      ),
+    };
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: isActive
-            ? AppColors.primaryLightActive.withValues(alpha: 0.4)
-            : isUpcoming
-            ? StatusColors.orangeTransparent
-            : AppColors.whiteHover.withValues(alpha: 0.5),
+        color: bgColor,
         border: Border.all(
-          color: isActive
-              ? AppColors.primaryActive.withValues(alpha: 0.1)
-              : isUpcoming
-              ? StatusColors.orange.withValues(alpha: 0.2)
-              : Colors.transparent,
+          color: borderColor,
         ),
       ),
       child: SvgPicture.asset(

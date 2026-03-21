@@ -17,6 +17,7 @@ class QuizStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (IconData icon, String text, Color color) = switch (state) {
+      //! Student States
       QuizState.available => (
         Icons.sensors_rounded,
         'Available Now',
@@ -32,16 +33,33 @@ class QuizStatusBadge extends StatelessWidget {
         'Quiz Closed',
         AppColors.whiteDarkActive,
       ),
-      // TODO: Handle this case.
-      QuizState.draft => throw UnimplementedError(),
-      // TODO: Handle this case.
-      QuizState.scheduled => throw UnimplementedError(),
-      // TODO: Handle this case.
-      QuizState.onGoing => throw UnimplementedError(),
-      // TODO: Handle this case.
-      QuizState.completed => throw UnimplementedError(),
-      // TODO: Handle this case.
-      QuizState.lockedDraft => throw UnimplementedError(),
+
+      //! Instructor States
+      QuizState.onGoing => (
+        Icons.podcasts_rounded,
+        'Live',
+        StatusColors.green,
+      ),
+      QuizState.scheduled => (
+        Icons.event_available_rounded,
+        'Scheduled: $formattedTime',
+        StatusColors.blue,
+      ),
+      QuizState.completed => (
+        Icons.check_circle_rounded,
+        'Completed',
+        AppColors.primary,
+      ),
+      QuizState.draft => (
+        Icons.edit_note_rounded,
+        'Draft',
+        AppColors.whiteDarkActive,
+      ),
+      QuizState.lockedDraft => (
+        Icons.lock_clock_rounded,
+        'Locked Draft',
+        StatusColors.red,
+      ),
     };
 
     return Container(

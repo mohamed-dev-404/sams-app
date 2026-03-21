@@ -43,12 +43,11 @@ class QuizsWebLayout extends StatelessWidget {
               return WebQuizCard(
                 quizModel: quiz,
                 onTap: () {
-                  if (quiz.state == QuizState.available) {
+                  if (quiz.state != QuizState.closed) {
                     context.goNamed(
                       RoutesName.quizDetails,
                       pathParameters: {
-                        'courseId':
-                            courseId, // Extracted from GoRouterState above
+                        'courseId': courseId,
                         'quizId': quiz.id,
                       },
                     );
