@@ -1,72 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/helper/app_toast.dart';
+import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
-import 'package:sams_app/features/quizzes/data/mock_data.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/widgets/mobile/mobile_quiz_card.dart';
 
 class QuizMobileLayout extends StatelessWidget {
-  const QuizMobileLayout({super.key});
+  final String courseId;
+  final List<QuizModel> quizzes;
+  final UserRole userRole;
+
+  const QuizMobileLayout({
+    super.key,
+    required this.courseId,
+    required this.quizzes,
+    required this.userRole,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bool isInstructor = CurrentRole.role == UserRole.instructor;
-    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
+    final bool isInstructor = userRole == UserRole.instructor;
 
-    return ListView(
-      // Padding around the entire scrollable area
-      padding: const EdgeInsets.only(bottom: 24),
-      children: [
-        // 1. Title Section
-        Text(
-          'Quizzes',
-          style: AppStyles.mobileTitleSmallSb.copyWith(fontSize: 24),
-        ),
-        const SizedBox(height: 24),
+    // Calculate how many fixed items we have before the actual quiz list
+    // Title is always there (1), Add button only for instructor (+1)
+    final int headerCount = isInstructor ? 2 : 1;
 
-        // 2. Instructor Create Action
-        if (isInstructor) ...[
-          AddNewCard(
-            title: 'Create Quiz',
-            isMobile: true,
-            onTap: () {
-              context.pushNamed(
-                RoutesName.createQuiz,
-                pathParameters: {'courseId': courseId},
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-        ],
-
-        // 3. Quiz List Section (Using a loop instead of nested ListView)
-        // This ensures the entire page scrolls as one unit
-        ...mockQuizzes.map((quiz) {
+    return ListView.builder(
+      // Total items = Headers + Quizzes (or 1 for Lottie if empty)
+      itemCount: headerCount + (quizzes.isEmpty ? 1 : quizzes.length),
+      itemBuilder: (context, index) {
+        // 1. Render Title Section
+        if (index == 0) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: MobileQuizCard(
-              quizModel: quiz,
-              onTap: () => _handleQuizNavigation(context, quiz, courseId),
+            padding: const EdgeInsets.only(bottom: 24.0),
+            child: Text(
+              'Quizzes',
+              style: AppStyles.mobileTitleSmallSb.copyWith(fontSize: 24),
             ),
           );
-        }),
-      ],
+        }
+
+        // 2. Render Instructor Add Button (Only if index 1 and user is instructor)
+        if (isInstructor && index == 1) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: AddNewCard(
+              title: 'Create Quiz',
+              isMobile: true,
+              onTap: () => _navigateToCreateQuiz(context),
+            ),
+          );
+        }
+
+        // 3. Handle Empty State or Quiz List
+        // Calculate the actual quiz index by subtracting headers
+        final int quizIndex = index - headerCount;
+
+        if (quizzes.isEmpty) {
+          return Center(
+            child: Lottie.asset(AppLottie.empty),
+          );
+        }
+
+        // 4. Render Quiz Cards
+        final quiz = quizzes[quizIndex];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: MobileQuizCard(
+            quizModel: quiz,
+            onTap: () => _handleQuizNavigation(context, quiz),
+          ),
+        );
+      },
     );
   }
 
-  /// Logic to handle navigation based on user role and quiz state
-  void _handleQuizNavigation(
-    BuildContext context,
-    QuizModel quiz,
-    String courseId,
-  ) {
-    bool canEnter =
-        quiz.state != QuizState.closed ||
-        CurrentRole.role == UserRole.instructor;
+  /// Navigation logic to create quiz screen
+  void _navigateToCreateQuiz(BuildContext context) {
+    context.pushNamed(
+      RoutesName.createQuiz,
+      pathParameters: {'courseId': courseId},
+    );
+  }
+
+  /// Centralized navigation logic based on business rules
+  void _handleQuizNavigation(BuildContext context, QuizModel quiz) {
+    final bool isInstructor = userRole == UserRole.instructor;
+    final bool canEnter = quiz.state != QuizState.closed || isInstructor;
 
     if (canEnter) {
       context.pushNamed(

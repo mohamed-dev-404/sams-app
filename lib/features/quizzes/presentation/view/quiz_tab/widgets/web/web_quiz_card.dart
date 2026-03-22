@@ -45,15 +45,6 @@ class _WebQuizCardState extends State<WebQuizCard> {
                   : style.borderColor,
               width: 1.5,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(
-                  alpha: isHovered ? 0.08 : 0.03,
-                ),
-                blurRadius: isHovered ? 24 : 12,
-                offset: isHovered ? const Offset(0, 10) : const Offset(0, 4),
-              ),
-            ],
           ),
           child: Stack(
             children: [

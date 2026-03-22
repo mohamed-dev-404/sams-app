@@ -19,7 +19,7 @@ class QuizCardImage extends StatelessWidget {
       //! --- Student States (Untouched Logic) ---
       QuizState.available => (
         AppColors.primaryLightActive.withValues(alpha: 0.4),
-        const Color.fromARGB(255, 92, 182, 200).withValues(alpha: 0.1),
+        AppColors.primary.withValues(alpha: 0.2),
       ),
       QuizState.upcoming => (
         StatusColors.orangeTransparent,

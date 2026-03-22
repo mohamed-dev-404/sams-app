@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
-//import 'package:lottie/lottie.dart';
 
 class QuizStatusBadge extends StatelessWidget {
   final QuizState state;
@@ -17,7 +16,7 @@ class QuizStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (IconData icon, String text, Color color) = switch (state) {
-      //! Student States
+      //! --- Student States ---
       QuizState.available => (
         Icons.sensors_rounded,
         'Available Now',
@@ -34,7 +33,7 @@ class QuizStatusBadge extends StatelessWidget {
         AppColors.whiteDarkActive,
       ),
 
-      //! Instructor States
+      //! --- Instructor States ---
       QuizState.onGoing => (
         Icons.podcasts_rounded,
         'Live',
@@ -77,13 +76,6 @@ class QuizStatusBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // if (state == QuizState.active)
-            //   Lottie.asset(
-            //     'assets/StatusGreen.json',
-            //     height: 14,
-
-            //   )
-            // else
             Icon(icon, size: 14, color: color),
             const SizedBox(width: 4),
             Text(

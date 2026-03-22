@@ -182,7 +182,7 @@ class QuizTrailingIcon extends StatelessWidget {
 
       QuizState.lockedDraft => Container(
         key: const ValueKey('locked_draft'),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.redLightHover,
           shape: BoxShape.circle,
         ),
