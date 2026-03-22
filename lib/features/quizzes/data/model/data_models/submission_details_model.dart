@@ -23,6 +23,7 @@ class SubmissionDetailsModel {
   final int points;
   final int earnedPoints;
   final bool? isCorrect; // Null specifically means pending manual grading
+  final bool isGraded;
 
   // MCQ & TF specific fields
   final List<AnswerOptionModel>? options;
@@ -38,6 +39,7 @@ class SubmissionDetailsModel {
     required this.timeLimit,
     required this.points,
     required this.earnedPoints,
+    required this.isGraded,
     this.isCorrect,
     this.options,
     this.selectedOptionId,
@@ -73,8 +75,8 @@ class SubmissionDetailsModel {
   QuestionUIState get state {
     if (questionType == ApiValues.written) {
       // If isCorrect is false here, it means the student left it empty (auto 0 points).
-      // If isCorrect is null, it requires the instructor to grade it.
-      return isCorrect == null
+      // If isGraded is false, it requires the instructor to grade it.
+      return isGraded == false
           ? QuestionUIState.unmarked
           : QuestionUIState.marked;
     } else {
@@ -124,6 +126,7 @@ class SubmissionDetailsModel {
       points: json[ApiKeys.points] ?? 0,
       earnedPoints: json[ApiKeys.earnedPoints] ?? 0,
       isCorrect: json[ApiKeys.isCorrect], // Keep nullable for pending grades
+      isGraded: json[ApiKeys.isGraded] ?? false,
       // Inject the safely parsed variables
       options: parsedOptions,
       selectedOptionId: parsedSelectedOptionId,
