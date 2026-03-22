@@ -1,8 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 
 abstract class QuizRepository {
-  // --- Discovery Flow ---
-  Future<Either<String, List<dynamic>>> getQuizzesForCourse(String courseId);
+
+// Method to fetch all quizzes for a specific course
+  Future<Either<String, List<QuizModel>>> getQuizzesForCourse(String courseId);
+  
   Future<Either<String, dynamic>> getQuizDetails(String quizId);
   Future<Either<String, List<dynamic>>> getQuizQuestions(String quizId);
 

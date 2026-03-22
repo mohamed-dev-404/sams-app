@@ -81,14 +81,28 @@ class QuizModel {
       parsedDescription = json[ApiKeys.description];
     }
 
+    /// Converts a string to DateTime, handling ISO 8601 and custom backend formats.
+    DateTime parseDate(String? dateStr) {
+      if (dateStr == null || dateStr.isEmpty) return DateTime.now();
+
+      // 1. Try Standard ISO 8601
+      var parsed = DateTime.tryParse(dateStr);
+      if (parsed != null) return parsed.toLocal();
+
+      // 2. Try Custom Backend Format (M/d/yyyy, h:mm:ss a)
+      try {
+        return DateFormat('M/d/yyyy, h:mm:ss a').parse(dateStr).toLocal();
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
     return QuizModel(
       id: json[ApiKeys.id] ?? '',
       title: json[ApiKeys.title] ?? '',
       description: parsedDescription,
-      // Parse the ISO 8601 strings directly into DateTime objects
-      startTime:
-          DateTime.tryParse(json[ApiKeys.startTime] ?? '') ?? DateTime.now(),
-      endTime: DateTime.tryParse(json[ApiKeys.endTime] ?? '') ?? DateTime.now(),
+      startTime: parseDate(json[ApiKeys.startTime]),
+      endTime: parseDate(json[ApiKeys.endTime]),
       totalTime: json[ApiKeys.totalTime] ?? 0,
       totalScore: json[ApiKeys.totalScore] ?? 0,
       numberOfQuestions: json[ApiKeys.numberOfQuestions] ?? 0,
