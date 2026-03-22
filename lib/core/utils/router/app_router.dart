@@ -242,9 +242,11 @@ class AppRouter {
                     name: RoutesName.takeQuiz,
                     path: RoutesName.takeQuiz,
                     builder: (context, state) => BlocProvider(
-                      create: (context) =>
-                          TakeQuizCubit(getIt<QuizRepository>()),
-                      child: const TakeQuizView(),
+                      create: (context) => TakeQuizCubit(
+                        getIt<QuizRepository>(),
+                        // TODO: get quiz id from state and quiz title from extra
+                      )..fetchQuestionsAndStart('69bec5cc77cb6287f4237c7b'),
+                      child: const TakeQuizView(quizTitle: 'test Quiz'),
                     ),
                   ),
                 ],
