@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/common/quiz_details_header.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/common/stats_row.dart';
@@ -40,7 +42,16 @@ class QuizDetailsMobileStudentLayout extends StatelessWidget {
 
                   StudentActionCard(
                     onPressed: () {
-                      // TODO: nav to quiz
+                      context.goNamed(
+                        RoutesName.takeQuiz,
+                        pathParameters: {
+                          'courseId': getCourseId(
+                            context,
+                          ),
+                          'quizId': quiz.id,
+                        },
+                        extra: quiz.title,
+                      );
                     },
                     quiz: quiz,
                   ),
@@ -58,4 +69,7 @@ class QuizDetailsMobileStudentLayout extends StatelessWidget {
       ),
     );
   }
+
+  static String getCourseId(BuildContext context) =>
+      GoRouterState.of(context).pathParameters['courseId'] ?? '';
 }

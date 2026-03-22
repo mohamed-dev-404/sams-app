@@ -212,7 +212,7 @@ class AppRouter {
                   return BlocProvider(
                     create: (context) =>
                         QuizDetailsCubit(getIt<QuizRepository>()),
-                    child: QuizDetailsView(quizId: quizId), 
+                    child: QuizDetailsView(quizId: quizId),
                   );
                 },
                 routes: [
@@ -249,13 +249,22 @@ class AppRouter {
                   GoRoute(
                     name: RoutesName.takeQuiz,
                     path: RoutesName.takeQuiz,
-                    builder: (context, state) => BlocProvider(
-                      create: (context) => TakeQuizCubit(
-                        getIt<QuizRepository>(),
-                        // TODO: get quiz id from state and quiz title from extra
-                      )..fetchQuestionsAndStart('69bec5cc77cb6287f4237c7b'),
-                      child: const TakeQuizView(quizTitle: 'test Quiz'),
-                    ),
+                    parentNavigatorKey: navigatorKey, // FULL SCREEN
+
+                    builder: (context, state) {
+                      final quizId = state.pathParameters['quizId']!;
+
+                      final quizTitle = state.extra as String? ?? 'Quiz';
+
+                      return BlocProvider(
+                        create: (context) => TakeQuizCubit(
+                          getIt<QuizRepository>(),
+                        )..fetchQuestionsAndStart(quizId),
+                        child: TakeQuizView(
+                          quizTitle: quizTitle,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

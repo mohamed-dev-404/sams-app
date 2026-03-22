@@ -12,7 +12,7 @@ class StudentActionCard extends StatelessWidget {
     required this.quiz,
   });
 
-  final VoidCallback onPressed;
+  final void Function() onPressed;
   final QuizModel quiz;
 
   @override

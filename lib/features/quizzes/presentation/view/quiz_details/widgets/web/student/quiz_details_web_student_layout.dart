@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/common/quiz_details_header.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/common/stats_row.dart';
@@ -22,13 +24,15 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: width > 940 ? _buildDesktopLayout() : _buildTabletLayout(),
+        child: width > 940
+            ? _buildDesktopLayout(context)
+            : _buildTabletLayout(context),
       ),
     );
   }
 
   // * 1. Desktop Layout
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -54,7 +58,7 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
             //* Right Column: Timer & Action Card
             Expanded(
               flex: 4,
-              child: _buildSideContent(),
+              child: _buildSideContent(context),
             ),
           ],
         ),
@@ -63,7 +67,7 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
   }
 
   // * 2. Tablet Layout
-  Widget _buildTabletLayout() {
+  Widget _buildTabletLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,7 +75,7 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
         const SizedBox(height: 32),
         StatsRow(quiz: quiz),
         const SizedBox(height: 32),
-        _buildSideContent(),
+        _buildSideContent(context),
         const SizedBox(height: 32),
         _buildInstructions(),
       ],
@@ -85,7 +89,7 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
   }
 
   // * 4. Side Content Area (Timer & Action Card)
-  Widget _buildSideContent() {
+  Widget _buildSideContent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -101,11 +105,23 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
 
         StudentActionCard(
           onPressed: () {
-            // TODO: Navigate to quiz attempt
+            context.goNamed(
+              RoutesName.takeQuiz,
+              pathParameters: {
+                'courseId': getCourseId(
+                  context,
+                ),
+                'quizId': quiz.id,
+              },
+              extra: quiz.title,
+            );
           },
           quiz: quiz,
         ),
       ],
     );
   }
+
+  static String getCourseId(BuildContext context) =>
+      GoRouterState.of(context).pathParameters['courseId'] ?? '';
 }
