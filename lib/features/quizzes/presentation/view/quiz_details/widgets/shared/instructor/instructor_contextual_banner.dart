@@ -26,7 +26,7 @@ class InstructorContextualBanner extends StatelessWidget {
         type: BannerType.warning,
         title: 'Quiz Time Expired',
         message:
-            'You cannot add questions because the end time has passed. Update timing first to unlock.',
+            'You cannot add questions because the start time has passed. Update start time and duration first to unlock.',
       ),
 
       _ => const SizedBox.shrink(),

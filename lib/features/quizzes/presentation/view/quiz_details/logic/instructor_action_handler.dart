@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'dart:developer';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'quiz_action_type.dart';
@@ -41,6 +44,28 @@ class InstructorActionHandler {
   }
 
   static void _navigateToSubmissions(BuildContext context, QuizModel quiz) {
+    kIsWeb
+        ? context.goNamed(
+            RoutesName.submissionsList,
+            pathParameters: {
+              'courseId': getCourseId(
+                context,
+              ), // Required by the parent ShellRoute/Tab
+              'quizId': quiz.id, // Required by the quizDetails route
+            },
+          )
+        : context.pushNamed(
+            RoutesName.submissionsList,
+            pathParameters: {
+              'courseId': getCourseId(
+                context,
+              ), // Required by the parent ShellRoute/Tab
+              'quizId': quiz.id, // Required by the quizDetails route
+            },
+          );
     log('Navigating to Submissions for quiz: ${quiz.id}');
   }
+
+  static String getCourseId(BuildContext context) =>
+      GoRouterState.of(context).pathParameters['courseId'] ?? '';
 }
