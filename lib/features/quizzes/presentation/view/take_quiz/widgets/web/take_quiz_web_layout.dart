@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/quizzes/presentation/view/take_quiz/widgets/shared/quiz_question_card.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/take_quiz_cubit/take_quiz_cubit.dart';
 import 'quiz_success_web_widget.dart';
@@ -63,7 +64,7 @@ class _TakeQuizWebLayoutState extends State<TakeQuizWebLayout> {
         child: BlocBuilder<TakeQuizCubit, TakeQuizState>(
           builder: (context, state) {
             if (state is TakeQuizLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: AppAnimatedLoadingIndicator());
             } else if (state is TakeQuizInProgress) {
               final currentQuestion =
                   state.questions[state.currentQuestionIndex];

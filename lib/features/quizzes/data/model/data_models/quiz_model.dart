@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/features/quizzes/data/model/helper/parse_date_helper.dart';
 
 //! --- Quiz States ---
 
@@ -80,23 +81,6 @@ class QuizModel {
     if (json[ApiKeys.description] is String) {
       parsedDescription = json[ApiKeys.description];
     }
-
-    /// Converts a string to DateTime, handling ISO 8601 and custom backend formats.
-    DateTime parseDate(String? dateStr) {
-      if (dateStr == null || dateStr.isEmpty) return DateTime.now();
-
-      // 1. Try Standard ISO 8601
-      var parsed = DateTime.tryParse(dateStr);
-      if (parsed != null) return parsed.toLocal();
-
-      // 2. Try Custom Backend Format (M/d/yyyy, h:mm:ss a)
-      try {
-        return DateFormat('M/d/yyyy, h:mm:ss a').parse(dateStr).toLocal();
-      } catch (e) {
-        return DateTime.now();
-      }
-    }
-
     return QuizModel(
       id: json[ApiKeys.id] ?? '',
       title: json[ApiKeys.title] ?? '',
