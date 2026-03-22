@@ -12,16 +12,16 @@ class QuizQuestionCard extends StatelessWidget {
   final int questionIndex;
   final QuestionModel question;
   final String? selectedAnswerId; // For MCQ/TF
-  final String? writtenAnswer; // For Written
-  final Function(String) onAnswerSelected;
+  final TextEditingController? writtenAnswerController; // For Written
+  final Function(String) onAnswerChanged; // For both MCQ/TF and Written
 
   const QuizQuestionCard({
     super.key,
     required this.questionIndex,
     required this.question,
     this.selectedAnswerId,
-    this.writtenAnswer,
-    required this.onAnswerSelected,
+    this.writtenAnswerController,
+    required this.onAnswerChanged,
   });
 
   @override
@@ -60,13 +60,12 @@ class QuizQuestionCard extends StatelessWidget {
       return ChoiceQuestionWidget(
         question: question as ChoiceQuestionModel,
         selectedOptionId: selectedAnswerId,
-        onSelect: onAnswerSelected,
+        onSelect: onAnswerChanged,
       );
     } else if (question is WrittenQuestionModel) {
       return WrittenQuestionWidget(
-        // Assuming you have a basic WrittenQuestionModel
-        initialText: writtenAnswer,
-        onChanged: onAnswerSelected,
+        controller: writtenAnswerController,
+        onChanged: onAnswerChanged,
       );
     }
     return const SizedBox.shrink();

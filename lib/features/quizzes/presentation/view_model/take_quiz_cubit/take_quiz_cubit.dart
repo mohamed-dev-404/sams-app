@@ -143,15 +143,15 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
     if (state is! TakeQuizInProgress) return;
     final currentState = state as TakeQuizInProgress;
 
-    // Commit whatever was selected (or nothing) for the timed-out question
-    _commitCurrentAnswer(currentState);
-
     if (currentState.currentQuestionIndex < currentState.questions.length - 1) {
+      // Commit the answer for the current question before moving on
+      _commitCurrentAnswer(currentState);
       _advanceToQuestion(
         currentState.currentQuestionIndex + 1,
         currentState,
       );
     } else {
+      // submitQuiz() internally handles committing the very last answer.
       submitQuiz();
     }
   }

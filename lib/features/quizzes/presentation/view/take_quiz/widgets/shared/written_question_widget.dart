@@ -3,19 +3,19 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class WrittenQuestionWidget extends StatelessWidget {
-  final String? initialText;
+  final TextEditingController? controller;
   final Function(String) onChanged;
 
   const WrittenQuestionWidget({
     super.key,
-    this.initialText,
+    this.controller,
     required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialText,
+      controller: controller,
       onChanged: onChanged,
       maxLines: 5,
       style: AppStyles.mobileBodySmallRg.copyWith(fontSize: 15),

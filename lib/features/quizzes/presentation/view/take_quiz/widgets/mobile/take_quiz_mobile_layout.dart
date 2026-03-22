@@ -15,13 +15,26 @@ class TakeQuizMobileLayout extends StatefulWidget {
 }
 
 class _TakeQuizMobileLayoutState extends State<TakeQuizMobileLayout> {
-  // Tracks the student's currently displayed answer for the ACTIVE question.
-  // Lives here in the StatefulWidget — survives timer-driven rebuilds because
-  // we only reset it when the question index actually changes (not every second).
-  String? _currentAnswer;
+  // Tracks the student's currently displayed selection (MCQ/TF only).
+  String? _currentSelectedOption;
 
-  // Tracks the last question index we rendered, so we know when to wipe _currentAnswer.
+  // Manages the text input for written questions.
+  late final TextEditingController _writtenAnswerController;
+
+  // Tracks the last question index we rendered, so we know when to wipe UI state.
   int _lastRenderedQuestionIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _writtenAnswerController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _writtenAnswerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +50,12 @@ class _TakeQuizMobileLayoutState extends State<TakeQuizMobileLayout> {
               final currentQuestion =
                   state.questions[state.currentQuestionIndex];
 
-              // Reset the displayed answer ONLY when the question actually changes.
-              // This is the key fix: we do NOT wipe _currentAnswer on every timer tick.
+              // IMPORTANT: Reset the UI trackers ONLY when the question index actually changes.
+              // This is what clears the field for the next question.
               if (_lastRenderedQuestionIndex != state.currentQuestionIndex) {
                 _lastRenderedQuestionIndex = state.currentQuestionIndex;
-                _currentAnswer = null;
+                _currentSelectedOption = null;
+                _writtenAnswerController.clear();
               }
 
               return Padding(
@@ -51,23 +65,17 @@ class _TakeQuizMobileLayoutState extends State<TakeQuizMobileLayout> {
                 ),
                 child: Column(
                   children: [
-                    // * HEADER: has its own BlocBuilder that ONLY rebuilds on
-                    // * timer ticks (remainingSeconds changes). The question card
-                    // * below is NOT re-created when the timer ticks.
+                    // * HEADER: only rebuilds on timer ticks.
                     _QuizTimerHeader(questions: state.questions),
                     const SizedBox(height: 24),
 
-                    // * QUESTION BODY: wrapped in a BlocBuilder that ignores
-                    // * timer ticks — only rebuilds on question navigation
-                    // * or submission state changes.
+                    // * QUESTION BODY: only rebuilds on navigation.
                     Expanded(
                       child: BlocBuilder<TakeQuizCubit, TakeQuizState>(
                         buildWhen: (prev, curr) {
                           if (prev is! TakeQuizInProgress ||
                               curr is! TakeQuizInProgress)
                             return true;
-                          // Only rebuild if the question index or submit state changes.
-                          // Ignore pure timer ticks (remainingSeconds changes alone).
                           return prev.currentQuestionIndex !=
                                   curr.currentQuestionIndex ||
                               prev.isSubmitting != curr.isSubmitting ||
@@ -80,21 +88,24 @@ class _TakeQuizMobileLayoutState extends State<TakeQuizMobileLayout> {
                           }
                           return SingleChildScrollView(
                             child: QuizQuestionCard(
+                              // Using unique key forces a fresh widget if the ID changes,
+                              // though our index check above handles the clearing.
+                              key: ValueKey(currentQuestion.id),
                               questionIndex:
                                   innerState.currentQuestionIndex + 1,
                               question: currentQuestion,
-                              selectedAnswerId: _currentAnswer,
-                              writtenAnswer: _currentAnswer,
-                              onAnswerSelected: (answer) {
-                                // setState only to update the local highlight —
-                                // no BLoC state emission needed here.
-                                setState(() => _currentAnswer = answer);
-
+                              selectedAnswerId: _currentSelectedOption,
+                              writtenAnswerController: _writtenAnswerController,
+                              onAnswerChanged: (answer) {
                                 final cubit = context.read<TakeQuizCubit>();
                                 if (currentQuestion.questionType ==
                                     ApiValues.written) {
                                   cubit.saveWrittenAnswer(answer);
                                 } else {
+                                  // Update local highlight state for MCQ
+                                  setState(
+                                    () => _currentSelectedOption = answer,
+                                  );
                                   cubit.saveSelectedOption(answer);
                                 }
                               },
@@ -200,15 +211,7 @@ class _TakeQuizMobileLayoutState extends State<TakeQuizMobileLayout> {
   }
 }
 
-// * ---------------------------------------------------------------------------
-// * Separate StatelessWidget for the timer header.
-// * It has its OWN BlocBuilder with a targeted buildWhen, so it ONLY
-// * rebuilds when remainingSeconds, currentQuestionIndex, or isLast10Seconds
-// * change — which is exactly what it displays. The question card above is
-// * completely unaffected by this widget's rebuilds.
-// * ---------------------------------------------------------------------------
 class _QuizTimerHeader extends StatelessWidget {
-  // We receive questions from the parent so the widget knows total count.
   final List questions;
 
   const _QuizTimerHeader({required this.questions});
@@ -216,7 +219,6 @@ class _QuizTimerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TakeQuizCubit, TakeQuizState>(
-      // Only rebuild when timer-related data changes
       buildWhen: (prev, curr) {
         if (prev is! TakeQuizInProgress || curr is! TakeQuizInProgress) {
           return true;

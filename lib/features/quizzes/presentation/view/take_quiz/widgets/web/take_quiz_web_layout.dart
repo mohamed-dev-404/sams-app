@@ -18,19 +18,19 @@ class TakeQuizWebLayout extends StatefulWidget {
 class _TakeQuizWebLayoutState extends State<TakeQuizWebLayout> {
   html.EventListener? _beforeUnloadListener;
 
-  // Tracks the student's currently displayed answer for the ACTIVE question.
-  // Lives here in the StatefulWidget — survives timer-driven rebuilds because
-  // we only reset it when the question index actually changes (not every second).
-  String? _currentAnswer;
+  // Tracks the student's currently displayed selection (MCQ/TF only).
+  String? _currentSelectedOption;
 
-  // Tracks the last question index we rendered, so we know when to wipe _currentAnswer.
+  // Manages the text input for written questions.
+  late final TextEditingController _writtenAnswerController;
+
+  // Tracks the last question index we rendered, so we know when to wipe UI state.
   int _lastRenderedQuestionIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    // Quiz questions are already fetched from the router via fetchQuestionsAndStart
+    _writtenAnswerController = TextEditingController();
 
     // Prevent Default Warning (web only)
     _beforeUnloadListener = (html.Event event) {
@@ -46,6 +46,7 @@ class _TakeQuizWebLayoutState extends State<TakeQuizWebLayout> {
     if (_beforeUnloadListener != null) {
       html.window.removeEventListener('beforeunload', _beforeUnloadListener!);
     }
+    _writtenAnswerController.dispose();
     super.dispose();
   }
 
@@ -57,147 +58,151 @@ class _TakeQuizWebLayoutState extends State<TakeQuizWebLayout> {
         // Toast errors are handled once in TakeQuizView's BlocListener.
         // This layout only needs its own BlocBuilders for rendering.
         child: BlocBuilder<TakeQuizCubit, TakeQuizState>(
-            builder: (context, state) {
-              if (state is TakeQuizLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is TakeQuizInProgress) {
-                final currentQuestion =
-                    state.questions[state.currentQuestionIndex];
+          builder: (context, state) {
+            if (state is TakeQuizLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is TakeQuizInProgress) {
+              final currentQuestion =
+                  state.questions[state.currentQuestionIndex];
 
-                // Reset the displayed answer ONLY when the question actually changes.
-                if (_lastRenderedQuestionIndex != state.currentQuestionIndex) {
-                  _lastRenderedQuestionIndex = state.currentQuestionIndex;
-                  _currentAnswer = null;
-                }
-
-                return Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 800),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0,
-                        vertical: 40.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // * HEADER: has its own BlocBuilder that ONLY rebuilds
-                          // * on timer ticks. Completely isolated from the question card.
-                          _QuizTimerHeader(questions: state.questions),
-                          const SizedBox(height: 32),
-
-                          // * QUESTION BODY: only rebuilds on question navigation
-                          // * or submission state changes, NOT on timer ticks.
-                          Expanded(
-                            child: BlocBuilder<TakeQuizCubit, TakeQuizState>(
-                              buildWhen: (prev, curr) {
-                                if (prev is! TakeQuizInProgress ||
-                                    curr is! TakeQuizInProgress)
-                                  return true;
-                                return prev.currentQuestionIndex !=
-                                        curr.currentQuestionIndex ||
-                                    prev.isSubmitting != curr.isSubmitting ||
-                                    prev.submitErrorMessage !=
-                                        curr.submitErrorMessage;
-                              },
-                              builder: (context, innerState) {
-                                if (innerState is! TakeQuizInProgress) {
-                                  return const SizedBox.shrink();
-                                }
-                                return SingleChildScrollView(
-                                  child: QuizQuestionCard(
-                                    questionIndex:
-                                        innerState.currentQuestionIndex + 1,
-                                    question: currentQuestion,
-                                    selectedAnswerId: _currentAnswer,
-                                    writtenAnswer: _currentAnswer,
-                                    onAnswerSelected: (answer) {
-                                      setState(() => _currentAnswer = answer);
-
-                                      final cubit = context
-                                          .read<TakeQuizCubit>();
-                                      if (currentQuestion.questionType ==
-                                          ApiValues.written) {
-                                        cubit.saveWrittenAnswer(answer);
-                                      } else {
-                                        cubit.saveSelectedOption(answer);
-                                      }
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-                          _buildNavigationControls(context, state),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              } else if (state is TakeQuizSuccessSubmit) {
-                return Center(
-                  child: Text(
-                    'Your Exam Has Been Successfully Submitted',
-                    style: AppStyles.mobileTitleMediumSb.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 24,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-              } else if (state is TakeQuizFetchFailure) {
-                return Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 80,
-                            color: AppColors.red,
-                          ),
-                          const SizedBox(height: 24),
-                          Text(
-                            state.message,
-                            style: AppStyles.mobileTitleMediumSb.copyWith(
-                              color: AppColors.primaryDark,
-                              fontSize: 24,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 32),
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: AppColors.white,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 48,
-                                vertical: 20,
-                              ),
-                            ),
-                            child: const Text(
-                              'Go Back',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+              // IMPORTANT: Reset the UI trackers ONLY when the question index actually changes.
+              // This is what clears the field for the next question.
+              if (_lastRenderedQuestionIndex != state.currentQuestionIndex) {
+                _lastRenderedQuestionIndex = state.currentQuestionIndex;
+                _currentSelectedOption = null;
+                _writtenAnswerController.clear();
               }
-              return const SizedBox.shrink();
-            },
-          ),
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0,
+                      vertical: 40.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // * HEADER: rebuilds on every tick.
+                        _QuizTimerHeader(questions: state.questions),
+                        const SizedBox(height: 32),
+
+                        // * QUESTION BODY: only rebuilds on navigation.
+                        Expanded(
+                          child: BlocBuilder<TakeQuizCubit, TakeQuizState>(
+                            buildWhen: (prev, curr) {
+                              if (prev is! TakeQuizInProgress ||
+                                  curr is! TakeQuizInProgress)
+                                return true;
+                              return prev.currentQuestionIndex !=
+                                      curr.currentQuestionIndex ||
+                                  prev.isSubmitting != curr.isSubmitting ||
+                                  prev.submitErrorMessage !=
+                                      curr.submitErrorMessage;
+                            },
+                            builder: (context, innerState) {
+                              if (innerState is! TakeQuizInProgress) {
+                                return const SizedBox.shrink();
+                              }
+                              return SingleChildScrollView(
+                                child: QuizQuestionCard(
+                                  // Added unique key to ensure widget state reset.
+                                  key: ValueKey(currentQuestion.id),
+                                  questionIndex:
+                                      innerState.currentQuestionIndex + 1,
+                                  question: currentQuestion,
+                                  selectedAnswerId: _currentSelectedOption,
+                                  writtenAnswerController:
+                                      _writtenAnswerController,
+                                  onAnswerChanged: (answer) {
+                                    final cubit = context.read<TakeQuizCubit>();
+                                    if (currentQuestion.questionType ==
+                                        ApiValues.written) {
+                                      cubit.saveWrittenAnswer(answer);
+                                    } else {
+                                      // Local highlight selection highlight
+                                      setState(
+                                        () => _currentSelectedOption = answer,
+                                      );
+                                      cubit.saveSelectedOption(answer);
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+                        _buildNavigationControls(context, state),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else if (state is TakeQuizSuccessSubmit) {
+              return Center(
+                child: Text(
+                  'Your Exam Has Been Successfully Submitted',
+                  style: AppStyles.mobileTitleMediumSb.copyWith(
+                    color: AppColors.primary,
+                    fontSize: 24,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else if (state is TakeQuizFetchFailure) {
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          size: 80,
+                          color: AppColors.red,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          state.message,
+                          style: AppStyles.mobileTitleMediumSb.copyWith(
+                            color: AppColors.primaryDark,
+                            fontSize: 24,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 32),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 48,
+                              vertical: 20,
+                            ),
+                          ),
+                          child: const Text(
+                            'Go Back',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -244,10 +249,6 @@ class _TakeQuizWebLayoutState extends State<TakeQuizWebLayout> {
   }
 }
 
-// * ---------------------------------------------------------------------------
-// * Separate widget for the timer header — only rebuilds on timer ticks.
-// * The question card is completely unaffected by this widget's rebuilds.
-// * ---------------------------------------------------------------------------
 class _QuizTimerHeader extends StatelessWidget {
   final List questions;
 
