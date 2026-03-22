@@ -7,7 +7,8 @@ import 'package:sams_app/features/quizzes/presentation/view/take_quiz/widgets/we
 import 'package:sams_app/features/quizzes/presentation/view_model/take_quiz_cubit/take_quiz_cubit.dart';
 
 class TakeQuizView extends StatelessWidget {
-  const TakeQuizView({super.key});
+  final String quizTitle;
+  const TakeQuizView({super.key, required this.quizTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,8 @@ class TakeQuizView extends StatelessWidget {
         }
       },
       child: AdaptiveLayout(
-        mobileLayout: (context) => const TakeQuizMobileLayout(),
-        webLayout: (context) => const TakeQuizWebLayout(),
+        mobileLayout: (context) => TakeQuizMobileLayout(quizTitle: quizTitle),
+        webLayout: (context) => TakeQuizWebLayout(quizTitle: quizTitle),
       ),
     );
   }
