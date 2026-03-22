@@ -97,6 +97,7 @@ abstract class ApiKeys {
   static const String score = 'score';
   static const String submittedAt = 'submittedAt';
   static const String isGraded = 'isGraded';
+  static const String totalPoints = 'totalPoints';
 
   //? Submission Details Keys
   static const String earnedPoints = 'earnedPoints';

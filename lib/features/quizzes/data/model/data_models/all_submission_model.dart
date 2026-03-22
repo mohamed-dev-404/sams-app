@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/features/quizzes/data/model/helper/parse_date_helper.dart';
 
 enum SubmissionStatus { marked, unmarked }
 
@@ -9,12 +10,14 @@ class AllSubmissionModel {
   final String academicId;
   final String studentName;
   final int score;
+  final int totalPoints;
   final DateTime submittedAt;
   final bool isGraded;
 
   const AllSubmissionModel({
     required this.id,
     required this.quizId,
+    required this.totalPoints,
     required this.academicId,
     required this.studentName,
     required this.score,
@@ -44,9 +47,9 @@ class AllSubmissionModel {
       academicId: json[ApiKeys.academicId] ?? '',
       studentName: json[ApiKeys.studentName] ?? 'Unknown Student',
       score: json[ApiKeys.score] ?? 0,
-      // Safely parse the ISO 8601 string
-      submittedAt:
-          DateTime.tryParse(json[ApiKeys.submittedAt] ?? '') ?? DateTime.now(),
+      totalPoints: json[ApiKeys.totalPoints] ?? 0,
+      // Safely parse date and convert to local time
+      submittedAt: parseDate(json[ApiKeys.submittedAt]),
       isGraded: json[ApiKeys.isGraded] ?? false,
     );
   }
@@ -58,6 +61,7 @@ class AllSubmissionModel {
       ApiKeys.academicId: academicId,
       ApiKeys.studentName: studentName,
       ApiKeys.score: score,
+      ApiKeys.totalPoints: totalPoints,
       ApiKeys.submittedAt: submittedAt.toIso8601String(),
       ApiKeys.isGraded: isGraded,
     };
