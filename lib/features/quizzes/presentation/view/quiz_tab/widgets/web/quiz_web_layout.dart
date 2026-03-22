@@ -26,38 +26,28 @@ class QuizsWebLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isInstructor = userRole == UserRole.instructor;
 
-    // In Web, if it's an instructor, we add 1 to the count for the "Add New Quiz" card
-    final int itemCount = isInstructor ? quizzes.length + 1 : quizzes.length;
-
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Section
+          // 1. Header Section
           Text(
             'Quizzes',
             style: AppStyles.mobileTitleSmallSb.copyWith(fontSize: 24),
           ),
           const SizedBox(height: 24),
 
-          // Handling Empty State for Students
+          // 2. Main Content Logic
           if (quizzes.isEmpty && !isInstructor)
-            Center(
-              child: Column(
-                children: [
-                  Lottie.asset(AppLottie.empty, height: 300),
-                  const SizedBox(height: 16),
-                  const Text('No quizzes available yet.'),
-                ],
-              ),
-            )
+            // Student Empty State: Big centered Lottie
+            _buildStudentEmptyState()
           else
-            // Unified Grid for Quizzes and Instructor Add Card
+            // Instructor (with or without data) OR Student (with data)
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: itemCount,
+              itemCount: _calculateItemCount(isInstructor),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 300,
                 mainAxisSpacing: 24,
@@ -65,7 +55,7 @@ class QuizsWebLayout extends StatelessWidget {
                 childAspectRatio: 400 / 440,
               ),
               itemBuilder: (context, index) {
-                // 1. If Instructor, the first item (index 0) is always the AddNewCard
+                // Case A: Instructor's first item is always the Add Card
                 if (isInstructor && index == 0) {
                   return AddNewCard(
                     title: 'Create Quiz',
@@ -74,10 +64,20 @@ class QuizsWebLayout extends StatelessWidget {
                   );
                 }
 
-                // 2. Adjust data index if instructor (because index 0 was the Add card)
-                final int dataIndex = isInstructor ? index - 1 : index;
-                final quiz = quizzes[dataIndex];
+                // Case B: Instructor Empty State - Show Lottie inside the Grid at index 1
+                if (isInstructor && quizzes.isEmpty && index == 1) {
+                  return _buildInstructorEmptyPlaceholder();
+                }
 
+                // Case C: Render actual Quiz Cards
+                final int dataIndex = isInstructor ? index - 1 : index;
+
+                // Safety check for data bounds
+                if (dataIndex < 0 || dataIndex >= quizzes.length) {
+                  return const SizedBox.shrink();
+                }
+
+                final quiz = quizzes[dataIndex];
                 return WebQuizCard(
                   quizModel: quiz,
                   onTap: () => _handleQuizNavigation(context, quiz),
@@ -86,6 +86,49 @@ class QuizsWebLayout extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+
+  /// Calculates the total number of items to show in the Grid
+  int _calculateItemCount(bool isInstructor) {
+    if (isInstructor) {
+      // If empty: 1 (Add Card) + 1 (Empty Lottie) = 2
+      // If has data: quizzes.length + 1 (Add Card)
+      return quizzes.isEmpty ? 2 : quizzes.length + 1;
+    }
+    return quizzes.length;
+  }
+
+  /// Large centered empty state for students
+  Widget _buildStudentEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(AppLottie.empty, height: 300),
+          const SizedBox(height: 16),
+          const Text(
+            'No quizzes available yet.',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Smaller empty state placeholder that fits inside the Grid for instructors
+  Widget _buildInstructorEmptyPlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Lottie.asset(AppLottie.empty, height: 180),
+        const SizedBox(height: 12),
+        const Text(
+          'Your quiz list is empty',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+        ),
+      ],
     );
   }
 
