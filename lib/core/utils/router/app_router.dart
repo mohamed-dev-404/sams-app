@@ -206,12 +206,15 @@ class AppRouter {
               GoRoute(
                 name: RoutesName.quizDetails,
                 path: '${RoutesName.quizDetails}/:quizId',
-                parentNavigatorKey: navigatorKey, // FULL SCREEN
-                builder: (context, state) => BlocProvider(
-                  create: (context) =>
-                      QuizDetailsCubit(getIt<QuizRepository>()),
-                  child: const QuizDetailsView(),
-                ),
+                parentNavigatorKey: navigatorKey,
+                builder: (context, state) {
+                  final quizId = state.pathParameters['quizId']!;
+                  return BlocProvider(
+                    create: (context) =>
+                        QuizDetailsCubit(getIt<QuizRepository>()),
+                    child: QuizDetailsView(quizId: quizId), 
+                  );
+                },
                 routes: [
                   GoRoute(
                     name: RoutesName.manageQuestions,

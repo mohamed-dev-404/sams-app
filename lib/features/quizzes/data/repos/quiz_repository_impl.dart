@@ -36,9 +36,20 @@ class QuizRepositoryImpl implements QuizRepository {
   }
 
   @override
-  Future<Either<String, dynamic>> getQuizDetails(String quizId) async {
-    // TODO: implement getQuizDetails
-    throw UnimplementedError();
+  Future<Either<String, QuizModel>> getQuizDetails(String quizId) async {
+    try {
+      // 1. Fetch data from the endpoint
+      final response = await api.get(EndPoints.getQuizDetails(quizId));
+
+      // 2. Parse the response
+      final quiz = QuizModel.fromJson(response[ApiKeys.data]);
+
+      return Right(quiz);
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override

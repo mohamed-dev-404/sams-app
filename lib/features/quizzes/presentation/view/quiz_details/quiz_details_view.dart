@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
-import 'package:sams_app/features/quizzes/data/mock_data.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/mobile/instructor/quiz_details_mobile_instructor_layout.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/mobile/student/quiz_details_mobile_student_layout.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/web/instructor/quiz_details_web_instructor_layout.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/web/student/quiz_details_web_student_layout.dart';
-import 'package:sams_app/features/quizzes/presentation/view_model/browse_quiz_cubit/browse_quiz_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/quiz_details_cubit/quiz_details_cubit.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/quiz_details_cubit/quiz_details_state.dart';
 
 class QuizDetailsView extends StatelessWidget {
-  const QuizDetailsView({super.key});
+  final String quizId;
+  const QuizDetailsView({super.key, required this.quizId});
 
   @override
   Widget build(BuildContext context) {
-    final quiz = mockQuizzes[2];
-    return BlocConsumer<BrowseQuizCubit, BrowseQuizState>(
-      listener: (context, state) {
-        // TODO: Implement listener logic for QuizFailure and QuizSuccess later
-      },
+    context.read<QuizDetailsCubit>().getQuizDetails(quizId);
+
+    return BlocBuilder<QuizDetailsCubit, QuizDetailsState>(
       builder: (context, state) {
-        final mobileLayout = CurrentRole.role == UserRole.instructor
-            ? QuizDetailsMobileInstructorLayout(quiz: quiz)
-            : QuizDetailsMobileStudentLayout(quiz: quiz);
+        if (state is QuizDetailsLoading) {
+          return const Scaffold(
+            body: Center(child: AppAnimatedLoadingIndicator()),
+          );
+        }
 
-        final webLayout = CurrentRole.role == UserRole.instructor
-            ? QuizDetailsWebInstructorLayout(quiz: quiz)
-            : QuizDetailsWebStudentLayout(quiz: quiz);
+        if (state is QuizDetailsSuccess) {
+          final quiz = state.quiz;
 
-        return AdaptiveLayout(
-          mobileLayout: (context) => mobileLayout,
-          webLayout: (context) => webLayout,
-        );
+          return AdaptiveLayout(
+            mobileLayout: (context) => CurrentRole.role == UserRole.instructor
+                ? QuizDetailsMobileInstructorLayout(quiz: quiz)
+                : QuizDetailsMobileStudentLayout(quiz: quiz),
+            webLayout: (context) => CurrentRole.role == UserRole.instructor
+                ? QuizDetailsWebInstructorLayout(quiz: quiz)
+                : QuizDetailsWebStudentLayout(quiz: quiz),
+          );
+        }
+
+        if (state is QuizDetailsFailure) {
+          return Scaffold(body: Center(child: Text(state.errorMessage)));
+        }
+
+        return const SizedBox();
       },
     );
   }

@@ -6,7 +6,7 @@ abstract class QuizRepository {
 // Method to fetch all quizzes for a specific course
   Future<Either<String, List<QuizModel>>> getQuizzesForCourse(String courseId);
   
-  Future<Either<String, dynamic>> getQuizDetails(String quizId);
+  Future<Either<String, QuizModel>> getQuizDetails(String quizId);
   Future<Either<String, List<dynamic>>> getQuizQuestions(String quizId);
 
   // --- Instructor Flow: Quiz CRUD ---
