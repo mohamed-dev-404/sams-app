@@ -68,7 +68,7 @@ class QuizModel {
       if (now.isBefore(startTime) && !isPublished) return QuizState.draft;
       if (now.isBefore(startTime) && isPublished) return QuizState.scheduled;
       if (now.isAfter(endTime) && isPublished) return QuizState.completed;
-      if (now.isAfter(endTime) && !isPublished) return QuizState.lockedDraft;
+      if (now.isAfter(startTime) && !isPublished) return QuizState.lockedDraft;
       return QuizState.onGoing;
     }
   }
