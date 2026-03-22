@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/features/quizzes/presentation/view/take_quiz/widgets/shared/back_to_quiz_tab_helper.dart';
 
 class QuizFailureWebWidget extends StatelessWidget {
   final String message;
@@ -33,7 +34,7 @@ class QuizFailureWebWidget extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => backToQuizTab(context: context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.white,
