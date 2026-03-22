@@ -113,7 +113,7 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
         // Play audio exactly when hitting 10 seconds
         if (newTime == 10 && !_hasPlayedAlert) {
           _hasPlayedAlert = true;
-          _playAlertSound();
+          _play10sAlertSound();
         }
 
         emit(
@@ -126,7 +126,11 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
     });
   }
 
-  Future<void> _playAlertSound() async {
+  // ! ---------------------------------------------------------------------------
+  // ! 3. PLAY SOUNDS
+  // ! ---------------------------------------------------------------------------
+
+  Future<void> _play10sAlertSound() async {
     try {
       await _audioPlayer.play(AssetSource(AppAudio.timeAlert));
     } catch (e) {
@@ -134,8 +138,16 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
     }
   }
 
+  Future<void> _playSuccessSubmitSound() async {
+    try {
+      await _audioPlayer.play(AssetSource(AppAudio.success));
+    } catch (e) {
+      // Ignored: MissingPluginException happens on hot restart or web without proper reload
+    }
+  }
+
   // ! ---------------------------------------------------------------------------
-  // ! 3. NAVIGATION
+  // ! 4. NAVIGATION
   // ! ---------------------------------------------------------------------------
 
   /// * Called automatically when the timer reaches 0.
@@ -209,7 +221,7 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
   }
 
   // ! ---------------------------------------------------------------------------
-  // ! 4. ANSWER TRACKING  (stored in cubit)
+  // ! 5. ANSWER TRACKING  (stored in cubit)
   // ! ---------------------------------------------------------------------------
 
   /// Called by the UI when the student picks a choice option.
@@ -227,7 +239,7 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
   }
 
   // ! ---------------------------------------------------------------------------
-  // ! 5. SUBMIT
+  // ! 6. SUBMIT
   // ! ---------------------------------------------------------------------------
 
   Future<void> submitQuiz() async {
@@ -262,13 +274,14 @@ class TakeQuizCubit extends Cubit<TakeQuizState> {
       },
       (_) {
         // Success -> move to the final success state
+        _playSuccessSubmitSound();
         emit(TakeQuizSuccessSubmit());
       },
     );
   }
 
   // ! ---------------------------------------------------------------------------
-  // ! 6. DISPOSE
+  // ! 7. DISPOSE
   // ! ---------------------------------------------------------------------------
 
   @override
