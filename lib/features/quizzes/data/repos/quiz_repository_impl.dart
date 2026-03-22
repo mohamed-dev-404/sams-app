@@ -3,6 +3,9 @@ import 'package:sams_app/core/errors/exceptions/api_exception.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/utils/constants/api_endpoints.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/quiz_answer_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/submit_quiz_request_body.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
 
@@ -52,10 +55,29 @@ class QuizRepositoryImpl implements QuizRepository {
     }
   }
 
+  // * get all questions for a quiz (/api/v1/quizzes/:quizId/questions)
   @override
-  Future<Either<String, List<dynamic>>> getQuizQuestions(String quizId) async {
-    // TODO: implement getQuizQuestions
-    throw UnimplementedError();
+  Future<Either<String, List<QuestionModel>>> getQuizQuestions(
+    String quizId,
+  ) async {
+    try {
+      // hit getAllQuestions request
+      Map<String, dynamic> response = await api.get(
+        EndPoints.getQuizQuestions(quizId),
+      );
+
+      //parsing and initialize questionsList
+      final questionsList = response[ApiKeys.data] as List<dynamic>;
+      final questions = questionsList
+          .map((e) => QuestionModel.fromJson(e))
+          .toList();
+
+      return Right(questions); // success case, return questions
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   // --- Instructor Flow: Quiz CRUD ---
@@ -116,15 +138,27 @@ class QuizRepositoryImpl implements QuizRepository {
     throw UnimplementedError();
   }
 
-  // --- Student Flow: Taking Quizzes ---
+  // ! --- Student Flow: Taking Quizzes ---
 
+  // * submit quiz (/api/v1/quizzes/:quizId/submit)
   @override
   Future<Either<String, String>> submitQuiz(
     String quizId,
-    Map<String, dynamic> data,
+    List<QuizAnswerModel> answers,
   ) async {
-    // TODO: implement submitQuiz
-    throw UnimplementedError();
+    try {
+      // hit submitQuiz request
+      Map<String, dynamic> response = await api.post(
+        EndPoints.submitQuiz(quizId),
+        data: SubmitQuizRequestBody(answers: answers).toJson(),
+      );
+
+      return Right(response[ApiKeys.message]); // success case, return message
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   // --- Instructor Flow: Grading ---
