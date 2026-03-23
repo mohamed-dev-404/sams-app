@@ -4,7 +4,7 @@ import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
-import 'package:sams_app/features/quizzes/data/model/data_models/all_submission_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/submission_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submission_list_tile.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submissions_stats_bar.dart';
 
@@ -121,7 +121,7 @@ class SubmissionsListWebLayout extends StatelessWidget {
 
   Widget _buildResponsiveGrid(
     BuildContext context,
-    List<AllSubmissionModel> list,
+    List<SubmissionModel> list,
   ) {
     double width = MediaQuery.of(context).size.width;
     // Determine column count based on available width

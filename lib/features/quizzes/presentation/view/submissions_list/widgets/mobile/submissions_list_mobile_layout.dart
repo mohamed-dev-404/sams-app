@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/quizzes/data/mock_data.dart';
-import 'package:sams_app/features/quizzes/data/model/data_models/all_submission_model.dart';
+import 'package:sams_app/features/quizzes/data/model/data_models/submission_model.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submission_list_tile.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/mobile/submissions_header_card.dart';
 import 'package:sams_app/features/quizzes/presentation/view/submissions_list/widgets/shared/submissions_stats_bar.dart';
@@ -74,7 +74,7 @@ class SubmissionsListMobileLayout extends StatelessWidget {
   }
 
   /// Extracted builder method
-  Widget _buildSubmissionsList(List<AllSubmissionModel> submissions) {
+  Widget _buildSubmissionsList(List<SubmissionModel> submissions) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
