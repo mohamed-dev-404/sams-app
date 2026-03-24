@@ -3,7 +3,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/data/model/update_material.request.dart';
 import 'package:sams_app/features/materials/data/repos/material_repo.dart';
+import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 
 //* Handles Material operations: Create (Upload), Update, and Delete.
@@ -16,14 +18,14 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
     : super(MaterialCrudInitial());
 
   //* Full Workflow: Request Presigned URLs → S3 Upload → Backend Confirmation
-  Future<void> uploadMaterial({
+  Future<void> createMaterial({
     required String courseId,
     required String title,
     required String description,
     required List<XFile> selectedFiles,
   }) async {
     // 1. Show loading state to block UI or show progress
-    emit(MaterialCrudLoading(isUploadingFiles: selectedFiles.isNotEmpty));
+    emit(CreateMaterialLoading(isUploadingFiles: selectedFiles.isNotEmpty));
 
     // 2. Execute the full workflow in the repository
     final result = await materialsRepo.uploadMaterialFullWorkflow(
@@ -37,17 +39,93 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
       (failure) {
         // Show snackbar error message using mixin
         emitMessage(failure);
-        emit(MaterialCrudFailure(failure));
+        emit(CreateMaterialFailure(failure));
       },
       (newMaterial) {
         // Success: Emit the newly created material to update the list later
         emit(
-          MaterialCrudSuccess(
+          CreateMaterialSuccess(
             material: newMaterial,
             message: 'Material added successfully!',
           ),
         );
       },
     );
+  }
+
+ //? --- 2. Sequential Update Workflow ---
+  //* Execution Order: Update Metadata → Delete Items → Upload New Items
+  Future<void> updateMaterial({
+    required String courseId,
+    required String title,
+    required String description,
+    required List<String> keysToDelete,
+    required List<XFile> newFiles,
+  }) async {
+    final materialId = initialMaterial!.id;
+    MaterialModel currentMaterial = initialMaterial!;
+
+    //* PHASE 1: Update Material Metadata (Title & Description)
+    emit(UpdateMaterialLoading('Saving material info...'));
+    final textUpdateResult = await materialsRepo.updateMaterial(
+      materialId: materialId,
+      request: UpdateMaterialRequest(title: title, description: description),
+    );
+
+    textUpdateResult.fold(
+      (failure) =>
+          null, //? Continue even if text update fails, or handle specifically if needed
+      (updated) => currentMaterial = updated,
+    );
+
+    //* PHASE 2: Handle Item Deletions
+    if (keysToDelete.isNotEmpty) {
+      emit(UpdateMaterialLoading('Deleting selected files...'));
+      for (var key in keysToDelete) {
+        final result = await materialsRepo.deleteMaterialItem(
+          materialId: materialId,
+          itemKey: key,
+        );
+
+        result.fold(
+          (failure) => null, //? Continue loop even if one item fails to delete
+          (updated) => currentMaterial = updated,
+        );
+      }
+    }
+
+    //* PHASE 3: Handle New File Uploads
+    if (newFiles.isNotEmpty) {
+      emit(UpdateMaterialLoading('Uploading new files...'));
+
+      final uploadResult = await materialsRepo.addItemsToMaterial(
+        materialId: materialId,
+        courseId: courseId,
+        newFiles: newFiles,
+      );
+
+      uploadResult.fold(
+        (failure) => emit(UpdateMaterialFailure(failure)),
+        (updatedMaterial) {
+          //* Notify listeners to refresh the list views
+          MaterialRefreshTrigger.requestRefresh();
+          emit(
+            UpdateMaterialSuccess(
+              material: updatedMaterial,
+              message: 'All changes saved successfully!',
+            ),
+          );
+        },
+      );
+    } else {
+      //* Finalize operation if no new files were provided
+      MaterialRefreshTrigger.requestRefresh();
+      emit(
+        UpdateMaterialSuccess(
+          material: currentMaterial,
+          message: 'Changes saved successfully!',
+        ),
+      );
+    }
   }
 }

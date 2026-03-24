@@ -5,45 +5,44 @@ import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/data/repos/material_repo.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
-//* Manages materials state — fetch all materials and single material details
+//* Manages material-related states: Fetching collections and individual details
 class MaterialFetchCubit extends Cubit<MaterialFetchState>
     with CubitMessageMixin, SafeEmitMixin {
   final MaterialRepo materialsRepo;
 
   MaterialFetchCubit(this.materialsRepo) : super(MaterialFetchInitial());
 
-  //* Load cached materials first, then fetch fresh data from API
-  //* Shows cached data instantly while waiting for network response
+  //* Implements "Cache-then-Network" strategy for better UX
+  //* Provides instant feedback via cache while fetching fresh data from the API
   Future<void> fetchMaterials({required String courseId}) async {
-    // 1. Try to get data from local cache first for instant UI feedback
+    // 1. PHASE: Immediate feedback from local cache
     final cachedMaterials = materialsRepo.getCachedMaterials();
 
     if (cachedMaterials.isNotEmpty) {
       emit(MaterialFetchSuccess(cachedMaterials));
     } else {
-      // 2. If no cache, show loading spinner
+      // 2. PHASE: Fallback to loading indicator if cache is empty
       emit(MaterialFetchLoading());
     }
 
-    // 3. Fetch fresh data from Remote API
+    // 3. PHASE: Remote data synchronization
     final result = await materialsRepo.fetchMaterials(courseId: courseId);
 
     result.fold(
       (failure) {
-        // If we already have cached data on screen, don't show error screen
-        // Just show a snackbar message using our mixin
+        //* Error Handling: If data is already on screen, show a message instead of an error view
         if (state is MaterialFetchSuccess) {
           emitMessage(failure);
         } else {
           emit(MaterialFetchFailure(failure));
         }
       },
-      // 4. Update UI with fresh data from server
+      //* Update UI with the latest synchronized data
       (materials) => emit(MaterialFetchSuccess(materials)),
     );
   }
 
-  //* Fetch details for a specific material by ID
+  //* Fetch comprehensive details for a specific material resource
   Future<void> fetchMaterialDetails({required String materialId}) async {
     emit(MaterialDetailsFetchLoading());
 
@@ -56,21 +55,44 @@ class MaterialFetchCubit extends Cubit<MaterialFetchState>
       (material) => emit(MaterialFetchDetailsSuccess(material)),
     );
   }
-  
-//* Update the UI list locally without making a new network request
+
+  //* Reactive UI: Prepend a new material to the list locally for zero-latency feedback
   void addMaterialToListView(MaterialModel newMaterial) {
     if (state is MaterialFetchSuccess) {
-      // 1. Get the current list from the success state
       final currentList = (state as MaterialFetchSuccess).materials;
 
-      // 2. Prepend the material to show it at the top of the list
+      // Ensure the new item appears first in the sequence
       final updatedList = [newMaterial, ...currentList];
-
-      // 3. Emit the same success state with the updated list
       emit(MaterialFetchSuccess(updatedList));
     } else {
-      // 4. If the state was initial, loading, or empty, show the new item as the first element
+      // Initialize list with the new material if state was empty or loading
       emit(MaterialFetchSuccess([newMaterial]));
     }
+  }
+
+  //* Reactive UI: Synchronize list state locally after a deletion operation
+  void removeMaterialFromList(String materialId) {
+    if (state is MaterialFetchSuccess) {
+      final currentList = (state as MaterialFetchSuccess).materials;
+      final updatedList = currentList.where((m) => m.id != materialId).toList();
+      emit(MaterialFetchSuccess(updatedList));
+    }
+  }
+
+  //* Reactive UI: Update specific item properties in the current list view
+  void updateMaterialInList(MaterialModel updatedMaterial) {
+    if (state is MaterialFetchSuccess) {
+      final currentList = (state as MaterialFetchSuccess).materials;
+      final updatedList = currentList
+          .map((m) => m.id == updatedMaterial.id ? updatedMaterial : m)
+          .toList();
+      emit(MaterialFetchSuccess(updatedList));
+    }
+  }
+
+  //* Combined Synchronization: Updates the item in the list and the details view simultaneously
+  void updateMaterialDetails(MaterialModel updatedMaterial) {
+    updateMaterialInList(updatedMaterial);
+    emit(MaterialFetchDetailsSuccess(updatedMaterial));
   }
 }
