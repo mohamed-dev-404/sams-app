@@ -128,4 +128,23 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
       );
     }
   }
+
+  //* DELETE Entire Material
+  Future<void> deleteMaterial({required String materialId}) async {
+    emit(DeleteMaterialLoading());
+
+    final result = await materialsRepo.deleteMaterial(materialId: materialId);
+
+    result.fold(
+      (failure) {
+        emitMessage(failure); // Emit error via mixin for SnackBars
+        emit(DeleteMaterialFailure(failure));
+      },
+      (_) {
+        // Notify listeners to refresh lists across the application
+        MaterialRefreshTrigger.requestRefresh();
+        emit(DeleteMaterialSuccess('Material deleted successfully!'));
+      },
+    );
+  }
 }

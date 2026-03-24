@@ -90,3 +90,20 @@ final class DeleteMaterialItemFailure extends MaterialActionState {
   final String errMessage;
   DeleteMaterialItemFailure(this.errMessage);
 }
+
+//? --- 5. Delete Entire Material States ---
+
+//? Emitted while deleting an entire material.
+final class DeleteMaterialLoading extends MaterialActionState {}
+
+//* Emitted when material deleted successfully.
+final class DeleteMaterialSuccess extends MaterialActionState {
+  final String message;
+  DeleteMaterialSuccess(this.message);
+}
+
+//! Emitted when deleting material fails.
+final class DeleteMaterialFailure extends MaterialActionState {
+  final String errMessage;
+  DeleteMaterialFailure(this.errMessage);
+}
