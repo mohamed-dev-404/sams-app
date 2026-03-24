@@ -11,6 +11,7 @@ import 'package:sams_app/features/materials/data/model/add_material_item_request
 import 'package:sams_app/features/materials/data/model/file_upload_reference.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/data/model/presigned_url_model.dart';
+import 'package:sams_app/features/materials/data/model/update_material.request.dart';
 import 'package:sams_app/features/materials/data/repos/material_repo.dart';
 
 //* Implementation of materials data operations using API and local cache
@@ -47,6 +48,12 @@ class MaterialRepoImpl implements MaterialRepo {
     } catch (e) {
       return left(e.toString());
     }
+  }
+
+  //* Returns materials from local cache
+  @override
+  List<MaterialModel> getCachedMaterials() {
+    return localDataSource.getCachedMaterials();
   }
 
   //* GET single material details
@@ -177,9 +184,96 @@ class MaterialRepoImpl implements MaterialRepo {
     return data.map((e) => PresignedUrlModel.fromJson(e)).toList();
   }
 
-  //* Returns materials from local cache
+  //* PATCH material title and/or description
   @override
-  List<MaterialModel> getCachedMaterials() {
-    return localDataSource.getCachedMaterials();
+  Future<Either<String, MaterialModel>> updateMaterial({
+    required String materialId,
+    required UpdateMaterialRequest request,
+  }) async {
+    try {
+      final response = await api.patch(
+        EndPoints.updateMaterialData(materialId),
+        data: request.toJson(),
+      );
+
+      return right(MaterialModel.fromJson(response[ApiKeys.data]));
+    } on ApiException catch (e) {
+      return left(e.errorModel.errorMessage);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  //* UPLOAD new items to an existing material (Full Workflow)
+  @override
+  Future<Either<String, MaterialModel>> addItemsToMaterial({
+    required String materialId,
+    required String courseId,
+    required List<XFile> newFiles,
+  }) async {
+    try {
+      //! Step 1: Request Presigned URLs for new files
+      final List<PresignedUrlModel> metadataList = await _getBatchPresignedUrls(
+        newFiles,
+        courseId,
+      );
+
+      //! Step 2: Parallel S3 Upload
+      await Future.wait(
+        metadataList.asMap().entries.map((entry) {
+          final index = entry.key;
+          final metadata = entry.value;
+
+          return s3Service.uploadFile(
+            url: metadata.uploadUrl,
+            xFile: newFiles[index],
+            fileName: metadata.originalFileName,
+            contentType: newFiles[index].name.fileContentType,
+          );
+        }),
+      );
+
+      //! Step 3: Confirm new items upload to backend
+      final List<FileUploadReference> itemsRefs = metadataList
+          .map(
+            (m) => FileUploadReference(
+              originalFileName: m.originalFileName,
+              contentType: m.originalFileName.fileContentType,
+              contentReference: m.key,
+            ),
+          )
+          .toList();
+
+      final response = await api.post(
+        EndPoints.addMaterialItems(materialId),
+        data: AddMaterialItemsRequest(materialItems: itemsRefs).toJson(),
+      );
+
+      return right(MaterialModel.fromJson(response[ApiKeys.data]));
+    } on ApiException catch (e) {
+      return left(e.errorModel.errorMessage);
+    } catch (e) {
+      return left('Failed to add items: ${e.toString()}');
+    }
+  }
+
+  //* DELETE single item from material using its S3 key
+  @override
+  Future<Either<String, MaterialModel>> deleteMaterialItem({
+    required String materialId,
+    required String itemKey,
+  }) async {
+    try {
+      final response = await api.delete(
+        EndPoints.deleteMaterialItem(materialId),
+        queryParameters: {ApiKeys.itemKey: itemKey},
+      );
+
+      return right(MaterialModel.fromJson(response[ApiKeys.data]));
+    } on ApiException catch (e) {
+      return left(e.errorModel.errorMessage);
+    } catch (e) {
+      return left(e.toString());
+    }
   }
 }
