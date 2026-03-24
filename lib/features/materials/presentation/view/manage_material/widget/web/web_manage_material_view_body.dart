@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/models/input_field_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:sams_app/features/home/presentation/views/create_course/widgets/
 import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_header.dart';
 import 'package:sams_app/features/materials/presentation/logic/manage_material_mixin.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/course_material_section.dart';
+import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/update_progress_overlay.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/uploading_overlay.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
@@ -29,27 +31,56 @@ class WebManageMaterialViewBody extends StatefulWidget {
 
 class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
     with ManageMaterialMixin {
+      
+  @override
+  void initState() {
+    super.initState();
+    //* Critical: Initialize controllers with data if we are in Edit Mode
+    final initialMaterial = context.read<MaterialCrudCubit>().initialMaterial;
+    initializeControllers(initialMaterial);
+  }
+
+  @override
+  void dispose() {
+    disposeManageMaterial();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MaterialCrudCubit, MaterialCrudState>(
+      listenWhen: (previous, current) =>
+          current is UpdateMaterialSuccess || current is CreateMaterialSuccess,
       listener: (context, state) {
-        if (state is MaterialCrudSuccess) {
+        if (state is UpdateMaterialSuccess) {
           AppSnackBar.success(context, state.message);
-          Navigator.of(context).pop(state.material);
-        } else if (state is MaterialCrudFailure) {
+          context.pop(state.material);
+        } else if (state is CreateMaterialSuccess) {
+          //* Return the created material and pop the view
+          AppSnackBar.success(context, state.message);
+          context.pop(state.material);
+        } else if (state is CreateMaterialFailure) {
           AppSnackBar.error(context, state.errMessage);
         }
       },
       builder: (context, state) {
-        final isLoading = state is MaterialCrudLoading;
-        final isUploading = isLoading && state.isUploadingFiles;
+        //* Decouple various loading states for better UI control
+        final isCreateLoading = state is CreateMaterialLoading;
+        final isCreateUploading = isCreateLoading && state.isUploadingFiles;
+        final isUpdateLoading = state is UpdateMaterialLoading;
+        final anyLoading = isCreateLoading || isUpdateLoading;
+
+        String updateMsg = '';
+        if (state is UpdateMaterialLoading) {
+          updateMsg = state.message;
+        }
 
         return Stack(
           children: [
             IgnorePointer(
-              ignoring: isUploading,
+              ignoring: isCreateUploading || isUpdateLoading,
               child: Opacity(
-                opacity: isUploading ? 0.3 : 1.0,
+                opacity: (isCreateUploading || isUpdateLoading) ? 0.3 : 1.0,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -65,7 +96,8 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
                             const SizedBox(height: 40),
                             _buildFormContent(),
                             const SizedBox(height: 50),
-                            if (!isUploading) _buildSubmitButton(isLoading),
+                            //* Prevent double submission by hiding the button during any loading state
+                            if (!anyLoading) _buildSubmitButton(anyLoading),
                           ],
                         ),
                       ),
@@ -74,7 +106,10 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
                 ),
               ),
             ),
-            if (isUploading) const UploadingOverlay(),
+
+            //* Web Overlays behave exactly like Mobile for consistency
+            if (isCreateUploading) const UploadingOverlay(),
+            if (isUpdateLoading) UpdateProgressOverlay(message: updateMsg),
           ],
         );
       },
@@ -118,7 +153,14 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
         ),
         const SizedBox(width: 24),
         Expanded(
-          child: CourseMaterialSection(key: materialSectionKey),
+          child: CourseMaterialSection(
+            key: materialSectionKey,
+            //* Pass existing files for display when in edit mode
+            initialItems: context
+                .read<MaterialCrudCubit>()
+                .initialMaterial
+                ?.materialItems,
+          ),
         ),
       ],
     );
@@ -132,9 +174,10 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
       label: widget.isEditMode ? 'Edit Material' : 'Add Material',
       onPressed: isLoading
           ? null
-          : () => onAddMaterialPressed(
+          : () => onManageMaterialPressed(
               context: context,
               courseId: widget.courseId,
+              isEditMode: widget.isEditMode,
             ),
       child: isLoading
           ? const CircularProgressIndicator(
