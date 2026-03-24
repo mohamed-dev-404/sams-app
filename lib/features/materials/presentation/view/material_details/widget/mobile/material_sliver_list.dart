@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/materials/data/model/material_item_model.dart';
@@ -8,7 +10,7 @@ import 'package:sams_app/features/materials/presentation/view/material_details/w
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/video_player_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A SliverList that displays course materials grouped by type (Videos and Documents).
+//* A SliverList that displays course materials grouped by type (Videos and Documents).
 class MaterialsSliverList extends StatelessWidget {
   final List<MaterialItemModel> materials;
 
@@ -18,11 +20,22 @@ class MaterialsSliverList extends StatelessWidget {
   Widget build(BuildContext context) {
     // Handle empty state
     if (materials.isEmpty) {
-      return const SliverToBoxAdapter(
+      return SliverToBoxAdapter(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Text('No files attached to this material.'),
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Lottie.asset(
+                  AppLottie.empty,
+                  width: 180,
+                  height: 180,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 16),
+                const Text('No files attached to this material.'),
+              ],
+            ),
           ),
         ),
       );

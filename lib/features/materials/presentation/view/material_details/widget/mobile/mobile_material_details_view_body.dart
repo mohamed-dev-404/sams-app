@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
+import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/mobile/material_sliver_list.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
@@ -53,30 +55,61 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            material.title.split(' ').first,
-                            style: AppStyles.mobileTitleLargeMd.copyWith(
-                              color: AppColors.primaryDarkHover,
+                          Expanded(
+                            child: Text(
+                              material.title,
+                              style: AppStyles.mobileTitleLargeMd.copyWith(
+                                color: AppColors.primaryDarkHover,
+                              ),
                             ),
                           ),
                           if (CurrentRole.role == UserRole.instructor)
-                            GestureDetector(
-                              onTap: () {
-                                context.pushNamed(
-                                  RoutesName.manageMaterial,
-                                  extra: material,
-                                );
-                              },
-                              child: SvgPicture.asset(
-                                AppIcons.iconsEditMaterial,
-                              ),
-                            ),
+                             Padding(
+                               padding: const EdgeInsets.only(left: 10),
+                               child: IconButton (
+                                onPressed: () async {
+                                  // 1. Get courseId from the current route parameters
+                                  final courseId =
+                                      GoRouterState.of(
+                                        context,
+                                      ).pathParameters['courseId'] ??
+                                      '';
+                               
+                                  // 2. Push to manageMaterial and pass the current material model as 'extra'
+                                  final updatedMaterial = await context.pushNamed(
+                                    RoutesName.manageMaterial,
+                                    pathParameters: {
+                                      'courseId': courseId,
+                                    },
+                                    extra:
+                                        material, 
+                                  );
+                               
+                                  // 3. Update the UI if the user edited and saved
+                                  if (updatedMaterial is MaterialModel &&
+                                      context.mounted) {
+                                    // Here you should call a method to refresh the current details view
+                                    context
+                                        .read<MaterialFetchCubit>()
+                                        .updateMaterialDetails(updatedMaterial);
+                                    AppSnackBar.success(
+                                      context,
+                                      'Changes saved!',
+                                    );
+                                  }
+                                },
+                                icon: SvgPicture.asset(
+                                  AppIcons.iconsEditMaterial,
+                                ),
+                                                           ),
+                             ),
                         ],
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        material.title,
+                        material.description,
                         style: AppStyles.mobileBodyMediumRg.copyWith(
                           color: AppColors.primary,
                         ),
