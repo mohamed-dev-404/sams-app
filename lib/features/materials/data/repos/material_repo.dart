@@ -44,4 +44,9 @@ abstract class MaterialRepo {
     required String courseId,
     required List<XFile> newFiles,
   });
+
+  //* Delete an entire material
+  Future<Either<String, Unit>> deleteMaterial({
+    required String materialId,
+  });
 }

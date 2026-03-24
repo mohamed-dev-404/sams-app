@@ -276,4 +276,21 @@ class MaterialRepoImpl implements MaterialRepo {
       return left(e.toString());
     }
   }
+
+  //* DELETE entire material
+  @override
+  Future<Either<String, Unit>> deleteMaterial({
+    required String materialId,
+  }) async {
+    try {
+      // Call the deletion endpoint
+      await api.delete(EndPoints.deleteMaterial(materialId));
+
+      return right(unit); // Success: returns unit (functional void)
+    } on ApiException catch (e) {
+      return left(e.errorModel.errorMessage);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
 }
