@@ -16,16 +16,20 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
+      // Only rebuild when the state is related to Material Details
       buildWhen: (previous, current) => current is MaterialDetailsState,
       builder: (context, state) {
         if (state is MaterialFetchLoading) {
           return const Center(child: AppAnimatedLoadingIndicator());
         }
+
         if (state is MaterialFetchFailure) {
           return Center(child: Text(state.errMessage));
         }
+
         if (state is MaterialFetchDetailsSuccess) {
           final material = state.material;
+
           return Column(
             children: [
               const WebHomeHeader(),
@@ -34,31 +38,35 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Row(
-                      // This will force the children (SideCard and the Column)
-                      // to have the same height
+                      // Force SideCard and Content Column to have the same height
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Sidebar info
+                        // 1. Sidebar info (Title, Description, Edit Button)
                         const Expanded(
                           flex: 2,
                           child: MaterialDetailsSideCard(),
                         ),
 
-                        // Main content
+                        const SizedBox(width: 32), // Clear spacing for Web
+                        // 2. Main content (Items Grid)
                         Expanded(
                           flex: 5,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 30.0),
+                                padding: const EdgeInsets.only(
+                                  left: 8.0,
+                                  bottom: 20,
+                                ),
                                 child: Text(
                                   'Material Content',
                                   style: AppStyles.webTitleMediumSb.copyWith(
                                     color: AppColors.primaryDarkHover,
                                     fontSize:
-                                        MediaQuery.sizeOf(context).width *
-                                        0.022,
+                                        (MediaQuery.sizeOf(context).width *
+                                                0.022)
+                                            .clamp(24, 32),
                                   ),
                                 ),
                               ),
