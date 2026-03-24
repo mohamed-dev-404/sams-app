@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/custom_app_button.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
+
 class DeleteMaterialDialog extends StatelessWidget {
   const DeleteMaterialDialog({
     super.key,
@@ -41,42 +47,36 @@ class DeleteMaterialDialog extends StatelessWidget {
         color: AppColors.primaryDarkHover,
       ),
       content: Text(
-        'Are you sure you want to delete this material? All linked files, videos, and resources will be permanently removed and cannot be recovered.',
+        '• Are you sure you want to delete this material?\n\n'
+        '• All linked files and resources will be permanently removed.\n',
         style: AppStyles.mobileBodyMediumRg.copyWith(
           color: AppColors.primaryDark,
         ),
       ),
       actions: [
-        // BlocConsumer<CrudCubit, CrudState>(
-        //   listener: (context, state) {
-        //     if (state is DeleteMaterialSuccess ||
-        //         state is DeleteMaterialFailure) {
-        //       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //         if (Navigator.canPop(context)) {
-        //           Navigator.pop(context); 
-        //           if (state is DeleteMaterialSuccess) {
-        //             AppSnackBar.success(context, state.message);
-        //           } else if (state is DeleteMaterialFailure) {
-        //             AppSnackBar.error(context, state.errMessage);
-        //           }
-        //         }
-        //       });
-        //     }
-        //   },
-        //   builder: (context, state) {
-        //     if (state is DeleteMaterialLoading) {
-        //       return const Center(
-        //         child: Padding(
-        //           padding: EdgeInsets.all(10),
-        //           child: CircularProgressIndicator(
-        //             color: AppColors.primaryDark,
-        //           ),
-        //         ),
-        //       );
-        //     }
-             Row(
+        BlocConsumer<MaterialCrudCubit, MaterialCrudState>(
+          listener: (context, state) {
+            if (state is DeleteMaterialSuccess) {
+              context.pop(context); // Close dialog on success
+              AppSnackBar.success(context, state.message);
+            } else if (state is DeleteMaterialFailure) {
+              context.pop(context); // Close dialog on failure
+              AppSnackBar.error(context, state.errMessage);
+            }
+          },
+          builder: (context, state) {
+            if (state is DeleteMaterialLoading) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryDark,
+                  ),
+                ),
+              );
+            }
+            return Row(
               children: [
-               
                 Expanded(
                   child: CustomAppButton(
                     label: 'Cancel',
@@ -87,7 +87,6 @@ class DeleteMaterialDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                
                 Expanded(
                   child: CustomAppButton(
                     label: 'Delete',
@@ -95,12 +94,17 @@ class DeleteMaterialDialog extends StatelessWidget {
                     textColor: AppColors.whiteLight,
                     backgroundColor: StatusColors.red,
                     onPressed: () {
-                     
+                      // Trigger the delete operation in the Cubit
+                      context.read<MaterialCrudCubit>().deleteMaterial(
+                        materialId: materialId,
+                      );
                     },
                   ),
                 ),
               ],
-            )
+            );
+          },
+        ),
       ],
     );
   }

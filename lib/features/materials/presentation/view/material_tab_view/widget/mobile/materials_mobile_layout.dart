@@ -14,6 +14,7 @@ import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
 import 'package:sams_app/features/materials/presentation/view/material_tab_view/widget/shared/delete_material_dialog.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -204,13 +205,19 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     }
   }
 
-  //* UI confirmation layer before triggering destructive delete operation
+ //! Instructor Actions: Confirmation Dialog for material deletion
   void _confirmDelete(MaterialModel material) {
     showDialog(
       context: context,
-      builder: (dialogContext) => DeleteMaterialDialog(
-        materialId: material.id,
-        materialName: material.title,
+      builder: (dialogContext) => BlocProvider.value(
+        value: context
+            .read<
+              MaterialCrudCubit
+            >(), // Inject the existing cubit into the dialog's route
+        child: DeleteMaterialDialog(
+          materialId: material.id, // Pass real material ID
+          materialName: material.title, // Pass real material name
+        ),
       ),
     );
   }
