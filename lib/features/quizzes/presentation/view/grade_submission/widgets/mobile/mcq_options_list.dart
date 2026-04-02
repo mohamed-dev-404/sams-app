@@ -39,6 +39,8 @@ class McqOptionsList extends StatelessWidget {
           color: StatusColors.green,
           size: 20,
         );
+        break;
+
       case OptionUIState.wrongSelected:
         bgColor = StatusColors.red.withValues(alpha: 0.2);
         borderColor = StatusColors.red;
@@ -47,17 +49,25 @@ class McqOptionsList extends StatelessWidget {
           color: StatusColors.red,
           size: 20,
         );
+        break;
+
       case OptionUIState.correctUnselected:
-        bgColor = AppColors.secondary.withValues(alpha: 0.08);
-        borderColor = AppColors.secondary.withValues(alpha: 0.5);
-        trailingIcon = Icon(
-          Icons.check_circle_outline_rounded,
-          color: AppColors.secondary.withValues(alpha: 0.5),
+        bgColor = StatusColors.green.withValues(alpha: 0.1);
+        borderColor = StatusColors.green;
+        textColor = AppColors.primaryDark;
+        trailingIcon = const Icon(
+          Icons.check_circle_outline,
+          color: StatusColors.green,
           size: 20,
         );
+        break;
+
       case OptionUIState.unselected:
-        bgColor = AppColors.whiteLight;
-        borderColor = AppColors.secondaryLightActive;
+        bgColor = AppColors.whiteLight.withValues(alpha: 0.4);
+        borderColor = AppColors.secondaryLightActive.withValues(alpha: 0.2);
+        textColor = AppColors.whiteDarkActive.withValues(alpha: 0.5);
+        trailingIcon = null;
+        break;
     }
 
     return Container(
