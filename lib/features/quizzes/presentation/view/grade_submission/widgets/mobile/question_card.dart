@@ -8,134 +8,166 @@ import 'package:sams_app/features/quizzes/presentation/view/grade_submission/wid
 
 class QuestionCard extends StatelessWidget {
   final SubmissionDetailsModel question;
-
-  const QuestionCard({super.key, required this.question});
+  final int index;
+  const QuestionCard({
+    super.key,
+    required this.question,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Unmarked question
-    final bool needsGrading = question.state == QuestionUIState.unmarked;
+    Color cardBgColor;
+    Color borderColor;
+    Color marksBadgeBg;
+    Color marksColor;
+
+    switch (question.state) {
+      case QuestionUIState.correct:
+        cardBgColor = StatusColors.green.withValues(alpha: 0.15);
+        borderColor = StatusColors.green.withValues(alpha: 0.3);
+        marksBadgeBg = StatusColors.green.withValues(alpha: 0.2);
+        marksColor = StatusColors.green;
+        break;
+      case QuestionUIState.incorrect:
+        cardBgColor = StatusColors.red.withValues(alpha: 0.1);
+        borderColor = StatusColors.red.withValues(alpha: 0.2);
+        marksBadgeBg = StatusColors.red.withValues(alpha: 0.15);
+        marksColor = StatusColors.red;
+        break;
+      case QuestionUIState.unmarked:
+        cardBgColor = StatusColors.orange.withValues(alpha: 0.1);
+        borderColor = StatusColors.orange.withValues(alpha: 0.3);
+        marksBadgeBg = StatusColors.orange.withValues(alpha: 0.2);
+        marksColor = StatusColors.orange;
+        break;
+      default:
+        cardBgColor = AppColors.whiteLight;
+        borderColor = AppColors.secondaryLightActive.withValues(alpha: 0.5);
+        marksBadgeBg = AppColors.secondaryLightActive.withValues(alpha: 0.2);
+        marksColor = AppColors.primary;
+    }
+
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.whiteLight,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: needsGrading
-              ? StatusColors.orange
-              : AppColors.secondaryLightActive,
-          width: needsGrading ? 2 : 1.5,
-        ),
+        color: cardBgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: borderColor, width: 1.2),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Header (Badge & Grading Input)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTypeBadge(),
-              question.isWritten
-                  ? GradingScoreField(
-                      maxPoints: question.points,
-                      earnedPoints: question.earnedPoints,
-                      isGraded: question.isGraded,
-                      questionId: question.id,
-                    )
-                  : _buildStaticScoreContainer(),
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. Header (Index, Type, Marks/Input)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'QUESTION ${index + 1}',
+                      style: AppStyles.mobileBodyXsmallMd.copyWith(
+                        color: AppColors.whiteDarkActive,
+                        fontSize: 10,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    _buildTypeBadge(),
+                  ],
+                ),
 
-          const SizedBox(height: 32),
-
-          Text(
-            question.text,
-            style: AppStyles.web16Semibold.copyWith(
-              color: AppColors.primaryDark,
+                // Grading Input or Static Score inline as in the new image
+                question.isWritten
+                    ? GradingInputScoreField(
+                        question: question,
+                      )
+                    : _buildStaticScoreBadge(marksBadgeBg, marksColor),
+              ],
             ),
-          ),
 
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          // 3. Answer Body
-          _buildAnswerBody(),
-        ],
+            // 2. Question Text
+            Text(
+              question.text,
+              style: AppStyles.mobileLabelMediumMd.copyWith(
+                color: AppColors.primaryDarkActive,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // 3. Answer Body
+            _buildAnswerBody(),
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _buildStaticScoreContainer() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          'Points',
-          style: AppStyles.mobileBodyXsmallMd.copyWith(
-            color: AppColors.whiteDarkActive,
-            fontSize: 10,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(
-            color: AppColors.whiteLight,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: question.earnedPoints == 0
-                  ? StatusColors.red.withValues(alpha: 0.5)
-                  : StatusColors.green.withValues(alpha: 0.5),
-              width: 1,
-            ),
-          ),
-          child: Text(
-            question.displayScore,
-            style: AppStyles.mobileLabelMediumMd.copyWith(
-              color: question.earnedPoints == 0
-                  ? StatusColors.red
-                  : StatusColors.green,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
   Widget _buildTypeBadge() {
-    IconData icon;
-    Color color = AppColors.primary;
-
-    if (question.isWritten) {
-      icon = Icons.edit_document;
-    } else {
-      icon = Icons.checklist_rtl;
-    }
+    final bool isWritten = question.isWritten;
+    final Color badgeColor = isWritten
+        ? AppColors.primary
+        : AppColors.secondary;
+    final IconData badgeIcon = isWritten
+        ? Icons.description_outlined
+        : Icons.fact_check_outlined;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: badgeColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: badgeColor.withValues(alpha: 0.15),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
+          Icon(
+            badgeIcon,
+            size: 13,
+            color: badgeColor,
+          ),
           const SizedBox(width: 6),
           Text(
-            question.uiTypeLabel,
-            style: AppStyles.mobileBodyXsmallMd.copyWith(color: color),
+            question.uiTypeLabel.toUpperCase(),
+            style: AppStyles.mobileBodyXsmallMd.copyWith(
+              color: badgeColor,
+              letterSpacing: 0.5,
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStaticScoreBadge(Color badgeBg, Color marksColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: badgeBg,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        question.displayScore,
+        style: AppStyles.mobileLabelMediumMd.copyWith(
+          color: marksColor,
+          fontSize: 12,
+        ),
       ),
     );
   }

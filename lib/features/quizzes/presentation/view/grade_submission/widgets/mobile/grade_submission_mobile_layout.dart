@@ -14,7 +14,10 @@ class GradeSubmissionMobileLayout extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
           final question = mockSubmissionDetails[index];
-          return QuestionCard(question: question);
+          return QuestionCard(
+            question: question,
+            index: index,
+          );
         },
       ),
     );
