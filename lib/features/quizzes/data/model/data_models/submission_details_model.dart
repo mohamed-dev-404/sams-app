@@ -10,7 +10,8 @@ enum QuestionUIState {
 
 ///! Represents the visual state of an individual MCQ/TF option
 enum OptionUIState {
-  correct, // Green (Correct answer, whether selected or not)
+  correctSelected, // Green (Correct answer, selected )
+  correctUnselected, // Light Green (Correct answer, not selected)
   wrongSelected, // Red (Wrong answer, but student selected it)
   unselected, // Default (Wrong answer, student did not select it)
 }
@@ -62,13 +63,15 @@ class SubmissionDetailsModel {
     }
   }
 
+  bool get isWritten => questionType == ApiValues.written;
+
   ///* Automatically formats the score string for the top-right badge (e.g., "1/1", "0/2", "-/3")
   String get displayScore {
     // If it's a written question AND isCorrect is null, it hasn't been graded yet.
     if (questionType == ApiValues.written && isCorrect == null) {
-      return '-/$points';
+      return '--';
     }
-    return '$earnedPoints/$points';
+    return '$earnedPoints / $points PTS';
   }
 
   ///* Determines the exact UI state for colors and borders of the overall question card
@@ -152,12 +155,15 @@ class AnswerOptionModel {
   //! --- UI Getter ---
   OptionUIState get state {
     // 1. If it's the correct answer, it's ALWAYS green.
-    if (isCorrect) return OptionUIState.correct;
+    if (isSelected && isCorrect) return OptionUIState.correctSelected;
 
     // 2. If it's wrong AND the student selected it, it's red.
-    if (isSelected) return OptionUIState.wrongSelected;
+    if (isSelected && !isCorrect) return OptionUIState.wrongSelected;
 
-    // 3. Otherwise, it's just a wrong answer they didn't pick (default).
+    // 3. If it's the correct answer but not selected , it Light green.
+    if (isCorrect && !isSelected) return OptionUIState.correctUnselected;
+
+    // 4. Otherwise, it's just a wrong answer they didn't pick (default).
     return OptionUIState.unselected;
   }
 
