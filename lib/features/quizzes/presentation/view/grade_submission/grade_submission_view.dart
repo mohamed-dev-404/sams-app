@@ -43,7 +43,9 @@ class _GradeSubmissionViewState extends State<GradeSubmissionView> {
           mobileLayout: (context) => GradeSubmissionMobileLayout(
             submissionId: widget.submissionId,
           ),
-          webLayout: (context) => const GradeSubmissionWebLayout(),
+          webLayout: (context) => GradeSubmissionWebLayout(
+            submissionId: widget.submissionId,
+          ),
         );
       },
     );
