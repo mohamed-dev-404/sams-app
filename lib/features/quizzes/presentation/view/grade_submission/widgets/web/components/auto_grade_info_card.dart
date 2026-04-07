@@ -16,7 +16,6 @@ class AutoGradeInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: question.state.autoGradeFeedbackColor.withValues(alpha: 0.08),
@@ -28,22 +27,25 @@ class AutoGradeInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                question.state.autoGradeFeedbackIcon,
-                color: question.state.autoGradeFeedbackColor,
-                size: 16,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                question.state.autoGradeFeedbackLabel,
-                style: AppStyles.webAgBodyBold.copyWith(
-                  fontSize: 12,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              children: [
+                Icon(
+                  question.state.autoGradeFeedbackIcon,
                   color: question.state.autoGradeFeedbackColor,
+                  size: 16,
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  question.state.autoGradeFeedbackLabel,
+                  style: AppStyles.webAgBodyBold.copyWith(
+                    fontSize: 12,
+                    color: question.state.autoGradeFeedbackColor,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           Text(

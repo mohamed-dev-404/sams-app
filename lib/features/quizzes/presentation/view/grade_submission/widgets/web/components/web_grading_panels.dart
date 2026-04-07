@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/submission_details_model.dart';
@@ -41,7 +39,6 @@ class _WebGradingPanelsState extends State<WebGradingPanels> {
   @override
   Widget build(BuildContext context) {
     final width = SizeConfig.screenWidth(context);
-    log(width.toString());
 
     // Clamp selected index if questions shrink
     if (widget.questions.isNotEmpty &&
