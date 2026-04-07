@@ -62,11 +62,7 @@ class _WebGradingPanelsState extends State<WebGradingPanels> {
             selectedIndex: _selectedIndex,
             onSelect: (i) {
               setState(() => _selectedIndex = i);
-              _pageController.animateToPage(
-                i,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOutCubic,
-              );
+              _pageController.jumpToPage(i);
             },
           ),
 
@@ -79,15 +75,15 @@ class _WebGradingPanelsState extends State<WebGradingPanels> {
               onPageChanged: (i) => setState(() => _selectedIndex = i),
               onPrev: _selectedIndex > 0
                   ? () => _pageController.previousPage(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeOutQuad,
-                      )
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeOutQuad,
+                    )
                   : null,
               onNext: _selectedIndex < widget.questions.length - 1
                   ? () => _pageController.nextPage(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeOutQuad,
-                      )
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeOutQuad,
+                    )
                   : null,
               onJump: (i) => _pageController.animateToPage(
                 i,
