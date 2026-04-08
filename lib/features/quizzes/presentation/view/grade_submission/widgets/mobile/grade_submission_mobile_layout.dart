@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/quizzes/presentation/view/grade_submission/widgets/mobile/question_card.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/grading_cubit/grading_cubit.dart';
 
@@ -17,7 +18,9 @@ class GradeSubmissionMobileLayout extends StatelessWidget {
       builder: (context, state) {
         // ── Loading ───────────────────────────────────────────────────────
         if (state is GradingLoading) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: AppAnimatedLoadingIndicator()),
+          );
         }
 
         // ── Data ready (or a question is being saved) ─────────────────────
@@ -44,7 +47,7 @@ class GradeSubmissionMobileLayout extends StatelessWidget {
 
         // ── Failure ───────────────────────────────────────────────────────
         if (state is GradingFailure) {
-          //TODO display the error screen 
+          //TODO display the error screen
           return Scaffold(
             body: Center(
               child: Text(state.errorMessage),

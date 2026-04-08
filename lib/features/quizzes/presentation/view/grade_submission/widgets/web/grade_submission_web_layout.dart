@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/quizzes/presentation/view/grade_submission/widgets/web/components/web_grading_panels.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/grading_cubit/grading_cubit.dart';
 
@@ -23,7 +24,7 @@ class GradeSubmissionWebLayout extends StatelessWidget {
         if (state is GradingLoading) {
           return const Scaffold(
             backgroundColor: _bgColor,
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: AppAnimatedLoadingIndicator()),
           );
         }
 

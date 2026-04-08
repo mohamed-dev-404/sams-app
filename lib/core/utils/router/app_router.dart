@@ -59,7 +59,7 @@ class AppRouter {
 
   static final appRouter = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: RoutesName.login,
+    initialLocation: '',
     errorBuilder: (context, state) => const GeneralErrorPage(),
     routes: [
       // ! --- AUTH ROUTES ---
@@ -241,7 +241,10 @@ class AppRouter {
                         builder: (context, state) => BlocProvider(
                           create: (context) =>
                               GradingCubit(getIt<QuizRepository>()),
-                          child: const GradeSubmissionView(),
+                          child: GradeSubmissionView(
+                            submissionId:
+                                state.pathParameters['submissionId'] ?? '',
+                          ),
                         ),
                       ),
                     ],
