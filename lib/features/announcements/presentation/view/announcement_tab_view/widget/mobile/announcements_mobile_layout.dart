@@ -29,16 +29,28 @@ class AnnouncementsMobileLayout extends StatelessWidget {
         const SizedBox(height: 8),
         Expanded(
           child: BlocBuilder<AnnouncementsFetchCubit, AnnouncementsFetchState>(
+            /// [buildWhen] is used to prevent the list UI from rebuilding or disappearing 
+            /// when the state changes to "AnnouncementDetails" states.
+            /// This ensures the list remains visible in the background when navigating to details.
+            buildWhen: (previous, current) {
+              return current is AnnouncementsFetchLoading || 
+                     current is AnnouncementsFetchSuccess || 
+                     current is AnnouncementsFetchFailure;
+            },
             builder: (context, state) {
               if (state is AnnouncementsFetchLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is AnnouncementsFetchSuccess) {
+              } 
+              
+              else if (state is AnnouncementsFetchSuccess) {
                 final announcements = state.announcements;
+                
                 if (announcements.isEmpty) {
                   return const Center(
                     child: Text('No announcements yet.'),
                   );
                 }
+                
                 return ListView.builder(
                   itemCount: announcements.length,
                   itemBuilder: (context, index) {
@@ -50,6 +62,12 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                           description: announcements[index].content,
                           image: AppImages.imagesAnnouncementCard,
                           onTap: () {
+                            /// Trigger fetching details for the specific announcement.
+                            context.read<AnnouncementsFetchCubit>().fetchAnnouncementDetails(
+                                  announcementId: announcements[index].id,
+                                );
+                            
+                            /// Navigate to the details screen.
                             context.pushNamed(
                               RoutesName.announcementDetails,
                               pathParameters: {
@@ -63,9 +81,14 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                     );
                   },
                 );
-              } else if (state is AnnouncementsFetchFailure) {
+              } 
+              
+              else if (state is AnnouncementsFetchFailure) {
                 return Center(child: Text(state.errMessage));
               }
+
+              /// Due to [buildWhen], if the state is "DetailsSuccess", the Builder will 
+              /// keep showing the last "AnnouncementsFetchSuccess" UI instead of an empty SizedBox.
               return const SizedBox();
             },
           ),

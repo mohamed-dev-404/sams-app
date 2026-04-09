@@ -5,7 +5,6 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 
 class MobileHeaderSection extends StatelessWidget {
   const MobileHeaderSection({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Padding(

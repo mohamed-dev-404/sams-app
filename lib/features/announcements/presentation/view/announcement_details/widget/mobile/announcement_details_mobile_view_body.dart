@@ -8,12 +8,13 @@ import 'package:sams_app/features/announcements/presentation/view/announcement_d
 
 class AnnouncementDetailsMobileViewBody extends StatelessWidget {
   const AnnouncementDetailsMobileViewBody({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return  const Column(
       children: [
-        MobileHeaderSection(),
+        MobileHeaderSection(
+      
+        ),
         Expanded(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16),

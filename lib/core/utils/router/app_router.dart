@@ -191,7 +191,9 @@ class AppRouter {
           _buildTabRoute(
             RoutesName.announcements,
             (id) => BlocProvider(
-              create: (context) => getIt<AnnouncementsFetchCubit>()..fetchAnnouncements(courseId: id),
+              create: (context) =>
+                  getIt<AnnouncementsFetchCubit>()
+                    ..fetchAnnouncements(courseId: id),
               child: AnnouncementsTabView(courseId: id),
             ),
             subRoutes: [
@@ -204,8 +206,13 @@ class AppRouter {
                 parentNavigatorKey: navigatorKey,
                 builder: (context, state) {
                   // Announcement ID can be extracted here for future logic/API calls
-                  // final announcementId = state.pathParameters['announcementId'] ?? '';
-                  return const AnnouncementDetailsView();
+                  final announcementId = state.pathParameters['announcementId'] ?? '';
+                  return BlocProvider(
+                    create: (context) => getIt<AnnouncementsFetchCubit>()..fetchAnnouncementDetails(announcementId: announcementId),
+                    child:  const AnnouncementDetailsView(
+                      
+                    ),
+                  );
                 },
               ),
             ],

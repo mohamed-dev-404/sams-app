@@ -5,12 +5,11 @@ import 'package:sams_app/features/announcements/presentation/view/announcement_d
 
 class AnnouncementDetailsView extends StatelessWidget {
   const AnnouncementDetailsView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return AdaptiveLayout(
       mobileLayout: (BuildContext context) {
-        return const AnnouncementDetailsMobileView();
+        return AnnouncementDetailsMobileView();
       },
       webLayout: (BuildContext context) {
         return const AnnouncementDetailsWebView();

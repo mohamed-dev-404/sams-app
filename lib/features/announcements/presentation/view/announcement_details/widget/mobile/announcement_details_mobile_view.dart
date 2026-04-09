@@ -6,10 +6,11 @@ class AnnouncementDetailsMobileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       backgroundColor: Color(0xffF5F7F9),
       body: SafeArea(
-        child: AnnouncementDetailsMobileViewBody(),
+        child: AnnouncementDetailsMobileViewBody(
+        ),
       ),
     );
   }
