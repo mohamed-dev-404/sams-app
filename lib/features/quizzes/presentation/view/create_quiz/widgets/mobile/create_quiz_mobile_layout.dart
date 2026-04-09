@@ -78,31 +78,18 @@ class CreateQuizMobileLayout extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // ─── Assigned Classwork ───
-                        TitledInputField(
-                          label: 'Assigned Classwork',
-                          child: ClassworkSelectorField(
-                            selectedClasswork: cubit.selectedClasswork,
-                            classworkItems: mockClassworkItems,
-                            onSelected: cubit.onClassworkSelected,
-                            // Locked in edit mode — cannot re-assign the classwork
-                            isReadOnly: cubit.isEditMode,
-                          ),
-                        ),
-                        // Hint shown only in edit mode to explain why the field is locked
-                        if (cubit.isEditMode) ...[
-                          const SizedBox(height: 4),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: Text(
-                              'The assigned classwork cannot be changed after creation.',
-                              style: AppStyles.mobileBodyXsmallRg.copyWith(
-                                color: AppColors.whiteDarkHover,
-                              ),
+                        if (!cubit.isEditMode) ...[
+                          // ─── Assigned Classwork ───
+                          TitledInputField(
+                            label: 'Assigned Classwork',
+                            child: ClassworkSelectorField(
+                              selectedClasswork: cubit.selectedClasswork,
+                              classworkItems: mockClassworkItems,
+                              onSelected: cubit.onClassworkSelected,
                             ),
                           ),
+                          const SizedBox(height: 20),
                         ],
-                        const SizedBox(height: 20),
 
                         // ─── Title ───
                         TitledInputField(

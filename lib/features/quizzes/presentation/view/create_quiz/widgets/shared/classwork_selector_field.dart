@@ -17,16 +17,11 @@ class ClassworkSelectorField extends StatelessWidget {
   /// Ignored when [isReadOnly] is `true`.
   final ValueChanged<ClassworkItemModel> onSelected;
 
-  /// When `true`, the field is displayed but is not interactive.
-  /// Used in Edit mode — the instructor cannot re-assign the quiz's classwork.
-  final bool isReadOnly;
-
   const ClassworkSelectorField({
     super.key,
     required this.selectedClasswork,
     required this.classworkItems,
     required this.onSelected,
-    this.isReadOnly = false,
   });
 
   @override
@@ -34,7 +29,7 @@ class ClassworkSelectorField extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(15),
       // Disable tap in read-only mode
-      onTap: isReadOnly ? null : () => _showClassworkSheet(context),
+      onTap: () => _showClassworkSheet(context),
       child: InputDecorator(
         decoration: InputDecoration(
           hintText: 'Select assigned classwork',
@@ -42,24 +37,16 @@ class ClassworkSelectorField extends StatelessWidget {
             color: AppColors.whiteDarkHover,
           ),
           // Show lock icon when read-only, chevron otherwise
-          suffixIcon: Icon(
-            isReadOnly
-                ? Icons.lock_outline_rounded
-                : Icons.keyboard_arrow_down_rounded,
-            color: isReadOnly
-                ? AppColors.whiteDarkHover
-                : AppColors.primaryDark,
+          suffixIcon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppColors.primaryDark,
           ),
-          // Visually dim the field in read-only mode
-          fillColor: isReadOnly ? AppColors.whiteHover : null,
         ),
         child: selectedClasswork != null
             ? Text(
                 '${selectedClasswork!.name}  •  ${selectedClasswork!.points} pts',
                 style: AppStyles.mobileBodySmallMd.copyWith(
-                  color: isReadOnly
-                      ? AppColors.whiteDarkActive
-                      : AppColors.primaryDarkHover,
+                  color: AppColors.primaryDarkHover,
                 ),
               )
             : null,
