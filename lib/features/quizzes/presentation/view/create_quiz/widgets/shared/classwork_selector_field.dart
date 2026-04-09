@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sams_app/core/enums/text_field_type.dart';
+import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/base/app_button.dart';
+import 'package:sams_app/core/widgets/base/app_text_field.dart';
+import 'package:sams_app/core/widgets/shared/titled_input_field.dart';
+import 'package:sams_app/features/home/data/models/classwork_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/classwork_item_model.dart';
 
 /// A tap-able field that looks like a text input but opens a bottom-sheet
@@ -93,6 +99,70 @@ class _ClassworkSelectionSheet extends StatelessWidget {
     required this.onSelected,
   });
 
+  Future<ClassworkModel?> showAddClassworkDialog(BuildContext context) async {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController pointsController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    return showDialog<ClassworkModel>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TitledInputField(
+                    label: 'Quiz Title',
+                    child: AppTextField(
+                      hintText: 'e.g. Quiz 3',
+                      controller: nameController,
+                      textFieldType: TextFieldType.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  TitledInputField(
+                    label: 'Total Marks',
+                    child: AppTextField(
+                      hintText: 'e.g. 5',
+                      controller: pointsController,
+                      textFieldType: TextFieldType.numerical,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  AppButton(
+                    model: AppButtonStyleModel(
+                      label: 'Done',
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          final newClasswork = ClassworkModel(
+                            name: nameController.text.trim(),
+                            points: double.parse(pointsController.text.trim()),
+                          );
+                          //TODO hit the post now class work
+                          Navigator.of(context).pop(newClasswork);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -132,6 +202,42 @@ class _ClassworkSelectionSheet extends StatelessWidget {
                 onTap: () => onSelected(item),
               );
             }),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: InkWell(
+                  onTap: () async {
+                    final ClassworkModel? newClasswork =
+                        await showAddClassworkDialog(context);
+
+                    if (newClasswork != null) {
+                      // Here you can do the following:
+                      // - Update the UI to add the new item to the list (using setState or Bloc/Provider).
+                      // - Call the API (POST request) that you attached in the Postman screenshot to upload the new classwork to the server.
+
+                      print(
+                        'Created Classwork: ${newClasswork.name} with ${newClasswork.points} points',
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.teal,
+                        width: 2,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.teal,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
