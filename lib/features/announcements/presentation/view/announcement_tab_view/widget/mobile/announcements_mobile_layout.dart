@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
+import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_state.dart';
 
@@ -16,44 +18,62 @@ class AnnouncementsMobileLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        Text(
-          'Announcements',
-          style: AppStyles.mobileTitleMediumSb.copyWith(
-            color: AppColors.primaryDarkHover,
+    return CustomScrollView(
+      slivers: [
+        /// 1. Title Header
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              'Announcements',
+              style: AppStyles.mobileTitleMediumSb.copyWith(
+                color: AppColors.primaryDarkHover,
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: BlocBuilder<AnnouncementsFetchCubit, AnnouncementsFetchState>(
-            /// [buildWhen] is used to prevent the list UI from rebuilding or disappearing 
-            /// when the state changes to "AnnouncementDetails" states.
-            /// This ensures the list remains visible in the background when navigating to details.
-            buildWhen: (previous, current) {
-              return current is AnnouncementsFetchLoading || 
-                     current is AnnouncementsFetchSuccess || 
-                     current is AnnouncementsFetchFailure;
-            },
-            builder: (context, state) {
-              if (state is AnnouncementsFetchLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } 
-              
-              else if (state is AnnouncementsFetchSuccess) {
-                final announcements = state.announcements;
-                
-                if (announcements.isEmpty) {
-                  return const Center(
-                    child: Text('No announcements yet.'),
-                  );
-                }
-                
-                return ListView.builder(
-                  itemCount: announcements.length,
-                  itemBuilder: (context, index) {
+
+        /// 2. Instructor Add Card (Scrolls with the list)
+        if (CurrentRole.role == UserRole.instructor)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: AddNewCard(
+                title: 'Add New Announcement',
+                isMobile: true,
+                onTap: () {
+                  // Navigate to Create Screen
+                },
+              ),
+            ),
+          ),
+
+        /// 3. The List of Announcements
+        BlocBuilder<AnnouncementsFetchCubit, AnnouncementsFetchState>(
+          buildWhen: (previous, current) {
+            return current is AnnouncementsFetchLoading ||
+                current is AnnouncementsFetchSuccess ||
+                current is AnnouncementsFetchFailure;
+          },
+          builder: (context, state) {
+            if (state is AnnouncementsFetchLoading) {
+              return const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else if (state is AnnouncementsFetchSuccess) {
+              final announcements = state.announcements;
+
+              if (announcements.isEmpty) {
+                return const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text('No announcements yet.')),
+                );
+              }
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: MobileMainCard(
@@ -62,12 +82,11 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                           description: announcements[index].content,
                           image: AppImages.imagesAnnouncementCard,
                           onTap: () {
-                            /// Trigger fetching details for the specific announcement.
-                            context.read<AnnouncementsFetchCubit>().fetchAnnouncementDetails(
+                            context
+                                .read<AnnouncementsFetchCubit>()
+                                .fetchAnnouncementDetails(
                                   announcementId: announcements[index].id,
                                 );
-                            
-                            /// Navigate to the details screen.
                             context.pushNamed(
                               RoutesName.announcementDetails,
                               pathParameters: {
@@ -80,18 +99,17 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                       ),
                     );
                   },
-                );
-              } 
-              
-              else if (state is AnnouncementsFetchFailure) {
-                return Center(child: Text(state.errMessage));
-              }
-
-              /// Due to [buildWhen], if the state is "DetailsSuccess", the Builder will 
-              /// keep showing the last "AnnouncementsFetchSuccess" UI instead of an empty SizedBox.
-              return const SizedBox();
-            },
-          ),
+                  childCount: announcements.length,
+                ),
+              );
+            } else if (state is AnnouncementsFetchFailure) {
+              return SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Text(state.errMessage)),
+              );
+            }
+            return const SliverToBoxAdapter(child: SizedBox());
+          },
         ),
       ],
     );

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_state.dart';
@@ -16,6 +18,7 @@ class AnnouncementsWebLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isInstructor = CurrentRole.role == UserRole.instructor;
     return Padding(
       padding: const EdgeInsets.fromLTRB(40, 12, 40, 0),
       child: CustomScrollView(
@@ -47,8 +50,8 @@ class AnnouncementsWebLayout extends StatelessWidget {
               
               else if (state is AnnouncementsFetchSuccess) {
                 final announcements = state.announcements;
-                
-                if (announcements.isEmpty) {
+                final int gridCount = isInstructor ? announcements.length + 1 : announcements.length;
+                if (gridCount==0) {
                   return const SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(child: Text('No announcements yet.')),
@@ -56,7 +59,7 @@ class AnnouncementsWebLayout extends StatelessWidget {
                 }
                 
                 return SliverGrid.builder(
-                  itemCount: announcements.length,
+                  itemCount: gridCount,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 350,
                     mainAxisSpacing: 16,
@@ -65,22 +68,32 @@ class AnnouncementsWebLayout extends StatelessWidget {
                     childAspectRatio: 301 / 240,
                   ),
                   itemBuilder: (context, index) {
+                    if (isInstructor && index == 0) {
+                      return AddNewCard(
+                        title: 'New Announcement',
+                        isMobile: false, 
+                        onTap: () {
+                          // Navigate to Create Screen
+                        },
+                      );
+                    }
+                    final dataIndex = isInstructor ? index - 1 : index;
                     return WebMainCard(
                       model: MainCardModel(
-                        title: announcements[index].title,
-                        description: announcements[index].content,
+                        title: announcements[dataIndex].title,
+                        description: announcements[dataIndex].content,
                         image: AppImages.imagesAnnouncementCard,
                         onTap: () {
                           /// Fetch specific details before navigating
                           context.read<AnnouncementsFetchCubit>().fetchAnnouncementDetails(
-                            announcementId: announcements[index].id,
+                            announcementId: announcements[dataIndex].id,
                           );
 
                           context.pushNamed(
                             RoutesName.announcementDetails,
                             pathParameters: {
                               'courseId': courseId,
-                              'announcementId': announcements[index].id,
+                              'announcementId': announcements[dataIndex].id,
                             },
                           );
                         },
