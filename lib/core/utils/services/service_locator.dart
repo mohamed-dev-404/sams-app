@@ -4,6 +4,10 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/network/dio_consumer.dart';
 import 'package:sams_app/core/utils/services/s3_upload_service.dart';
+import 'package:sams_app/features/announcements/data/data_sources/announcements_local_data_source.dart';
+import 'package:sams_app/features/announcements/data/repos/announcement_repo.dart';
+import 'package:sams_app/features/announcements/data/repos/announcemet_repo_impl.dart';
+import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
 import 'package:sams_app/features/auth/data/repos/auth_repo.dart';
 import 'package:sams_app/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:sams_app/features/home/data/data_sources/home_local_data_sourse.dart';
@@ -65,5 +69,25 @@ void setupServiceLocator() {
   //* register ProfileCubit
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepo>()),
+  );
+
+
+  //! Announcements Feature
+  //* 1. Register Local Data Source
+  getIt.registerLazySingleton<AnnouncementLocalDataSource>(
+    () => AnnouncementLocalDataSource(),
+  );
+
+  //* 2. Register Repo Implementation
+  getIt.registerLazySingleton<AnnouncementsRepo>(
+    () => AnnouncementsRepoImpl(
+      api: getIt<ApiConsumer>(),
+      localDataSource: getIt<AnnouncementLocalDataSource>(),
+    ),
+  );
+
+  //* 3. Register Fetch Cubit (Factory: to get a fresh instance every time)
+  getIt.registerFactory<AnnouncementsFetchCubit>(
+    () => AnnouncementsFetchCubit(getIt<AnnouncementsRepo>()),
   );
 }
