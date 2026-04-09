@@ -1,5 +1,4 @@
 // ignore_for_file: unintended_html_in_doc_comment
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';

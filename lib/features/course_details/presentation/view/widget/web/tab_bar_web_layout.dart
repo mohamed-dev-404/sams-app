@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/web/web_course_header_card.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
+import 'package:sams_app/features/course_details/presentation/view/widget/web/web_tab_body_view.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
 /// Web course details shell.
@@ -25,15 +26,15 @@ class TabBarWebLayout extends StatelessWidget {
     return BlocBuilder<CourseNavigationCubit, int>(
       builder: (context, currentIndex) {
         return Scaffold(
-          // ── Sticky tab bar in AppBar ──────────────────────────────
+          // ! ── Sticky tab bar in AppBar ──────────────────────────────
           appBar: AppBar(
             elevation: 0,
             backgroundColor: AppColors.primary,
             automaticallyImplyLeading: false,
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(56),
+              preferredSize: const Size.fromHeight(35),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: CustomWebTabBar(
                   tabs: cubit.visibleTabTitles,
                   currentIndex: currentIndex,
@@ -43,9 +44,10 @@ class TabBarWebLayout extends StatelessWidget {
             ),
           ),
 
-          // ── Scrollable body ───────────────────────────────────────
+          // ! ── Scrollable body ───────────────────────────────────────
           body: NestedScrollView(
-            // Header region — course header card scrolls away.
+            physics: const BouncingScrollPhysics(),
+            // * Header region — course header card scrolls away.
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverToBoxAdapter(
                 child: Padding(
@@ -55,10 +57,12 @@ class TabBarWebLayout extends StatelessWidget {
               ),
             ],
 
-            // Body region — tab content.
-            body: IndexedStack(
-              index: currentIndex,
-              children: tabs,
+            // * Body region — tab content.
+            body: WebTabBodyView(
+              child: IndexedStack(
+                index: currentIndex,
+                children: tabs,
+              ),
             ),
           ),
         );

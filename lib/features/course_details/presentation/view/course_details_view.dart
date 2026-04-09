@@ -65,8 +65,6 @@ class CourseDetailsView extends StatelessWidget {
 
     // Return only the tabs that are visible for the current role,
     // preserving the same order the cubit uses.
-    return cubit.visibleTabs
-        .map((tab) => allTabs[tab.title]!)
-        .toList();
+    return cubit.visibleTabs.map((tab) => allTabs[tab.title]!).toList();
   }
 }

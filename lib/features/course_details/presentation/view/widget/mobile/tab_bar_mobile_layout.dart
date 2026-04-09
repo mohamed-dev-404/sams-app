@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_coures_header_card.dart';
+import 'package:sams_app/features/course_details/presentation/view/widget/mobile/mobile_tab_body_view.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/mobile/custom_mobile_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
 
@@ -25,7 +26,8 @@ class TabBarMobileLayout extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
-          // Header region — scrolls away as the user drags up.
+          physics: const BouncingScrollPhysics(),
+          // ! Header region — scrolls away as the user drags up.
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverToBoxAdapter(
               child: Padding(
@@ -37,12 +39,12 @@ class TabBarMobileLayout extends StatelessWidget {
             ),
           ],
 
-          // Body region — tab bar always visible, content beneath it.
+          // ! Body region — tab bar always visible, content beneath it.
           body: BlocBuilder<CourseNavigationCubit, int>(
             builder: (context, currentIndex) {
               return Column(
                 children: [
-                  // ── Sticky tab bar ─────────────────────────────────
+                  // * ── Sticky tab bar ─────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -55,11 +57,13 @@ class TabBarMobileLayout extends StatelessWidget {
                     ),
                   ),
 
-                  // ── Tab content ────────────────────────────────────
+                  // * ── Tab content ────────────────────────────────────
                   Expanded(
-                    child: IndexedStack(
-                      index: currentIndex,
-                      children: tabs,
+                    child: MobileTabBodyView(
+                      child: IndexedStack(
+                        index: currentIndex,
+                        children: tabs,
+                      ),
                     ),
                   ),
                 ],
