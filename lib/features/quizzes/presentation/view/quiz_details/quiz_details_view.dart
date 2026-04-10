@@ -12,7 +12,12 @@ import 'package:sams_app/features/quizzes/presentation/view_model/quiz_details_c
 
 class QuizDetailsView extends StatelessWidget {
   final String quizId;
-  const QuizDetailsView({super.key, required this.quizId});
+  final String courseId;
+  const QuizDetailsView({
+    super.key,
+    required this.quizId,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +41,20 @@ class QuizDetailsView extends StatelessWidget {
 
           return AdaptiveLayout(
             mobileLayout: (context) => CurrentRole.role == UserRole.instructor
-                ? QuizDetailsMobileInstructorLayout(quiz: quiz)
-                : QuizDetailsMobileStudentLayout(quiz: quiz),
+                ? QuizDetailsMobileInstructorLayout(
+                    quiz: quiz,
+                    courseId: courseId,
+                  )
+                : QuizDetailsMobileStudentLayout(
+                    quiz: quiz,
+                    courseId: courseId,
+                  ),
             webLayout: (context) => CurrentRole.role == UserRole.instructor
-                ? QuizDetailsWebInstructorLayout(quiz: quiz)
-                : QuizDetailsWebStudentLayout(quiz: quiz),
+                ? QuizDetailsWebInstructorLayout(quiz: quiz, courseId: courseId)
+                : QuizDetailsWebStudentLayout(
+                    quiz: quiz,
+                    courseId: courseId,
+                  ),
           );
         }
 

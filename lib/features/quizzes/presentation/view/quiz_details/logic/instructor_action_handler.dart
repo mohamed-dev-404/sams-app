@@ -12,10 +12,11 @@ class InstructorActionHandler {
     required BuildContext context,
     required QuizActionType action,
     required QuizModel quiz,
+    required String courseId,
   }) {
     switch (action) {
       case QuizActionType.editQuiz:
-        _navigateToEditQuiz(context, quiz);
+        _navigateToEditQuiz(context, quiz, courseId);
         break;
       case QuizActionType.addQuestions:
         _navigateToAddQuestions(context, quiz);
@@ -36,16 +37,20 @@ class InstructorActionHandler {
 
   /// Navigates to [QuizFormScreen] in Edit mode, passing the full [QuizModel]
   /// as [CreateQuizFormArgs.initialData] so every field is pre-populated.
-  static void _navigateToEditQuiz(BuildContext context, QuizModel quiz) {
+  static void _navigateToEditQuiz(
+    BuildContext context,
+    QuizModel quiz,
+    String courseId,
+  ) {
     //final courseId = getCourseId(context);
     log('Navigating to EditQuiz: ${quiz.id}');
     context.push(
       RoutesName.createQuiz,
-      // extra: CreateQuizFormArgs( //TODO fix it
-      //  // courseId: courseId,
-      //   isEditMode: true,
-      //   initialData: quiz,
-      // ),
+      extra: CreateQuizFormArgs(
+        courseId: courseId,
+        isEditMode: true,
+        initialData: quiz,
+      ),
     );
   }
 
@@ -81,4 +86,3 @@ class InstructorActionHandler {
     );
   }
 }
-

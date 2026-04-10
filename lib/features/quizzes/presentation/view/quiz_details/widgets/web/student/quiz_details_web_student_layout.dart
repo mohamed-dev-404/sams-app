@@ -13,8 +13,13 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets
 
 class QuizDetailsWebStudentLayout extends StatelessWidget {
   final QuizModel quiz;
+  final String courseId;
 
-  const QuizDetailsWebStudentLayout({super.key, required this.quiz});
+  const QuizDetailsWebStudentLayout({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,10 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        QuizDetailsHeader(quiz: quiz),
+        QuizDetailsHeader(
+          quiz: quiz,
+          courseId: courseId,
+        ),
         const SizedBox(height: 32),
 
         Row(
@@ -71,7 +79,10 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        QuizDetailsHeader(quiz: quiz),
+        QuizDetailsHeader(
+          quiz: quiz,
+          courseId: courseId,
+        ),
         const SizedBox(height: 32),
         StatsRow(quiz: quiz),
         const SizedBox(height: 32),
@@ -118,5 +129,4 @@ class QuizDetailsWebStudentLayout extends StatelessWidget {
       ],
     );
   }
-
 }

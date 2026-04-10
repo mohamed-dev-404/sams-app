@@ -199,10 +199,11 @@ class AppRouter {
           );
           if (extra == null) return _fallbackHome();
           final quizId = extra['quizId'] as String? ?? '';
+          final courseId = extra['courseId'] as String? ?? '';
 
           return BlocProvider(
             create: (_) => QuizDetailsCubit(getIt<QuizRepository>()),
-            child: QuizDetailsView(quizId: quizId),
+            child: QuizDetailsView(quizId: quizId, courseId: courseId),
           );
         },
       ),
@@ -211,17 +212,16 @@ class AppRouter {
         name: RoutesName.createQuiz,
         path: RoutesName.createQuiz,
         builder: (context, state) {
-          final extra =
-              RouterPayloadCache.get<Map<String, dynamic>>(
-                    RoutesName.createQuiz,
-                    state.extra,
-                  )
-                  as CreateQuizFormArgs?;
-          if (extra == null) return _fallbackHome();
+          final createQuizFormArgs = RouterPayloadCache.get<CreateQuizFormArgs>(
+            RoutesName.createQuiz,
+            state.extra,
+          );
+          if (createQuizFormArgs == null) return _fallbackHome();
 
           return BlocProvider(
             create: (_) =>
-                CreateQuizCubit(getIt<QuizRepository>())..init(extra),
+                CreateQuizCubit(getIt<QuizRepository>())
+                  ..init(createQuizFormArgs),
             child: const CreateQuizView(),
           );
         },

@@ -8,8 +8,13 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets
 
 class InstructorActionsList extends StatelessWidget {
   final QuizModel quiz;
+  final String courseId;
 
-  const InstructorActionsList({super.key, required this.quiz});
+  const InstructorActionsList({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +50,7 @@ class InstructorActionsList extends StatelessWidget {
                 context: context,
                 action: actionType,
                 quiz: quiz,
+                courseId: courseId,
               ),
             ),
           );

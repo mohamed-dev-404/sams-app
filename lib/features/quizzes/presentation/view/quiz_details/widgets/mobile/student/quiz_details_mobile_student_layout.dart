@@ -11,8 +11,13 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets
 
 class QuizDetailsMobileStudentLayout extends StatelessWidget {
   final QuizModel quiz;
+  final String courseId;
 
-  const QuizDetailsMobileStudentLayout({super.key, required this.quiz});
+  const QuizDetailsMobileStudentLayout({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,10 @@ class QuizDetailsMobileStudentLayout extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            QuizDetailsHeader(quiz: quiz),
+            QuizDetailsHeader(
+              quiz: quiz,
+              courseId: courseId,
+            ),
             const SizedBox(height: 8),
 
             Padding(
@@ -66,5 +74,4 @@ class QuizDetailsMobileStudentLayout extends StatelessWidget {
       ),
     );
   }
-
 }

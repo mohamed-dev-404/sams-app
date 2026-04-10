@@ -11,8 +11,13 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets
 
 class QuizDetailsWebInstructorLayout extends StatelessWidget {
   final QuizModel quiz;
+  final String courseId;
 
-  const QuizDetailsWebInstructorLayout({super.key, required this.quiz});
+  const QuizDetailsWebInstructorLayout({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,10 @@ class QuizDetailsWebInstructorLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // * 1. Header (Full Width for both Desktop & Tablet)
-            QuizDetailsHeader(quiz: quiz),
+            QuizDetailsHeader(
+              quiz: quiz,
+              courseId: courseId,
+            ),
             const SizedBox(height: 32),
 
             // * 2. Adaptive Content
@@ -101,7 +109,10 @@ class QuizDetailsWebInstructorLayout extends StatelessWidget {
           ),
         ],
       ),
-      child: InstructorActionsList(quiz: quiz),
+      child: InstructorActionsList(
+        quiz: quiz,
+        courseId: courseId,
+      ),
     );
   }
 }

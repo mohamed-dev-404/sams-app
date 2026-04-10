@@ -8,9 +8,14 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/logic/q
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/common/quiz_details_state_badge.dart';
 
 class QuizDetailsHeader extends StatelessWidget {
-  const QuizDetailsHeader({super.key, required this.quiz});
+  const QuizDetailsHeader({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   final QuizModel quiz;
+  final String courseId;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +53,7 @@ class QuizDetailsHeader extends StatelessWidget {
                           context: context,
                           action: QuizActionType.editQuiz,
                           quiz: quiz,
+                          courseId: courseId,
                         );
                       },
                       icon: const Icon(

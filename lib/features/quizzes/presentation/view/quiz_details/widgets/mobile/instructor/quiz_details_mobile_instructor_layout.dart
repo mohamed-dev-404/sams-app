@@ -8,8 +8,13 @@ import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets
 
 class QuizDetailsMobileInstructorLayout extends StatelessWidget {
   final QuizModel quiz;
+  final String courseId;
 
-  const QuizDetailsMobileInstructorLayout({super.key, required this.quiz});
+  const QuizDetailsMobileInstructorLayout({
+    super.key,
+    required this.quiz,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,10 @@ class QuizDetailsMobileInstructorLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //* Dynamic Header Section
-            QuizDetailsHeader(quiz: quiz),
+            QuizDetailsHeader(
+              quiz: quiz,
+              courseId: courseId,
+            ),
 
             //* Main Content
             Padding(
@@ -34,7 +42,10 @@ class QuizDetailsMobileInstructorLayout extends StatelessWidget {
                   InstructorContextualBanner(quiz: quiz),
                   const SizedBox(height: 24),
 
-                  InstructorActionsList(quiz: quiz),
+                  InstructorActionsList(
+                    quiz: quiz,
+                    courseId: courseId,
+                  ),
                 ],
               ),
             ),

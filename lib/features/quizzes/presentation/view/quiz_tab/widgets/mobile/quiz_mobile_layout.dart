@@ -8,6 +8,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
+import 'package:sams_app/features/quizzes/presentation/view/create_quiz/model/create_quiz_form_args.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_tab/widgets/mobile/mobile_quiz_card.dart';
 
 class QuizMobileLayout extends StatelessWidget {
@@ -84,7 +85,10 @@ class QuizMobileLayout extends StatelessWidget {
   void _navigateToCreateQuiz(BuildContext context) {
     context.push(
       RoutesName.createQuiz,
-      extra: {'courseId': courseId},
+      extra: CreateQuizFormArgs(
+        courseId: courseId,
+        isEditMode: false,
+      ),
     );
   }
 
@@ -98,6 +102,7 @@ class QuizMobileLayout extends StatelessWidget {
         RoutesName.quizDetails,
         extra: {
           'quizId': quiz.id.toString(),
+          'courseId': courseId,
         },
       );
     } else if (quiz.state == QuizState.upcoming) {
