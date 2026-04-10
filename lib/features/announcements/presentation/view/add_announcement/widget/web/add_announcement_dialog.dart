@@ -37,76 +37,89 @@ class _AddAnnouncementDialogState extends State<AddAnnouncementDialog> {
         builder: (newContext) {
           return Dialog(
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: BlocListener<AnnouncementsActionsCubit, AnnouncementsActionsState>(
-              listener: (context, state) {
-                // TODO: implement listener
-                if (state is AddAnnouncementSuccess) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
-                  Navigator.pop(context);
-                } else if (state is AddAnnouncementFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.errMessage),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
-              child: Container(
-                width: 550,
-                padding: const EdgeInsets.all(28),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // ── Title ──
-                      Center(
-                        child: Text(
-                          'Announcement Information',
-                          style: AppStyles.webTitleMediumSb.copyWith(
-                            color: AppColors.primaryDarkHover,
-                            fontSize: 16,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child:
+                BlocListener<
+                  AnnouncementsActionsCubit,
+                  AnnouncementsActionsState
+                >(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                    if (state is AddAnnouncementSuccess) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: AppColors.green,
+                        ),
+                      );
+                      Navigator.pop(context, true);
+                    } else if (state is AddAnnouncementFailure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.errMessage),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: 550,
+                    padding: const EdgeInsets.all(28),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // ── Title ──
+                          Center(
+                            child: Text(
+                              'Announcement Information',
+                              style: AppStyles.webTitleMediumSb.copyWith(
+                                color: AppColors.primaryDarkHover,
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 24),
+
+                          // ── Announcement Title Field ──
+                          AddAnnouncementSection(
+                            titleController: _titleController,
+                            contentController: _descriptionController,
+                          ),
+                          const SizedBox(height: 30),
+                          // ── Submit Button ──
+                          AppButton(
+                            model: AppButtonStyleModel(
+                              height: 40,
+                              width: 250,
+                              label: 'Add Announcement',
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  // TODO: context.read<AnnouncementsCubit>().addAnnouncement(...)
+                                  newContext
+                                      .read<AnnouncementsActionsCubit>()
+                                      .addAnnouncement(
+                                        courseId: widget.courseId,
+                                        title: _titleController.text,
+                                        content: _descriptionController.text,
+                                      );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-          
-                      // ── Announcement Title Field ──
-                      AddAnnouncementSection(
-                        titleController: _titleController,
-                        contentController: _descriptionController,
-                      ),
-                      const SizedBox(height: 30),
-                      // ── Submit Button ──
-                      AppButton(
-                        model: AppButtonStyleModel(
-                          height: 40,
-                          width: 250,
-                          label: 'Add Announcement',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // TODO: context.read<AnnouncementsCubit>().addAnnouncement(...)
-                              newContext.read<AnnouncementsActionsCubit>().addAnnouncement(
-                                    courseId: widget.courseId,
-                                    title: _titleController.text,
-                                    content: _descriptionController.text,
-                                  );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
           );
-        }
+        },
       ),
     );
   }

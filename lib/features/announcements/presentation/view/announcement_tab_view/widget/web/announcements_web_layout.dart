@@ -34,12 +34,12 @@ class AnnouncementsWebLayout extends StatelessWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
           BlocBuilder<AnnouncementsFetchCubit, AnnouncementsFetchState>(
-            /// [buildWhen] ensures the Grid doesn't disappear when the state shifts 
+            /// [buildWhen] ensures the Grid doesn't disappear when the state shifts
             /// to fetch individual announcement details. It preserves the list view.
             buildWhen: (previous, current) {
-              return current is AnnouncementsFetchLoading || 
-                     current is AnnouncementsFetchSuccess || 
-                     current is AnnouncementsFetchFailure;
+              return current is AnnouncementsFetchLoading ||
+                  current is AnnouncementsFetchSuccess ||
+                  current is AnnouncementsFetchFailure;
             },
             builder: (context, state) {
               if (state is AnnouncementsFetchLoading) {
@@ -47,18 +47,18 @@ class AnnouncementsWebLayout extends StatelessWidget {
                   hasScrollBody: false,
                   child: Center(child: CircularProgressIndicator()),
                 );
-              } 
-              
-              else if (state is AnnouncementsFetchSuccess) {
+              } else if (state is AnnouncementsFetchSuccess) {
                 final announcements = state.announcements;
-                final int gridCount = isInstructor ? announcements.length + 1 : announcements.length;
-                if (gridCount==0) {
+                final int gridCount = isInstructor
+                    ? announcements.length + 1
+                    : announcements.length;
+                if (gridCount == 0) {
                   return const SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(child: Text('No announcements yet.')),
                   );
                 }
-                
+
                 return SliverGrid.builder(
                   itemCount: gridCount,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -72,13 +72,19 @@ class AnnouncementsWebLayout extends StatelessWidget {
                     if (isInstructor && index == 0) {
                       return AddNewCard(
                         title: 'New Announcement',
-                        isMobile: false, 
-                        onTap: () {
+                        isMobile: false,
+                        onTap: () async {
                           // Navigate to Create Screen
-                          showDialog(
+                          final result = await showDialog<bool>(
                             context: context,
-                            builder: (context) => AddAnnouncementDialog(courseId: courseId),
-                            );
+                            builder: (context) =>
+                                AddAnnouncementDialog(courseId: courseId),
+                          );
+                          if (result == true && context.mounted) {
+                            context
+                                .read<AnnouncementsFetchCubit>()
+                                .fetchAnnouncements(courseId: courseId);
+                          }
                         },
                       );
                     }
@@ -90,9 +96,11 @@ class AnnouncementsWebLayout extends StatelessWidget {
                         image: AppImages.imagesAnnouncementCard,
                         onTap: () {
                           /// Fetch specific details before navigating
-                          context.read<AnnouncementsFetchCubit>().fetchAnnouncementDetails(
-                            announcementId: announcements[dataIndex].id,
-                          );
+                          context
+                              .read<AnnouncementsFetchCubit>()
+                              .fetchAnnouncementDetails(
+                                announcementId: announcements[dataIndex].id,
+                              );
 
                           context.pushNamed(
                             RoutesName.announcementDetails,
@@ -106,15 +114,13 @@ class AnnouncementsWebLayout extends StatelessWidget {
                     );
                   },
                 );
-              } 
-              
-              else if (state is AnnouncementsFetchFailure) {
+              } else if (state is AnnouncementsFetchFailure) {
                 return SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(child: Text(state.errMessage)),
                 );
               }
-              
+
               /// Keep the list visible during details fetching thanks to [buildWhen]
               return const SliverToBoxAdapter(child: SizedBox());
             },

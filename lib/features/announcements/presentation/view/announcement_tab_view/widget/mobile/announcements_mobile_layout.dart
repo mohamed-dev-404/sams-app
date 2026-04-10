@@ -41,15 +41,20 @@ class AnnouncementsMobileLayout extends StatelessWidget {
               child: AddNewCard(
                 title: 'Add New Announcement',
                 isMobile: true,
-                onTap: () {
+                onTap: () async {
                   // Navigate to Create Screen
-                  context.pushNamed(
+                  final result = await context.pushNamed(
                     RoutesName.addAnnouncement,
                     pathParameters: {
                       'courseId': courseId,
                       'announcementId': '122',
                     },
                   );
+                  if (result == true && context.mounted) {
+                    context.read<AnnouncementsFetchCubit>().fetchAnnouncements(
+                      courseId: courseId,
+                    );
+                  }
                 },
               ),
             ),

@@ -36,14 +36,19 @@ class _AddAnnouncementMobileViewBodyState
       listener: (context, state) {
         // TODO: implement listener
         if (state is AddAnnouncementSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-          context.pop(); 
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message),backgroundColor: AppColors.green,));
+          Navigator.pop(context, true);
         } else if (state is AddAnnouncementFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errMessage), backgroundColor: Colors.red),
+            SnackBar(
+              
+              content: Text(state.errMessage),
+              backgroundColor: Colors.red,
+            ),
           );
         }
-        
       },
       child: Form(
         key: _formKey,
@@ -89,12 +94,12 @@ class _AddAnnouncementMobileViewBodyState
                   label: 'Add Announcement',
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                        context.read<AnnouncementsActionsCubit>().addAnnouncement(
-                          courseId: widget.courseId,
-                          title: _titleController.text,
-                          content: _contentController.text,
-                        );
-                      }
+                      context.read<AnnouncementsActionsCubit>().addAnnouncement(
+                        courseId: widget.courseId,
+                        title: _titleController.text,
+                        content: _contentController.text,
+                      );
+                    }
                   },
                 ),
               ),
