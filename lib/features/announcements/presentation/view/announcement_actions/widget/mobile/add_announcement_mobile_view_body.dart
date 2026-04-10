@@ -5,7 +5,7 @@ import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_button.dart';
-import 'package:sams_app/features/announcements/presentation/view/add_announcement/widget/shared/add_announcement_section.dart';
+import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/shared/add_announcement_section.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_state.dart';
 
