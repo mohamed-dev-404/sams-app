@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

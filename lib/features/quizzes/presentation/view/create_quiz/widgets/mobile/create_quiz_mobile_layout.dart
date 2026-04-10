@@ -23,7 +23,7 @@ import 'package:sams_app/features/quizzes/presentation/view/create_quiz/widgets/
 /// - [CreateQuizFormArgs.isEditMode] == true  → Edit mode (pre-filled form, "Edit Quiz" title,
 ///   classwork field locked)
 ///
-/// Data flow is ready for Cubit integration — see the TODO comments at the
+/// Data flow is ready for Cubit integration — see the TOdO comments at the
 /// submit handler.
 class CreateQuizMobileLayout extends StatelessWidget {
   const CreateQuizMobileLayout({super.key});
@@ -33,9 +33,6 @@ class CreateQuizMobileLayout extends StatelessWidget {
     final cubit = context.read<CreateQuizCubit>();
 
     return Scaffold(
-      // appBar: MobileCustomAppBar(
-      //   title: cubit.isEditMode ? 'Edit Quiz' : 'Create Quiz',
-      // ),
       bottomNavigationBar: BlocBuilder<CreateQuizCubit, CreateQuizState>(
         builder: (context, state) =>
             _buildBottomButton(context, state is CreateQuizLoading),
