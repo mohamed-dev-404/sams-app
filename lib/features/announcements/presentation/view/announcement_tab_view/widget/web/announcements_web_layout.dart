@@ -9,6 +9,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
+import 'package:sams_app/features/announcements/presentation/view/add_announcement/widget/web/add_announcement_dialog.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_state.dart';
 
@@ -74,6 +75,10 @@ class AnnouncementsWebLayout extends StatelessWidget {
                         isMobile: false, 
                         onTap: () {
                           // Navigate to Create Screen
+                          showDialog(
+                            context: context,
+                            builder: (context) => const AddAnnouncementDialog(),
+                            );
                         },
                       );
                     }

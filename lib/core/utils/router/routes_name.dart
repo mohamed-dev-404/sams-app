@@ -20,6 +20,8 @@ class RoutesName {
 
   //? announcement sub-routes
   static const String announcementDetails = 'announcementDetails';
+  static const String addAnnouncement = 'addAnnouncement';
+
 
   //?auth routes
   //login

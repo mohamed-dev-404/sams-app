@@ -9,6 +9,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/widgets/shared/general_error_page.dart';
 import 'package:sams_app/features/Grades/presentation/view/grades_tab_view.dart';
+import 'package:sams_app/features/announcements/presentation/view/add_announcement/widget/mobile/add_announcement_mobile_view.dart';
 import 'package:sams_app/features/announcements/presentation/view/announcement_details/announcement_details_view.dart';
 import 'package:sams_app/features/announcements/presentation/view/announcement_tab_view/announcements_tab_view.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
@@ -206,13 +207,27 @@ class AppRouter {
                 parentNavigatorKey: navigatorKey,
                 builder: (context, state) {
                   // Announcement ID can be extracted here for future logic/API calls
-                  final announcementId = state.pathParameters['announcementId'] ?? '';
+                  final announcementId =
+                      state.pathParameters['announcementId'] ?? '';
                   return BlocProvider(
-                    create: (context) => getIt<AnnouncementsFetchCubit>()..fetchAnnouncementDetails(announcementId: announcementId),
-                    child:  const AnnouncementDetailsView(
-                      
-                    ),
+                    create: (context) => getIt<AnnouncementsFetchCubit>()
+                      ..fetchAnnouncementDetails(
+                        announcementId: announcementId,
+                      ),
+                    child: const AnnouncementDetailsView(),
                   );
+                },
+              ),
+              GoRoute(
+                name: RoutesName.addAnnouncement,
+                // Path format: /courses/:courseId/announcements/announcementDetails/:announcementId
+                path: '${RoutesName.addAnnouncement}/:announcementId',
+                // Using parentNavigatorKey to push the view on top of the Shell (Full Screen)
+                parentNavigatorKey: navigatorKey,
+                builder: (context, state) {
+                  // Announcement ID can be extracted here for future logic/API calls
+                  // final announcementId = state.pathParameters['announcementId'] ?? '';
+                  return const AddAnnouncementMobileView();
                 },
               ),
             ],

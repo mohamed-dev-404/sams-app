@@ -43,6 +43,13 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                 isMobile: true,
                 onTap: () {
                   // Navigate to Create Screen
+                  context.pushNamed(
+                    RoutesName.addAnnouncement,
+                    pathParameters: {
+                      'courseId': courseId,
+                      'announcementId': '122',
+                    },
+                  );
                 },
               ),
             ),
