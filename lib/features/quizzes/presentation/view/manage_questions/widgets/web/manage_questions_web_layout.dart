@@ -6,8 +6,11 @@ import 'package:sams_app/features/quizzes/presentation/view/manage_questions/wid
 ///
 /// Currently delegates to the mobile layout wrapped in a constrained container.
 /// A dedicated web-specific layout can be built here later.
+import 'package:sams_app/features/quizzes/presentation/view/manage_questions/model/manage_questions_args.dart';
+
 class ManageQuestionsWebLayout extends StatelessWidget {
-  const ManageQuestionsWebLayout({super.key});
+  final ManageQuestionsArgs args;
+  const ManageQuestionsWebLayout({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class ManageQuestionsWebLayout extends StatelessWidget {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
-          child: const ManageQuestionsMobileLayout(),
+          child: ManageQuestionsMobileLayout(args: args),
         ),
       ),
     );

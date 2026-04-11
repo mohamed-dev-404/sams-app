@@ -241,7 +241,7 @@ class AppRouter {
           return BlocProvider(
             create: (_) =>
                 ManageQuizCubit(getIt<QuizRepository>())..init(args),
-            child: const ManageQuestionsView(),
+            child: ManageQuestionsView(args: args),
           );
         },
       ),
