@@ -5,7 +5,7 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_button.dart';
-import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/shared/add_announcement_section.dart';
+import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/shared/announcement_form_section.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_state.dart';
 
@@ -88,10 +88,11 @@ class _AddAnnouncementDialogState extends State<AddAnnouncementDialog> {
                           const SizedBox(height: 24),
 
                           // ── Announcement Title Field ──
-                          AddAnnouncementSection(
-                            titleController: _titleController,
-                            contentController: _descriptionController,
-                          ),
+                          // AddAnnouncementSection(
+                          //   titleController: _titleController,
+                          //   contentController: _descriptionController,
+                          // ),
+                          AnnouncementFormSection(titleController: _titleController, contentController: _descriptionController,),
                           const SizedBox(height: 30),
                           // ── Submit Button ──
                           AppButton(

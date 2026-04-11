@@ -5,7 +5,7 @@ import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_button.dart';
-import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/shared/add_announcement_section.dart';
+import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/shared/announcement_form_section.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_state.dart';
 
@@ -82,10 +82,11 @@ class _AddAnnouncementMobileViewBodyState
                 ],
               ),
               const SizedBox(height: 24),
-              AddAnnouncementSection(
-                titleController: _titleController,
-                contentController: _contentController,
-              ),
+              // AddAnnouncementSection(
+              //   titleController: _titleController,
+              //   contentController: _contentController,
+              // ),
+              AnnouncementFormSection(titleController: _titleController, contentController: _contentController,),
               const SizedBox(height: 80),
               AppButton(
                 model: AppButtonStyleModel(
