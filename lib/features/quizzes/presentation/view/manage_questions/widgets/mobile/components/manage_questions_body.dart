@@ -34,7 +34,7 @@ class ManageQuestionsBody extends StatefulWidget {
 }
 
 class _ManageQuestionsBodyState extends State<ManageQuestionsBody>
-    with ManageQuestionsLogic {
+    with ManageQuestionsLogic<ManageQuestionsBody> {
   @override
   void initState() {
     super.initState();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/constants/api_keys.dart';
 import 'package:sams_app/features/quizzes/presentation/view/manage_questions/model/editable_question_model.dart';
-import 'package:sams_app/features/quizzes/presentation/view/manage_questions/widgets/mobile/components/manage_questions_body.dart';
+
 
 /// A logic mixin that encapsulates all list manipulation for managing questions.
 ///
 /// This separates the "How" (logic) from the "What" (UI), keeping the main
 /// body file clean and maintainable.
-mixin ManageQuestionsLogic on State<ManageQuestionsBody> {
+mixin ManageQuestionsLogic<T extends StatefulWidget> on State<T> {
   late List<EditableQuestionModel> questions;
 
   /// Initializes the local questions list from the widget's initial data.

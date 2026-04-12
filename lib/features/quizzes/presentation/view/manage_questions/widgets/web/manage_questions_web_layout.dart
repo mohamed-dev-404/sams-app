@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/features/quizzes/presentation/view/manage_questions/widgets/mobile/manage_questions_mobile_layout.dart';
-
-/// Web layout for the Manage Questions screen.
-///
-/// Currently delegates to the mobile layout wrapped in a constrained container.
-/// A dedicated web-specific layout can be built here later.
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/quizzes/presentation/view/manage_questions/model/manage_questions_args.dart';
+import 'package:sams_app/features/quizzes/presentation/view/manage_questions/widgets/web/components/web_manage_questions_body.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/manage_quiz_cubit/manage_quiz_cubit.dart';
 
 class ManageQuestionsWebLayout extends StatelessWidget {
   final ManageQuestionsArgs args;
@@ -14,14 +11,35 @@ class ManageQuestionsWebLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: ManageQuestionsMobileLayout(args: args),
-        ),
-      ),
+    return BlocBuilder<ManageQuizCubit, ManageQuizState>(
+      buildWhen: (prev, curr) {
+        return curr is ManageQuizInitial ||
+            curr is ManageQuizLoading ||
+            curr is ManageQuizQuestionsLoaded;
+      },
+      builder: (context, state) {
+        if (state is ManageQuizLoading) {
+          return const Scaffold(
+            backgroundColor: Color(0xFFF4F6F9),
+            body: Center(child: AppAnimatedLoadingIndicator()),
+          );
+        }
+
+        if (state is ManageQuizQuestionsLoaded) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF4F6F9),
+            body: WebManageQuestionsBody(
+              initialQuestions: state.questions,
+              args: args,
+            ),
+          );
+        }
+
+        return const Scaffold(
+          backgroundColor: Color(0xFFF4F6F9),
+          body: Center(child: AppAnimatedLoadingIndicator()),
+        );
+      },
     );
   }
 }
