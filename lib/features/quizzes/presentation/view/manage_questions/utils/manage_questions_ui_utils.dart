@@ -23,16 +23,7 @@ class ManageQuestionsUiUtils {
     }
   }
 
-  static String getHeaderSubtitle(QuizMode mode) {
-    switch (mode) {
-      case QuizMode.draft:
-        return 'Build your quiz by adding questions below.';
-      case QuizMode.edit:
-        return 'Review or edit your questions before publishing.';
-      case QuizMode.view:
-        return 'Browse quiz content and correct answers.';
-    }
-  }
+
 
   static String getBadgeLabel(QuizMode mode) {
     switch (mode) {

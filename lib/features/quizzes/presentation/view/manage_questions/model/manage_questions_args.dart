@@ -12,12 +12,12 @@ class ManageQuestionsArgs {
   /// Controls the UI mode of the screen (view / edit / draft).
   final QuizMode mode;
 
-  /// Optional: displayed in the AppBar for context.
-  final String? quizTitle;
+  /// Required: displayed prominently in the mode configuration header.
+  final String quizTitle;
 
   const ManageQuestionsArgs({
     required this.quizId,
     required this.mode,
-    this.quizTitle,
+    required this.quizTitle,
   });
 }

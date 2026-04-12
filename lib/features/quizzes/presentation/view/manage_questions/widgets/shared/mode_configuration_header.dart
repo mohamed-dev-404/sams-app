@@ -6,17 +6,18 @@ import 'package:sams_app/features/quizzes/presentation/view/manage_questions/uti
 
 /// Displays the screen title and subtitle based on the current [QuizMode].
 ///
-/// - **Draft**: "Add Questions" — "Build your quiz by adding questions below."
-/// - **Edit**: "Manage Questions" — "Review or edit your questions."
-/// - **View**: "View Questions" — "Browse quiz content (read-only)."
+/// If [quizTitle] is provided, it replaces the main heading for a more personalized
+/// experience, and moves the standard mode text to the subtitle.
 class ModeConfigurationHeader extends StatelessWidget {
   final QuizMode mode;
   final int questionCount;
+  final String quizTitle;
 
   const ModeConfigurationHeader({
     super.key,
     required this.mode,
     this.questionCount = 0,
+    required this.quizTitle,
   });
 
   @override
@@ -46,32 +47,46 @@ class ModeConfigurationHeader extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // ─── Title ───
+            // ─── Main Title (Quiz Title) ───
             Text(
-              ManageQuestionsUiUtils.getHeaderTitle(mode),
+              quizTitle,
               style: AppStyles.mobileTitleMediumSb.copyWith(
                 color: Colors.white,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
 
-            // ─── Subtitle ───
-            Text(
-              ManageQuestionsUiUtils.getHeaderSubtitle(mode),
-              style: AppStyles.mobileBodySmallRg.copyWith(
-                color: Colors.white.withAlpha(180),
-              ),
-            ),
-
-            if (questionCount > 0) ...[
-              const SizedBox(height: 12),
-              Text(
-                '$questionCount question${questionCount == 1 ? '' : 's'}',
-                style: AppStyles.mobileBodyXsmallMd.copyWith(
-                  color: AppColors.secondaryLightHover,
+            // ─── Metadata Row (Mode Action • Question Count) ───
+            Row(
+              children: [
+                Text(
+                  ManageQuestionsUiUtils.getHeaderTitle(mode),
+                  style: AppStyles.mobileBodySmallRg.copyWith(
+                    color: Colors.white.withAlpha(200),
+                  ),
                 ),
-              ),
-            ],
+                if (questionCount > 0) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(100),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '$questionCount question${questionCount == 1 ? '' : 's'}',
+                    style: AppStyles.mobileBodyXsmallMd.copyWith(
+                      color: AppColors.secondaryLightHover,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ],
         ),
       ),
@@ -101,7 +116,7 @@ class ModeConfigurationHeader extends StatelessWidget {
   Widget _buildModeBadge() {
     final badgeColor = ManageQuestionsUiUtils.getBadgeColor(mode);
     final badgeLabel = ManageQuestionsUiUtils.getBadgeLabel(mode);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
