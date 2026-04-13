@@ -153,18 +153,9 @@ class CreateQuizWebLayout extends StatelessWidget {
           const SizedBox(height: 24),
 
           if (!cubit.isEditMode) ...[
-            BlocBuilder<CreateQuizCubit, CreateQuizState>(
-              buildWhen: (prev, curr) => curr is CreateQuizUIUpdated,
-              builder: (context, state) {
-                return TitledInputField(
-                  label: 'Assigned Classwork',
-                  child: ClassworkSelectorField(
-                    selectedClasswork: cubit.selectedClasswork,
-                    classworkItems: mockClassworkItems,
-                    onSelected: cubit.onClassworkSelected,
-                  ),
-                );
-              },
+            const TitledInputField(
+              label: 'Assigned Classwork',
+              child: ClassworkSelectorField(),
             ),
             const SizedBox(height: 24),
           ],

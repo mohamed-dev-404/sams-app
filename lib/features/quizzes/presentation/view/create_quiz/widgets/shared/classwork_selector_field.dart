@@ -1,87 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/text_field_type.dart';
 import 'package:sams_app/core/models/app_button_style_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/base/app_button.dart';
 import 'package:sams_app/core/widgets/base/app_text_field.dart';
 import 'package:sams_app/core/widgets/shared/titled_input_field.dart';
 import 'package:sams_app/features/home/data/models/classwork_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/classwork_item_model.dart';
+import 'package:sams_app/features/quizzes/presentation/view_model/create_quiz_cubit/create_quiz_cubit.dart';
 
 /// A tap-able field that looks like a text input but opens a bottom-sheet
 /// selector for choosing a [ClassworItemkModel].
 ///
-/// In Edit mode, pass [isReadOnly] = `true` to lock the selection.
-/// The field still displays the currently-assigned value but the bottom-sheet
-/// will not open and the chevron is replaced with a lock icon.
 class ClassworkSelectorField extends StatelessWidget {
-  final ClassworkItemModel? selectedClasswork;
-  final List<ClassworkItemModel> classworkItems;
-
-  /// Called when the user picks a different classwork item.
-  /// Ignored when [isReadOnly] is `true`.
-  final ValueChanged<ClassworkItemModel> onSelected;
-
-  const ClassworkSelectorField({
-    super.key,
-    required this.selectedClasswork,
-    required this.classworkItems,
-    required this.onSelected,
-  });
+  const ClassworkSelectorField({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(15),
-      // Disable tap in read-only mode
-      onTap: () => _showClassworkSheet(context),
-      child: InputDecorator(
-        decoration: const InputDecoration(
-          // Show lock icon when read-only, chevron otherwise
-          suffixIcon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: AppColors.primaryDark,
-          ),
-        ),
-        child: selectedClasswork != null
-            ? Text(
-                '${selectedClasswork!.name}  •  ${selectedClasswork!.points} pts',
-                style: AppStyles.mobileBodySmallMd.copyWith(
-                  color: AppColors.primaryDarkHover,
-                ),
-              )
-            : Text(
-                'Select assigned classwork',
-                style: AppStyles.mobileBodySmallRg.copyWith(
-                  color: AppColors.whiteDarkHover,
-                ),
+    final cubit = context.read<CreateQuizCubit>();
+
+    return BlocBuilder<CreateQuizCubit, CreateQuizState>(
+      buildWhen: (previous, current) {
+        return current is CreateQuizUIUpdated || current is CreateQuizInitial;
+      },
+      builder: (context, state) {
+        final selectedClasswork = cubit.selectedClasswork;
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: () {
+            FocusScope.of(context).unfocus(); // Unfocus form fields
+            cubit.getAvailableClassworks();
+            _showClassworkSheet(context: context, cubit: cubit);
+          },
+          child: InputDecorator(
+            decoration: const InputDecoration(
+              suffixIcon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: AppColors.primaryDark,
               ),
-      ),
+            ),
+            child: selectedClasswork != null
+                ? Text(
+                    '${selectedClasswork.name}  •  ${selectedClasswork.points} pts',
+                    style: AppStyles.mobileBodySmallMd.copyWith(
+                      color: AppColors.primaryDarkHover,
+                    ),
+                  )
+                : Text(
+                    'Select assigned classwork',
+                    style: AppStyles.mobileBodySmallRg.copyWith(
+                      color: AppColors.whiteDarkHover,
+                    ),
+                  ),
+          ),
+        );
+      },
     );
   }
 
-  // ──────────────── Bottom Sheet / Dialog ────────────────
+  // * ──────────────── Bottom Sheet / Dialog ────────────────
 
-  void _showClassworkSheet(BuildContext context) {
+  void _showClassworkSheet({
+    required BuildContext context,
+    required CreateQuizCubit cubit,
+  }) {
     if (MediaQuery.of(context).size.width >= 800) {
       showDialog(
         context: context,
         builder: (dialogContext) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: AppColors.whiteLight,
-            child: SizedBox(
-              width: 500,
-              child: _ClassworkSelectionSheet(
-                items: classworkItems,
-                selectedId: selectedClasswork?.id,
-                onSelected: (item) {
-                  onSelected(item);
-                  Navigator.of(dialogContext).pop();
-                },
+          return BlocProvider.value(
+            value: cubit,
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              backgroundColor: AppColors.whiteLight,
+              child: SizedBox(
+                width: 500,
+                child: _buildDialogContent(dialogContext, cubit),
               ),
             ),
           );
@@ -95,23 +96,129 @@ class ClassworkSelectorField extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         builder: (sheetContext) {
-          return _ClassworkSelectionSheet(
-            items: classworkItems,
-            selectedId: selectedClasswork?.id,
-            onSelected: (item) {
-              onSelected(item);
-              Navigator.of(sheetContext).pop();
-            },
+          return BlocProvider.value(
+            value: cubit,
+            child: _buildDialogContent(sheetContext, cubit),
           );
         },
       );
     }
   }
+
+  Widget _buildDialogContent(BuildContext context, CreateQuizCubit cubit) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ── Handle bar ──
+            if (MediaQuery.of(context).size.width < 800) ...[
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteActive,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // ── Title ──
+            Center(
+              child: Text(
+                'Select Classwork',
+                style: AppStyles.mobileTitleSmallSb.copyWith(
+                  color: AppColors.primaryDarkHover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Divider(color: AppColors.whiteHover, thickness: 1),
+            const SizedBox(height: 4),
+
+            // ── Dynamic Content ──
+            BlocBuilder<CreateQuizCubit, CreateQuizState>(
+              buildWhen: (prev, curr) => curr is GetAvailableClassworks,
+              builder: (context, state) {
+                if (state is GetAvailableClassworksFailure) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                        const SizedBox(height: 16),
+                        Text(
+                          state.message,
+                          textAlign: TextAlign.center,
+                          style:
+                              AppStyles.mobileBodySmallMd.copyWith(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state is GetAvailableClassworksSuccess) {
+                  if (state.classworks.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.inbox_outlined,
+                            color: AppColors.whiteDarkActive,
+                            size: 48,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No assigned classworks found.',
+                            textAlign: TextAlign.center,
+                            style: AppStyles.mobileBodySmallMd.copyWith(
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return _ClassworkSelectionSheet(
+                    items: state.classworks,
+                    selectedId: cubit.selectedClasswork?.id,
+                    onSelected: (item) {
+                      cubit.onClassworkSelected(item);
+                      Navigator.of(context).pop();
+                    },
+                  );
+                }
+
+                // Default / Loading State
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 60.0),
+                  child: Center(
+                    child: SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: AppAnimatedLoadingIndicator(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  Private Bottom-Sheet Content
-// ══════════════════════════════════════════════════════════════
+// ! ══════════════════════════════════════════════════════════════
+// !  Bottom-Sheet or Dialog Content
+// ! ══════════════════════════════════════════════════════════════
 
 class _ClassworkSelectionSheet extends StatelessWidget {
   final List<ClassworkItemModel> items;
@@ -173,7 +280,7 @@ class _ClassworkSelectionSheet extends StatelessWidget {
                             name: nameController.text.trim(),
                             points: double.parse(pointsController.text.trim()),
                           );
-                          //TODO hit the post now class work
+                          // TODO hit the post now class work
                           Navigator.of(context).pop(newClasswork);
                         }
                       },
@@ -190,38 +297,12 @@ class _ClassworkSelectionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // ── Handle bar ──
-            if (MediaQuery.of(context).size.width < 800) ...[
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.whiteActive,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            // ── Title ──
-            Text(
-              'Select Classwork',
-              style: AppStyles.mobileTitleSmallSb.copyWith(
-                color: AppColors.primaryDarkHover,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Divider(color: AppColors.whiteHover, thickness: 1),
-            const SizedBox(height: 4),
-
-            // ── Items ──
-            ...items.map((item) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // ── Items ──
+        ...items.map((item) {
               final bool isSelected = item.id == selectedId;
               return _ClassworkTile(
                 item: item,
@@ -267,16 +348,14 @@ class _ClassworkSelectionSheet extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-//  Single Tile
-// ══════════════════════════════════════════════════════════════
+// ! ══════════════════════════════════════════════════════════════
+// !  Single Tile
+// ! ══════════════════════════════════════════════════════════════
 
 class _ClassworkTile extends StatelessWidget {
   final ClassworkItemModel item;

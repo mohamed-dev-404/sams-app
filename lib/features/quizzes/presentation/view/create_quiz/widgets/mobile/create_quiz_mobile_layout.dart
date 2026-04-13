@@ -21,10 +21,8 @@ import 'package:sams_app/features/quizzes/presentation/view/create_quiz/widgets/
 /// Behaviour is driven entirely by [CreateQuizFormArgs]:
 /// - [CreateQuizFormArgs.isEditMode] == false → Create mode (blank form, "Create Quiz" title)
 /// - [CreateQuizFormArgs.isEditMode] == true  → Edit mode (pre-filled form, "Edit Quiz" title,
-///   classwork field locked)
+///   classwork field hidden)
 ///
-/// Data flow is ready for Cubit integration — see the TOdO comments at the
-/// submit handler.
 class CreateQuizMobileLayout extends StatelessWidget {
   const CreateQuizMobileLayout({super.key});
 
@@ -42,8 +40,10 @@ class CreateQuizMobileLayout extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // * ──────────────────── Header Section ────────────────────
               HeaderSection(isEditMode: cubit.isEditMode),
 
+              // * ──────────────────── Form Section ────────────────────
               Transform.translate(
                 offset: const Offset(0, -25),
                 child: Container(
@@ -63,25 +63,14 @@ class CreateQuizMobileLayout extends StatelessWidget {
                   child: Column(
                     children: [
                       if (!cubit.isEditMode) ...[
-                        // Wrap with BlocBuilder to fix the rebuild issue
-                        BlocBuilder<CreateQuizCubit, CreateQuizState>(
-                          buildWhen: (prev, curr) =>
-                              curr is CreateQuizUIUpdated,
-                          builder: (context, state) {
-                            return TitledInputField(
-                              label: 'Assigned Classwork',
-                              child: ClassworkSelectorField(
-                                selectedClasswork: cubit.selectedClasswork,
-                                classworkItems: mockClassworkItems,
-                                onSelected: cubit.onClassworkSelected,
-                              ),
-                            );
-                          },
+                        const TitledInputField(
+                          label: 'Assigned Classwork',
+                          child: ClassworkSelectorField(),
                         ),
                         const SizedBox(height: 20),
                       ],
 
-                      // ─── Title ───
+                      // ? ─── Title ───
                       TitledInputField(
                         label: 'Title',
                         child: AppTextField(
@@ -93,7 +82,7 @@ class CreateQuizMobileLayout extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ─── Description ───
+                      // ? ─── Description ───
                       TitledInputField(
                         label: 'Description',
                         child: AppTextField(
@@ -106,7 +95,7 @@ class CreateQuizMobileLayout extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ─── Start Time ───
+                      // ? ─── Start Time ───
                       BlocBuilder<CreateQuizCubit, CreateQuizState>(
                         buildWhen: (prev, curr) => curr is CreateQuizUIUpdated,
                         builder: (context, state) {
@@ -124,7 +113,7 @@ class CreateQuizMobileLayout extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ─── Duration ───
+                      // ? ─── Duration ───
                       TitledInputField(
                         label: 'Duration',
                         child: DurationInputField(
@@ -143,7 +132,7 @@ class CreateQuizMobileLayout extends StatelessWidget {
     );
   }
 
-  // ──────────────────── Bottom Button ────────────────────
+  // * ──────────────────── Bottom Button ────────────────────
 
   Widget _buildBottomButton(BuildContext context, bool isLoading) {
     final cubit = context.read<CreateQuizCubit>();
