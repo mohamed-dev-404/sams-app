@@ -30,12 +30,30 @@ class StatsRow extends StatelessWidget {
         Expanded(
           child: _StatItem(
             icon: Icons.schedule_rounded,
-            value: '${quiz.totalTime}m',
+            value: _formatTime(quiz.totalTime),
             label: 'Total time',
           ),
         ),
       ],
     );
+  }
+
+  String _formatTime(num totalSeconds) {
+    final int seconds = totalSeconds.toInt();
+    if (seconds < 60) return '${seconds}s';
+
+    final int minutes = seconds ~/ 60;
+    final int remainingSeconds = seconds % 60;
+
+    if (minutes >= 60) {
+      final int hours = minutes ~/ 60;
+      final int remainingMinutes = minutes % 60;
+      if (remainingMinutes == 0) return '${hours}h';
+      return '${hours}h ${remainingMinutes}m';
+    }
+
+    if (remainingSeconds == 0) return '${minutes}m';
+    return '${minutes}m ${remainingSeconds}s';
   }
 }
 
@@ -67,16 +85,22 @@ class _StatItem extends StatelessWidget {
             child: Icon(icon, color: AppColors.secondary, size: 20),
           ),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: AppStyles.mobileBodyLargeSb.copyWith(
-              color: AppColors.primaryDark,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: AppStyles.mobileBodyLargeSb.copyWith(
+                color: AppColors.primaryDark,
+              ),
             ),
           ),
-          Text(
-            label,
-            style: AppStyles.mobileBodyXsmallRg.copyWith(
-              color: AppColors.secondary,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: AppStyles.mobileBodyXsmallRg.copyWith(
+                color: AppColors.secondary,
+              ),
             ),
           ),
         ],
