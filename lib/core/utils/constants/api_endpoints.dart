@@ -57,4 +57,7 @@ class EndPoints {
   static String getSubmissionDetails(String submissionId) => 'instructor/submissions/$submissionId';
   static String gradeQuestion(String submissionId, String questionId) => 'instructor/submissions/$submissionId/questions/$questionId';
 
+  //* --- Classworks CRUD --- ;
+  static String getAvailableClassworks(String courseId) => 'instructor/courses/$courseId/classworks';
+  static String addNewClasswork(String courseId) => 'instructor/courses/$courseId/classworks';
 }
