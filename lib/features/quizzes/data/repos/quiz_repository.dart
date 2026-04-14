@@ -3,6 +3,7 @@ import 'package:sams_app/features/quizzes/data/model/data_models/classwork_item_
 import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/student_submission_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/submission_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/create_quiz_request_body.dart';
 import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/quiz_answer_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
 
@@ -13,13 +14,13 @@ abstract class QuizRepository {
   Future<Either<String, List<QuestionModel>>> getQuizQuestions(String quizId);
 
   // --- Instructor Flow: Quiz CRUD ---
-  Future<Either<String, String>> createQuiz(
+  Future<Either<String, void>> createQuiz(
     String courseId,
-    Map<String, dynamic> data,
+    CreateQuizRequestBody data,
   );
-  Future<Either<String, String>> updateQuiz(
+  Future<Either<String, void>> updateQuiz(
     String quizId,
-    Map<String, dynamic> data,
+    CreateQuizRequestBody data,
   );
   Future<Either<String, String>> deleteQuiz(String quizId);
   Future<Either<String, String>> toggleQuizPublished(String quizId);

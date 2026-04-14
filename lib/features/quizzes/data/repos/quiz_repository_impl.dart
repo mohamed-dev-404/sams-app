@@ -7,6 +7,7 @@ import 'package:sams_app/features/quizzes/data/model/data_models/classwork_item_
 import 'package:sams_app/features/quizzes/data/model/data_models/question/question_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/student_submission_model.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/submission_model.dart';
+import 'package:sams_app/features/quizzes/data/model/request_bodies_models/create_quiz_request_body.dart';
 import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/quiz_answer_model.dart';
 import 'package:sams_app/features/quizzes/data/model/request_bodies_models/submit_quiz/submit_quiz_request_body.dart';
 import 'package:sams_app/features/quizzes/data/model/data_models/quiz_model.dart';
@@ -86,21 +87,42 @@ class QuizRepositoryImpl implements QuizRepository {
   // --- Instructor Flow: Quiz CRUD ---
 
   @override
-  Future<Either<String, String>> createQuiz(
+  Future<Either<String, void>> createQuiz(
     String courseId,
-    Map<String, dynamic> data,
+    CreateQuizRequestBody data,
   ) async {
-    // TODO: implement createQuiz
-    throw UnimplementedError();
+    try {
+      await api.post(
+        EndPoints.createQuiz(courseId),
+        data: data.toJson(),
+      );
+
+      return const Right(null); // success case, return message
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   @override
-  Future<Either<String, String>> updateQuiz(
+  Future<Either<String, void>> updateQuiz(
     String quizId,
-    Map<String, dynamic> data,
+    CreateQuizRequestBody data,
   ) async {
-    // TODO: implement updateQuiz
-    throw UnimplementedError();
+    try {
+      // hit updateQuiz request
+      await api.patch(
+        EndPoints.updateQuiz(quizId),
+        data: data.toJson(),
+      );
+
+      return const Right(null); // success case, return message
+    } on ApiException catch (e) {
+      return Left(e.errorModel.errorMessage); // failure case
+    } catch (e) {
+      return Left(e.toString()); // failure case
+    }
   }
 
   @override

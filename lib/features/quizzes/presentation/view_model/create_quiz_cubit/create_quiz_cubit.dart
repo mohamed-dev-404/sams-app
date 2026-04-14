@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,7 +49,10 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
     if (isEditMode && args.initialData != null) {
       titleController.text = initialData!.title;
       descriptionController.text = initialData!.description ?? '';
-      durationController.text = initialData!.totalTime.toString();
+      final duration = initialData!.endTime
+          .difference(initialData!.startTime)
+          .inMinutes;
+      durationController.text = duration.toString();
 
       _selectedDate = initialData!.startTime;
       _selectedTime = TimeOfDay.fromDateTime(initialData!.startTime);
@@ -97,20 +101,22 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
   Future<void> onSubmit() async {
     // 1. Validation
     if (isEditMode == false && selectedClasswork == null) {
-      emit(const CreateQuizFailure('Please select a classwork first.'));
+      // ignore: prefer_const_constructors
+      emit(CreateQuizFailure('Please select a classwork first.'));
       return;
     }
 
     if (!formKey.currentState!.validate()) return;
 
     if (_selectedDate == null || _selectedTime == null) {
-      emit(const CreateQuizFailure('Please select a start time.'));
+      // ignore: prefer_const_constructors
+      emit(CreateQuizFailure('Please select a start time.'));
       return;
     }
 
     // 2. Prepare Data
     final body = CreateQuizRequestBody(
-      classworkId: selectedClasswork?.id,
+      classworkId: isEditMode ? null : selectedClasswork?.id,
       title: titleController.text.trim(),
       description: descriptionController.text.trim(),
       startTime: DateTime(
@@ -126,19 +132,23 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
     // 3. Execution
     emit(CreateQuizLoading());
 
+    final Either<String, void> result;
     try {
-      // if (isEditMode) {
-      //   await _repo.updateQuiz(initialData!.id, body);
-      // } else {
-      //   await _repo.createQuiz(courseId, body);
-      // }
+      if (isEditMode) {
+        result = await _repo.updateQuiz(initialData!.id, body);
+      } else {
+        result = await _repo.createQuiz(courseId, body);
+      }
 
-      await Future.delayed(const Duration(seconds: 1)); // Fake delay
-
-      final successMsg = isEditMode
-          ? 'Quiz updated successfully'
-          : 'Quiz created successfully';
-      emit(CreateQuizSuccess(successMsg));
+      result.fold(
+        (failureMessage) => emit(CreateQuizFailure(failureMessage)),
+        (_) {
+          final successMessage = isEditMode
+              ? 'Quiz updated successfully'
+              : 'Quiz created successfully';
+          emit(CreateQuizSuccess(successMessage));
+        },
+      );
     } catch (e) {
       emit(CreateQuizFailure('Something went wrong: ${e.toString()}'));
     }
