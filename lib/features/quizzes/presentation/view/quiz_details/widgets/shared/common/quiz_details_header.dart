@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/features/quizzes/presentation/view/quiz_details/widgets/shared/instructor/delete_quiz_dialog.dart';
+import 'package:sams_app/features/quizzes/presentation/view/take_quiz/widgets/shared/back_to_quiz_tab_helper.dart';
 import 'package:sams_app/features/quizzes/presentation/view_model/quiz_details_cubit/quiz_details_cubit.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
@@ -22,9 +24,10 @@ class QuizDetailsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = SizeConfig.isMobile(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 48, 24, 32),
+      padding: EdgeInsets.fromLTRB(24, isMobile ? 48 : 24, 24, 32),
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: const BorderRadius.only(
@@ -42,6 +45,18 @@ class QuizDetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          isMobile
+              ? const SizedBox.shrink()
+              : IconButton(
+                  onPressed: () {
+                    backToQuizTab(context: context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: AppColors.whiteLight,
+                  ),
+                ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

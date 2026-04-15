@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
+import 'package:sams_app/features/quizzes/presentation/view/take_quiz/widgets/shared/back_to_quiz_tab_helper.dart';
 
 class HeaderSection extends StatelessWidget {
   final bool isEditMode;
@@ -13,7 +14,7 @@ class HeaderSection extends StatelessWidget {
     final isMobile = SizeConfig.isMobile(context);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, isMobile ? 60 : 40, 20, 50),
+      padding: EdgeInsets.fromLTRB(20, isMobile ? 60 : 20, 20, 50),
       decoration: const BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
@@ -24,6 +25,23 @@ class HeaderSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          isMobile
+              ? const SizedBox.shrink()
+              : Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        backToQuizTab(context: context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: AppColors.whiteLight,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+
           // * ──────────────────── Badge for mode ────────────────────
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
