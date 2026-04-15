@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/widgets/web/web_course_header_card.dart';
+import 'package:sams_app/features/course_details/presentation/view/widget/web/app_logo.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/web_tab_body_view.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
@@ -32,13 +33,26 @@ class TabBarWebLayout extends StatelessWidget {
             backgroundColor: AppColors.primary,
             automaticallyImplyLeading: false,
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(35),
+              preferredSize: const Size.fromHeight(50),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
-                child: CustomWebTabBar(
-                  tabs: cubit.visibleTabTitles,
-                  currentIndex: currentIndex,
-                  onTap: cubit.changeTab,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: AppLogo(),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomWebTabBar(
+                        tabs: cubit.visibleTabTitles,
+                        currentIndex: currentIndex,
+                        onTap: cubit.changeTab,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
