@@ -58,7 +58,10 @@ final class UpdateMaterialFailure extends MaterialActionState {
 //? --- 3. Add Items States (Standalone Request) ---
 
 //? Emitted while adding new files to an existing material.
-final class AddMaterialItemsLoading extends MaterialActionState {}
+final class AddMaterialItemsLoading extends MaterialActionState {
+  final String message;
+  AddMaterialItemsLoading(this.message);
+}
 
 //* Emitted when items added successfully.
 final class AddMaterialItemsSuccess extends MaterialActionState {

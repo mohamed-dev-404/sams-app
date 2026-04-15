@@ -53,7 +53,7 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
     );
   }
 
- //? --- 2. Sequential Update Workflow ---
+  //? --- 2. Sequential Update Workflow ---
   //* Execution Order: Update Metadata → Delete Items → Upload New Items
   Future<void> updateMaterial({
     required String courseId,
@@ -144,6 +144,68 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
         // Notify listeners to refresh lists across the application
         MaterialRefreshTrigger.requestRefresh();
         emit(DeleteMaterialSuccess('Material deleted successfully!'));
+      },
+    );
+  }
+
+  //?  Add New Items Only Workflow in floating button
+  Future<void> addNewItemsOnly({
+    required String materialId,
+    required String courseId,
+    required List<XFile> newFiles,
+  }) async {
+    if (newFiles.isEmpty) return;
+
+    emit(AddMaterialItemsLoading('Uploading new files...'));
+
+    final uploadResult = await materialsRepo.addItemsToMaterial(
+      materialId: materialId,
+      courseId: courseId,
+      newFiles: newFiles,
+    );
+
+    uploadResult.fold(
+      (failure) {
+        emitMessage(failure);
+        emit(AddMaterialItemsFailure(failure));
+      },
+      (updatedMaterial) {
+        MaterialRefreshTrigger.requestRefresh();
+        emit(
+          AddMaterialItemsSuccess(
+            material: updatedMaterial,
+            message: 'Files added successfully!',
+          ),
+        );
+      },
+    );
+  }
+
+  //* DELETE Single Item from Material
+  Future<void> deleteSingleItem({
+    required String materialId,
+    required String itemKey,
+  }) async {
+    emit(DeleteMaterialItemLoading());
+
+    final result = await materialsRepo.deleteMaterialItem(
+      materialId: materialId,
+      itemKey: itemKey,
+    );
+
+    result.fold(
+      (failure) {
+        emitMessage(failure);
+        emit(DeleteMaterialItemFailure(failure));
+      },
+      (updatedMaterial) {
+        MaterialRefreshTrigger.requestRefresh();
+        emit(
+          DeleteMaterialItemSuccess(
+            material: updatedMaterial,
+            message: 'File removed successfully!',
+          ),
+        );
       },
     );
   }
