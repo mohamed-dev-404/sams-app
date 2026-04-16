@@ -35,7 +35,7 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
   Widget build(BuildContext context) {
     final bool isMobile = SizeConfig.isMobile(context);
 
-    var blocListener = BlocListener<MaterialCrudCubit, MaterialCrudState>(
+    var crudBlocListener = BlocListener<MaterialCrudCubit, MaterialCrudState>(
       listener: (context, state) {
         if (state is AddMaterialItemsSuccess) {
           // Start fetching new data immediately after upload success
@@ -49,7 +49,7 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
     );
     return MultiBlocListener(
       listeners: [
-        blocListener,
+        crudBlocListener,
         BlocListener<MaterialFetchCubit, MaterialFetchState>(
           listener: (context, state) {
             // Only pop the dialog when data is successfully refreshed

@@ -131,7 +131,7 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                     ],
                     border: Border.all(
                       color: _isHovered
-                          ? AppColors.primary.withValues(alpha: 0.2)
+                          ? AppColors.primary.withValues(alpha: 0.5)
                           : Colors.transparent,
                       width: 1.5,
                     ),

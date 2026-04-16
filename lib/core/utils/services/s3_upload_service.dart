@@ -42,7 +42,7 @@ class S3UploadService {
      ///* Set headers
       final Map<String, dynamic> headers = {
         ApiKeys.contentTypeHeader: contentType,
-        'Content-Length': fileSize.toString(),
+        ApiKeys.contentLengthHeader: fileSize.toString(),
       };
 
       await _dio.put(
@@ -52,7 +52,7 @@ class S3UploadService {
         options: Options(
           headers: headers,
           sendTimeout: timeout,
-          receiveTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(minutes: 20),
           responseType: ResponseType.plain,
         ),
         onSendProgress: (count, total) {
