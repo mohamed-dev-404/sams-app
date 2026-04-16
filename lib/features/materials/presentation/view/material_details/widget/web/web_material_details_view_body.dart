@@ -42,7 +42,10 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
                 crudState is DeleteMaterialItemSuccess) {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
-                AppSnackBar.success(context, 'Item deleted and updated successfully!');
+                AppSnackBar.success(
+                  context,
+                  'Item deleted and updated successfully!',
+                );
               }
             }
           },
@@ -75,9 +78,17 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // 1. Sidebar info (Title, Description, Edit Button)
-                          const Expanded(
-                            flex: 2,
-                            child: MaterialDetailsSideCard(),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: 230,
+                              maxWidth:
+                                  (MediaQuery.sizeOf(context).width * 0.28)
+                                      .clamp(
+                                        230,
+                                        double.infinity,
+                                      ),
+                            ),
+                            child: const MaterialDetailsSideCard(),
                           ),
 
                           const SizedBox(width: 32), // Clear spacing for Web

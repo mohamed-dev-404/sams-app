@@ -6,10 +6,10 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/mobile/material_sliver_list.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
@@ -45,7 +45,6 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
         BlocListener<MaterialFetchCubit, MaterialFetchState>(
           listener: (context, state) {
             final crudState = context.read<MaterialCrudCubit>().state;
-
             //? Check if both fetch and delete were successful to notify the user.
             if (state is MaterialFetchDetailsSuccess &&
                 crudState is DeleteMaterialItemSuccess) {
@@ -112,37 +111,8 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: IconButton(
-                                  onPressed: () async {
-                                    final courseId =
-                                        GoRouterState.of(
-                                          context,
-                                        ).pathParameters['courseId'] ??
-                                        '';
-
-                                    //* Wait for updated data from ManageMaterial screen.
-                                    final updatedMaterial = await context
-                                        .pushNamed(
-                                          RoutesName.manageMaterial,
-                                          pathParameters: {
-                                            'courseId': courseId,
-                                          },
-                                          extra: material,
-                                        );
-
-                                    //! Ensure context is still valid before updating the Cubit state.
-                                    if (updatedMaterial is MaterialModel &&
-                                        context.mounted) {
-                                      context
-                                          .read<MaterialFetchCubit>()
-                                          .updateMaterialDetails(
-                                            updatedMaterial,
-                                          );
-                                      AppSnackBar.success(
-                                        context,
-                                        'Changes saved!',
-                                      );
-                                    }
-                                  },
+                                  onPressed: () =>
+                                      _onEditPressed(context, material),
                                   icon: SvgPicture.asset(
                                     AppIcons.iconsEditMaterial,
                                   ),
@@ -187,6 +157,22 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
           return const SizedBox.shrink();
         },
       ),
+    );
+  }
+
+  void _onEditPressed(BuildContext context, MaterialModel material) async {
+    //* Retrieve the courseId from the GoRouter's path parameters.
+    final courseId =
+        GoRouterState.of(
+          context,
+        ).pathParameters['courseId'] ??
+        '';
+    //* Wait for updated data from ManageMaterial screen.
+    //! Ensure context is still valid before updating the Cubit state.
+    MaterialsNavigationHandler.navigateToEditMaterial(
+      context,
+      courseId: courseId,
+      material: material,
     );
   }
 }

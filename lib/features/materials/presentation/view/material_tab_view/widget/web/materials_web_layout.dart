@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
-import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/core/widgets/shared/app_grid_style.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
-import 'package:sams_app/features/materials/presentation/view/material_tab_view/widget/shared/delete_material_dialog.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -109,7 +106,10 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
                                     material,
                                   )
                                 : null,
-                            onTap: () => _navigateToDetails(context, material),
+                            onTap: () => _navigateToDetails(
+                              context,
+                              material,
+                            ),
                           ),
                         ),
                       );
@@ -128,31 +128,21 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
     );
   }
 
-  //* Navigates to details and initiates a background fetch for detailed material data
+  // //* Navigates to details and initiates a background fetch for detailed material data
   void _navigateToDetails(BuildContext context, MaterialModel material) {
-    context.read<MaterialFetchCubit>().fetchMaterialDetails(
-      materialId: material.id,
-    );
-    context.pushNamed(
-      RoutesName.materialDetails,
-      pathParameters: {
-        'courseId': widget.courseId,
-        'materialId': material.id,
-      },
+    MaterialsNavigationHandler.navigateToDetails(
+      context,
+      courseId: widget.courseId,
+      material: material,
     );
   }
 
-  //* Logic for creating new material; updates the list locally upon success
+  // //* Logic for creating new material; updates the list locally upon success
   void _navigateToAddMaterial(BuildContext context) async {
-    final materialCubit = context.read<MaterialFetchCubit>();
-    final newMaterial = await context.pushNamed(
-      RoutesName.manageMaterial,
-      pathParameters: {'courseId': widget.courseId},
+    MaterialsNavigationHandler.navigateToManageMaterial(
+      context,
+      courseId: widget.courseId,
     );
-
-    if (newMaterial is MaterialModel && mounted) {
-      materialCubit.addMaterialToListView(newMaterial);
-    }
   }
 
   //* Displays a contextually positioned menu for Instructor actions
@@ -196,22 +186,9 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
         ),
       ],
     );
-
     if (selected == 'delete' && mounted) {
       //! Instructor Actions: Confirmation Dialog for material deletion
-      showDialog(
-        context: context,
-        builder: (dialogContext) => BlocProvider.value(
-          value: context
-              .read<
-                MaterialCrudCubit
-              >(), // Inject the existing cubit into the dialog's route
-          child: DeleteMaterialDialog(
-            materialId: material.id, // Pass real material ID
-            materialName: material.title, // Pass real material name
-          ),
-        ),
-      );
+      MaterialsNavigationHandler.showDeleteDialog(context, material: material);
     }
   }
 }

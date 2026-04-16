@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/models/main_card_model.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
-import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
-import 'package:sams_app/features/materials/presentation/view/material_tab_view/widget/shared/delete_material_dialog.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -73,20 +70,7 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
                     child: AddNewCard(
                       isMobile: true,
                       title: 'Add Material',
-                      onTap: () async {
-                        final newMaterial = await context.pushNamed(
-                          RoutesName.manageMaterial,
-                          pathParameters: {
-                            'courseId': widget.courseId,
-                          },
-                        );
-                        //* Immediately inject new material into the list for snappy UX
-                        if (newMaterial is MaterialModel && context.mounted) {
-                          context
-                              .read<MaterialFetchCubit>()
-                              .addMaterialToListView(newMaterial);
-                        }
-                      },
+                      onTap: () => _navigateToAddMaterial(context),
                     ),
                   ),
                 ),
@@ -150,17 +134,20 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     );
   }
 
-  //* Navigates and triggers detail pre-fetching for better perceived performance
-  void _navigateToDetails(MaterialModel material) {
-    context.read<MaterialFetchCubit>().fetchMaterialDetails(
-      materialId: material.id,
+  //* navigate to manage materials
+  void _navigateToAddMaterial(BuildContext context) async {
+    MaterialsNavigationHandler.navigateToManageMaterial(
+      context,
+      courseId: widget.courseId,
     );
-    context.pushNamed(
-      RoutesName.materialDetails,
-      pathParameters: {
-        'courseId': widget.courseId,
-        'materialId': material.id,
-      },
+  }
+
+  //* navigate to material details
+  void _navigateToDetails(MaterialModel material) {
+    MaterialsNavigationHandler.navigateToDetails(
+      context,
+      courseId: widget.courseId,
+      material: material,
     );
   }
 
@@ -205,20 +192,8 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     }
   }
 
- //! Instructor Actions: Confirmation Dialog for material deletion
+  //! Instructor Actions: Delete Material
   void _confirmDelete(MaterialModel material) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context
-            .read<
-              MaterialCrudCubit
-            >(), // Inject the existing cubit into the dialog's route
-        child: DeleteMaterialDialog(
-          materialId: material.id, // Pass real material ID
-          materialName: material.title, // Pass real material name
-        ),
-      ),
-    );
+    MaterialsNavigationHandler.showDeleteDialog(context, material: material);
   }
 }
