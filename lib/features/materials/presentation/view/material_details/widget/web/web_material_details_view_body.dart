@@ -27,32 +27,58 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
         BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
             if (state is DeleteMaterialItemSuccess) {
-              final fetchCubit = context.read<MaterialFetchCubit>();
-              if (fetchCubit.state is MaterialFetchDetailsSuccess) {
-                final materialId =
-                    (fetchCubit.state as MaterialFetchDetailsSuccess)
-                        .material
-                        .id;
-                fetchCubit.fetchMaterialDetails(materialId: materialId);
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
+
+              //? 2. UI Feedback: Close dialog and show success
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
               }
+
+              AppSnackBar.success(
+                context,
+                'Item deleted and updated successfully!',
+              );
+            } else if (state is DeleteMaterialItemFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
             }
           },
         ),
-        //* Listener 2: Fetch Success after Deletion -> UI Feedback.
-        //* Closes the dialog and shows success notification once the UI is synced with the server.
-        BlocListener<MaterialFetchCubit, MaterialFetchState>(
+        BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
-            final crudState = context.read<MaterialCrudCubit>().state;
+            if (state is AddMaterialItemsSuccess) {
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
 
-            if (state is MaterialFetchDetailsSuccess &&
-                crudState is DeleteMaterialItemSuccess) {
+              //? 2. UI Feedback: Close dialog and show success
               if (Navigator.canPop(context)) {
-                Navigator.pop(context); // Close deletion confirmation dialog.
-                AppSnackBar.success(
-                  context,
-                  'Item deleted and updated successfully!',
-                );
+                Navigator.pop(context);
               }
+
+              AppSnackBar.success(
+                context,
+                'Item updated successfully!',
+              );
+            } else if (state is AddMaterialItemsFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
             }
           },
         ),

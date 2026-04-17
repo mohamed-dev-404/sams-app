@@ -26,37 +26,63 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        //* Listener 1: Syncing Deletion with Fetching.
-        //* When an item is deleted successfully, we trigger a refresh of the details.
+        //* Listener 1: CRUD Success -> Re-fetch data.
+        //* If an item is deleted, we automatically trigger a refresh from the server.
         BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
             if (state is DeleteMaterialItemSuccess) {
-              final fetchCubit = context.read<MaterialFetchCubit>();
-              if (fetchCubit.state is MaterialFetchDetailsSuccess) {
-                final materialId =
-                    (fetchCubit.state as MaterialFetchDetailsSuccess)
-                        .material
-                        .id;
-                fetchCubit.fetchMaterialDetails(materialId: materialId);
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
+
+              //? 2. UI Feedback: Close dialog and show success
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
               }
+
+              AppSnackBar.success(
+                context,
+                'Item deleted and updated successfully!',
+              );
+            } else if (state is DeleteMaterialItemFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
             }
           },
         ),
-        //* Listener 2: Global UI Feedback.
-        //* Once the data is refreshed after a deletion, we close the dialog and notify the user.
-        BlocListener<MaterialFetchCubit, MaterialFetchState>(
+        BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
-            final crudState = context.read<MaterialCrudCubit>().state;
-            //? Logical check to ensure SnackBar only shows after a successful CRUD-triggered refresh.
-            if (state is MaterialFetchDetailsSuccess &&
-                crudState is DeleteMaterialItemSuccess) {
+            if (state is AddMaterialItemsSuccess) {
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
+
+              //? 2. UI Feedback: Close dialog and show success
               if (Navigator.canPop(context)) {
-                Navigator.pop(context); // Closes deletion dialog
-                AppSnackBar.success(
-                  context,
-                  'Item deleted and updated successfully!',
-                );
+                Navigator.pop(context);
               }
+
+              AppSnackBar.success(
+                context,
+                'Item updated successfully!',
+              );
+            } else if (state is AddMaterialItemsFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
             }
           },
         ),

@@ -170,7 +170,6 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
         emit(AddMaterialItemsFailure(failure));
       },
       (updatedMaterial) {
-        MaterialRefreshTrigger.requestRefresh();
         emit(
           AddMaterialItemsSuccess(
             material: updatedMaterial,
@@ -199,7 +198,6 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
         emit(DeleteMaterialItemFailure(failure));
       },
       (updatedMaterial) {
-        MaterialRefreshTrigger.requestRefresh();
         emit(
           DeleteMaterialItemSuccess(
             material: updatedMaterial,
