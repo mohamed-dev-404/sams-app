@@ -37,33 +37,36 @@ class MaterialsSliverList extends StatelessWidget {
     final documentItems = materials.where((item) => !item.isVideoItem).toList();
 
     //* Using SliverMainAxisGroup to treat multiple slivers as a single logical unit.
-    return SliverMainAxisGroup(
-      slivers: [
-        //* Video Section
-        if (videoItems.isNotEmpty) ...[
-          _buildHeader('Videos'),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildCard(videoItems[index], context),
-              childCount: videoItems.length,
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 50),
+      sliver: SliverMainAxisGroup(
+        slivers: [
+          //* Video Section
+          if (videoItems.isNotEmpty) ...[
+            _buildHeader('Videos'),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _buildCard(videoItems[index], context),
+                childCount: videoItems.length,
+              ),
             ),
-          ),
-        ],
+          ],
 
-        //* Document Section
-        if (documentItems.isNotEmpty) ...[
-          //? Add spacing between sections only if both exist.
-          if (videoItems.isNotEmpty)
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
-          _buildHeader('Documents'),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildCard(documentItems[index], context),
-              childCount: documentItems.length,
+          //* Document Section
+          if (documentItems.isNotEmpty) ...[
+            //? Add spacing between sections only if both exist.
+            if (videoItems.isNotEmpty)
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            _buildHeader('Files & Documents'),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _buildCard(documentItems[index], context),
+                childCount: documentItems.length,
+              ),
             ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 

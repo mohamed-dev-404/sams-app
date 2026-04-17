@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
@@ -73,7 +72,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                         //* Role Guard: Management actions are restricted to instructors.
                         if (CurrentRole.role == UserRole.instructor)
                           IconButton(
-                            onPressed: () => _onEditPressed(context, material),
+                            onPressed: () => _showEditDialog(context, material),
                             icon: SvgPicture.asset(
                               AppIcons.iconsEditMaterial,
                               width: 24,
@@ -101,15 +100,8 @@ class MaterialDetailsSideCard extends StatelessWidget {
     );
   }
 
-  /// Extracts navigation context and opens the editing interface.
-  void _onEditPressed(BuildContext context, MaterialModel material) async {
-    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
-
-    //* Delegation: Navigation logic is kept outside the UI widget.
-    MaterialsNavigationHandler.navigateToEditMaterial(
-      context,
-      courseId: courseId,
-      material: material,
-    );
+  //** Opens the dialog to edit the material title and description.
+  void _showEditDialog(BuildContext context, MaterialModel material) async {
+    MaterialsNavigationHandler.showEdieMaterialDialog(context, material: material);
   }
 }

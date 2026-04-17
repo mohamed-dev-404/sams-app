@@ -82,6 +82,35 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
             }
           },
         ),
+        BlocListener<MaterialCrudCubit, MaterialCrudState>(
+          listener: (context, state) {
+            if (state is UpdateMaterialSuccess) {
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
+
+              //? 2. UI Feedback: Close dialog and show success
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+
+              AppSnackBar.success(
+                context,
+                'Item updated successfully!',
+              );
+            } else if (state is UpdateMaterialFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
+            }
+          },
+        ),
       ],
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
         //_ Optimization: Rebuild only for relevant Material Details states.

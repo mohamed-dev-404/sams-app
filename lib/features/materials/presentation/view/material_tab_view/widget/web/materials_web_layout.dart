@@ -180,11 +180,29 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
             ],
           ),
         ),
+        const PopupMenuItem<String>(
+          value: 'edit',
+          child: Row(
+            children: [
+              Icon(Icons.edit, color: AppColors.primary, size: 20),
+              SizedBox(width: 10),
+              Text('Edit', style: TextStyle(color: AppColors.primary)),
+            ],
+          ),
+        ),
       ],
     );
 
     if (selected == 'delete' && mounted) {
       MaterialsNavigationHandler.showDeleteDialog(context, material: material);
+    }
+
+    if (selected == 'edit' && mounted) {
+      MaterialsNavigationHandler.navigateToEditMaterial(
+        context,
+        courseId: widget.courseId,
+        material: material,
+      );
     }
   }
 }

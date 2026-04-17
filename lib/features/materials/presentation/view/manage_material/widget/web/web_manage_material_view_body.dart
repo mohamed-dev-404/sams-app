@@ -155,9 +155,9 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
                   controller: titleController,
                 ),
                 InputFieldData(
-                  label: 'Subtitle',
+                  label: 'Description',
                   hint: 'e.g. Overview',
-                  controller: subtitleController,
+                  controller: descriptionController,
                 ),
               ],
             ),

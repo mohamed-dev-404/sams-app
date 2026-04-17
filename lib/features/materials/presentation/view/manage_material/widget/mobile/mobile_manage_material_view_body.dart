@@ -120,7 +120,7 @@ class _MobileManageMaterialViewBodyState
     );
   }
 
-  /// Constructs the text input fields for title and subtitle using the provided mixin controllers.
+  /// Constructs the text input fields for title and description using the provided mixin controllers.
   Widget _buildFormSection() {
     return Form(
       key: formKey,
@@ -133,9 +133,9 @@ class _MobileManageMaterialViewBodyState
             controller: titleController,
           ),
           InputFieldData(
-            label: 'Subtitle',
+            label: 'Description',
             hint: 'e.g. Overview',
-            controller: subtitleController,
+            controller: descriptionController,
           ),
         ],
       ),

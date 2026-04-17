@@ -8,7 +8,7 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 mixin ManageMaterialMixin<T extends StatefulWidget> on State<T> {
   //* Text controllers and keys
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController subtitleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   final GlobalKey<CourseMaterialSectionState> materialSectionKey = GlobalKey();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -16,14 +16,14 @@ mixin ManageMaterialMixin<T extends StatefulWidget> on State<T> {
   void initializeControllers(MaterialModel? initialMaterial) {
     if (initialMaterial != null) {
       titleController.text = initialMaterial.title;
-      subtitleController.text = initialMaterial.description;
+      descriptionController.text = initialMaterial.description;
     }
   }
 
   //* Dispose controllers
   void disposeManageMaterial() {
     titleController.dispose();
-    subtitleController.dispose();
+    descriptionController.dispose();
   }
 
   //* Updated logic in ManageMaterialMixin
@@ -54,7 +54,7 @@ mixin ManageMaterialMixin<T extends StatefulWidget> on State<T> {
       cubit.updateMaterial(
         courseId: courseId,
         title: titleController.text.trim(),
-        description: subtitleController.text.trim(),
+        description: descriptionController.text.trim(),
         keysToDelete: keysToDelete,
         newFiles: newFiles,
       );
@@ -63,7 +63,7 @@ mixin ManageMaterialMixin<T extends StatefulWidget> on State<T> {
       cubit.createMaterial(
         courseId: courseId,
         title: titleController.text.trim(),
-        description: subtitleController.text.trim(),
+        description: descriptionController.text.trim(),
         selectedFiles: newFiles,
       );
     }

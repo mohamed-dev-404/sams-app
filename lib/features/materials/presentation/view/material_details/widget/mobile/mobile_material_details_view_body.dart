@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/helper/app_snack_bar.dart';
 import 'package:sams_app/core/utils/assets/app_icons.dart';
@@ -86,6 +85,35 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
             }
           },
         ),
+         BlocListener<MaterialCrudCubit, MaterialCrudState>(
+          listener: (context, state) {
+            if (state is UpdateMaterialSuccess) {
+              //? 1. Update the FetchCubit locally using the response data
+              //? This updates both the Details screen and the background List view.
+              context.read<MaterialFetchCubit>().updateMaterialDetails(
+                state.material,
+              );
+
+              //? 2. UI Feedback: Close dialog and show success
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+
+              AppSnackBar.success(
+                context,
+                'Item updated successfully!',
+              );
+            } else if (state is UpdateMaterialFailure) {
+              //? UI Feedback: Close dialog and show error
+              if (Navigator.canPop(context)) Navigator.pop(context);
+
+              AppSnackBar.error(
+                context,
+                state.errMessage,
+              );
+            }
+          },
+        ),
       ],
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
         //_ Optimized rebuilds: Only listen to states relevant to the details view.
@@ -142,7 +170,7 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                                 padding: const EdgeInsets.only(left: 10),
                                 child: IconButton(
                                   onPressed: () =>
-                                      _onEditPressed(context, material),
+                                      _showEditMaterialSheet(context, material),
                                   icon: SvgPicture.asset(
                                     AppIcons.iconsEditMaterial,
                                   ),
@@ -191,14 +219,10 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
     );
   }
 
-  /// Extracts navigation parameters and redirects to the edit screen.
-  void _onEditPressed(BuildContext context, MaterialModel material) async {
-    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
-
-    //* Navigation Logic: Delegated to the handler for clean architecture.
-    MaterialsNavigationHandler.navigateToEditMaterial(
+  //** Opens the dialog to edit the material title and description.
+  void _showEditMaterialSheet(BuildContext context, MaterialModel material) async {
+    MaterialsNavigationHandler.showEditMaterialSheet(
       context,
-      courseId: courseId,
       material: material,
     );
   }

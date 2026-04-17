@@ -175,6 +175,16 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       items: [
         const PopupMenuItem<String>(
+          value: 'edit',
+          child: Row(
+            children: [
+              Icon(Icons.edit, color: AppColors.primary, size: 20),
+              SizedBox(width: 10),
+              Text('Edit', style: TextStyle(color: AppColors.primary)),
+            ],
+          ),
+        ),
+        const PopupMenuItem<String>(
           value: 'delete',
           child: Row(
             children: [
@@ -190,6 +200,18 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     if (selected == 'delete' && mounted) {
       _confirmDelete(material);
     }
+
+    if (selected == 'edit' && mounted) {
+      _navigateToEditMaterial(material);
+    }
+  }
+
+  void _navigateToEditMaterial(MaterialModel material) {
+    MaterialsNavigationHandler.navigateToEditMaterial(
+      context,
+      material: material,
+      courseId: widget.courseId,
+    );
   }
 
   void _confirmDelete(MaterialModel material) {

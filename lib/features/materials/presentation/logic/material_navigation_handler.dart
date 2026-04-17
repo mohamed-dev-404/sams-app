@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/materials/data/model/material_item_model.dart';
 import 'package:sams_app/features/materials/data/model/material_model.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/mobile/edit_material_buttom_sheet.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/add_material_items_dialog.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/delete_single_item_dialog.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/edit_material_dialog.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/file_preview_screen.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/video_player_screen.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
@@ -173,6 +175,48 @@ class MaterialsNavigationHandler {
         child: AddNewMaterialItemsDialog(
           courseId: courseId,
           materialId: materialId,
+        ),
+      ),
+    );
+  }
+
+  /// Opens the dialog to edit a material title and description.
+  static void showEdieMaterialDialog(
+    BuildContext context, {
+    required MaterialModel material,
+  }) {
+    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
+    final crudCubit = context.read<MaterialCrudCubit>();
+    showDialog<void>(
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: crudCubit,
+        child: EditMaterialDialog(
+          courseId: courseId,
+          material: material,
+        ),
+      ),
+    );
+  }
+
+  /// Opens the Bottom Sheet to edit material metadata (Title & Description).
+  static void showEditMaterialSheet(
+    BuildContext context, {
+    required MaterialModel material,
+  }) {
+    final crudCubit = context.read<MaterialCrudCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => BlocProvider.value(
+        value: crudCubit,
+        child: EditMaterialBottomSheet(
+          material: material,
         ),
       ),
     );

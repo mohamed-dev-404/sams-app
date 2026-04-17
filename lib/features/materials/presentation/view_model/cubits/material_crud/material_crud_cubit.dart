@@ -129,7 +129,7 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
     }
   }
 
-  //* DELETE Entire Material
+  //! DELETE Entire Material
   Future<void> deleteMaterial({required String materialId}) async {
     emit(DeleteMaterialLoading());
 
@@ -179,8 +179,39 @@ class MaterialCrudCubit extends Cubit<MaterialCrudState>
       },
     );
   }
+ 
+  //* Updates only Title and Description without touching files
+  Future<void> updateMaterialMetadata({
+    required String materialId,
+    required String title,
+    required String description,
+  }) async {
+    emit(UpdateMaterialLoading('Saving material info...'));
 
-  //* DELETE Single Item from Material
+    final result = await materialsRepo.updateMaterial(
+      materialId: materialId,
+      request: UpdateMaterialRequest(title: title, description: description),
+    );
+
+    result.fold(
+      (failure) {
+        emitMessage(failure); // Show error snackbar
+        emit(UpdateMaterialFailure(failure));
+      },
+      (updatedMaterial) {
+        // Notify listeners to refresh lists across the application
+        MaterialRefreshTrigger.requestRefresh();
+        emit(
+          UpdateMaterialSuccess(
+            material: updatedMaterial,
+            message: 'Material info updated successfully!',
+          ),
+        );
+      },
+    );
+  }
+
+  //! DELETE Single Item from Material
   Future<void> deleteSingleItem({
     required String materialId,
     required String itemKey,
