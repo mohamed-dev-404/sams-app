@@ -6,13 +6,15 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/shine_overlay.dart';
 
-//* Defines the type of material .
+/// Defines the supported categories of course content.
 enum CourseMaterialType { pdf, video }
 
-//* A custom card widget used to display course materials (PDFs or Videos).
-// * Hover effects for web/desktop.
-// * Pulse animation on tap.
-// * Visual feedback with [ShineOverlay].
+/// An interactive card component for displaying course materials.
+/// Features:
+/// - Dynamic icon/color selection based on file type.
+/// - Pulse scale animation on tap using [AnimationController].
+/// - Elevation and color shifting on hover for Web/Desktop environments.
+/// - Integrated [ShineOverlay] for high-end visual feedback during actions.
 class MaterialItemCard extends StatefulWidget {
   final String fileName;
   final String description;
@@ -46,7 +48,7 @@ class _MaterialItemCardState extends State<MaterialItemCard>
   @override
   void initState() {
     super.initState();
-    //* Initialize controller for the pulse scale effect.
+    //* Pulse Effect: Short duration to ensure the feedback feels snappy.
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -59,12 +61,13 @@ class _MaterialItemCardState extends State<MaterialItemCard>
     super.dispose();
   }
 
-  /// Handles the tap interaction including animation and shine effect.
+  /// Manages the visual and functional sequence of a tap event.
   void _handleTap() {
-    //* Trigger scale pulse animation.
+    //* Phase 1: Animation Feedback.
     _controller.forward().then((_) => _controller.reverse());
     setState(() => _isShining = true);
 
+    //* Phase 2: Action Execution after a brief delay to allow the effect to be seen.
     Future.delayed(const Duration(milliseconds: 200), () {
       widget.onTap?.call();
       if (mounted) setState(() => _isShining = false);
@@ -73,12 +76,11 @@ class _MaterialItemCardState extends State<MaterialItemCard>
 
   @override
   Widget build(BuildContext context) {
-    //? Select icon path based on material type.
+    //* Logic: Resource selection based on enum state.
     final String iconPath = widget.materialType == CourseMaterialType.video
         ? AppIcons.iconsVideoMaterial
         : AppIcons.iconsPdfMaterials;
 
-    //? Determine icon color based on material type if not explicitly provided.
     final Color finalIconColor =
         widget.iconColor ??
         (widget.materialType == CourseMaterialType.video
@@ -92,6 +94,7 @@ class _MaterialItemCardState extends State<MaterialItemCard>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
+          //? Subtle scale down (3%) during the pulse to mimic a physical button press.
           double pulseScale = 1.0 - (_controller.value * 0.03);
           return Transform.scale(
             scale: _controller.isAnimating ? pulseScale : 1.0,
@@ -99,11 +102,10 @@ class _MaterialItemCardState extends State<MaterialItemCard>
           );
         },
         child: SizedBox(
-          //* Fixed height maintains list stability when internal container expands on hover.
-          height: 70,
+          height: 70, // Maintains constant spacing in the ListView.
           child: Stack(
-            //! Clip.none is essential for the hover expansion to overlay adjacent widgets.
-            clipBehavior: Clip.none,
+            clipBehavior: Clip
+                .none, // Allows expanded hover state to bleed out of bounds.
             children: [
               GestureDetector(
                 onTap: _handleTap,
@@ -111,7 +113,6 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
                   width: double.infinity,
-                  //_ Constraints allow the card to expand vertically for long titles on hover.
                   constraints: const BoxConstraints(minHeight: 70),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -154,14 +155,15 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                               widget.fileName,
                               minFontSize: 16,
                               maxFontSize: 24,
-                              maxLines: _isHovered ? 2 : 1,
+                              maxLines: _isHovered
+                                  ? 2
+                                  : 1, // Expand title view on hover.
                               overflow: TextOverflow.ellipsis,
                               style: AppStyles.mobileBodyLargeMd.copyWith(
                                 color: AppColors.primaryDarkHover,
                                 height: 1.2,
                               ),
                             ),
-                            //_ Hide description during hover to focus on the full title.
                             if (widget.description.isNotEmpty &&
                                 !_isHovered) ...[
                               const SizedBox(height: 2),
@@ -176,6 +178,7 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                           ],
                         ),
                       ),
+                      //* Destructive Action: Item deletion trigger.
                       IconButton(
                         icon: const Icon(
                           Icons.close,
@@ -188,6 +191,7 @@ class _MaterialItemCardState extends State<MaterialItemCard>
                   ),
                 ),
               ),
+              //* Overlay Layer: Activated on tap to show the shine movement.
               if (_isShining)
                 Positioned.fill(
                   child: IgnorePointer(
@@ -204,10 +208,8 @@ class _MaterialItemCardState extends State<MaterialItemCard>
     );
   }
 
-  /// Builds the leading icon for the card, supporting both IconData and SVG.
   Widget _buildIcon(Color color, String path) {
     return Container(
-      //? Slightly offset the icon when the card expands on hover.
       margin: EdgeInsets.only(top: _isHovered ? 4 : 0),
       child: widget.icon != null
           ? Icon(widget.icon, size: 36, color: color)

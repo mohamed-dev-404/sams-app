@@ -11,6 +11,9 @@ import 'package:sams_app/features/materials/presentation/logic/material_navigati
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
+/// A responsive side information card for the Web interface.
+/// It displays material metadata (Title, Illustration, Description) and
+/// provides edit access for instructors.
 class MaterialDetailsSideCard extends StatelessWidget {
   const MaterialDetailsSideCard({super.key});
 
@@ -18,12 +21,14 @@ class MaterialDetailsSideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
       builder: (context, state) {
+        //* Safety Check: Only render the card if the material data is successfully fetched.
         if (state is! MaterialFetchDetailsSuccess) {
           return const SizedBox.shrink();
         }
 
         final material = state.material;
 
+        //* LayoutBuilder is used here to create a fluid UI that scales based on the sidebar width.
         return LayoutBuilder(
           builder: (context, constraints) {
             final double width = constraints.maxWidth;
@@ -38,7 +43,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Illustration Image
+                    //* Visual Identity: The top illustration scales proportionally.
                     Center(
                       child: SvgPicture.asset(
                         'assets/images/hijab_image.svg',
@@ -48,7 +53,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    // Title and Edit Action
+                    //* Header Row: Title and the conditional Edit Action.
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,13 +61,15 @@ class MaterialDetailsSideCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             material.title,
+                            //? Clamp ensures the font size stays within readable bounds on different screen sizes.
                             style: AppStyles.webTitleMediumSb.copyWith(
                               color: AppColors.primaryDarkHover,
                               fontSize: (width * 0.09).clamp(20, 28),
                             ),
                           ),
                         ),
-                        // Show edit button only for instructors
+
+                        //* Role Guard: Management actions are restricted to instructors.
                         if (CurrentRole.role == UserRole.instructor)
                           IconButton(
                             onPressed: () => _onEditPressed(context, material),
@@ -75,7 +82,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    // Description text
+                    //* Informational Body: Displays the long-form description of the material.
                     Text(
                       material.description,
                       style: AppStyles.mobileBodyLargeRg.copyWith(
@@ -93,16 +100,11 @@ class MaterialDetailsSideCard extends StatelessWidget {
     );
   }
 
-  /// Handles navigating to the manage material screen for editing
+  /// Extracts navigation context and opens the editing interface.
   void _onEditPressed(BuildContext context, MaterialModel material) async {
-    //* Retrieve the courseId from the GoRouter's path parameters.
-    final courseId =
-        GoRouterState.of(
-          context,
-        ).pathParameters['courseId'] ??
-        '';
-    //* Wait for updated data from ManageMaterial screen.
-    //! Ensure context is still valid before updating the Cubit state.
+    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
+
+    //* Delegation: Navigation logic is kept outside the UI widget.
     MaterialsNavigationHandler.navigateToEditMaterial(
       context,
       courseId: courseId,

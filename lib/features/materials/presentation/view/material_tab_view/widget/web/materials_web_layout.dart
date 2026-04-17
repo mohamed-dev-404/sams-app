@@ -18,6 +18,9 @@ import 'package:sams_app/features/materials/presentation/logic/material_refresh_
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
+/// Web-optimized layout for course materials.
+/// Features a grid-based system that adapts to screen width and integrates
+/// instructor-specific management tools directly into the grid flow.
 class MaterialsWebLayout extends StatefulWidget {
   const MaterialsWebLayout({super.key, required this.courseId});
   final String courseId;
@@ -30,18 +33,16 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
   @override
   void initState() {
     super.initState();
-    //* Listen for global refresh triggers (e.g., after deletion or creation) to sync the Web UI
+    //* Observer Pattern: Real-time UI synchronization across different modules.
     MaterialRefreshTrigger.shouldRefresh.addListener(_fetch);
   }
 
   @override
   void dispose() {
-    //* Clean up listeners to prevent memory leaks in web navigation
     MaterialRefreshTrigger.shouldRefresh.removeListener(_fetch);
     super.dispose();
   }
 
-  //* Core fetch logic triggered by pull-to-refresh or global listeners
   void _fetch() {
     if (mounted) {
       context.read<MaterialFetchCubit>().fetchMaterials(
@@ -57,7 +58,6 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
 
     return TabBodyView(
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
-        //* Optimize rebuilds: only react to success, loading, or failure states
         buildWhen: (previous, current) =>
             current is MaterialFetchSuccess ||
             current is MaterialFetchLoading ||
@@ -76,7 +76,7 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
                 SliverGrid(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      //* Append the 'Add Material' card at the end of the grid for Instructors
+                      //* Logic: The 'Add Material' card is appended as the LAST item for instructors.
                       if (isInstructor && index == materials.length) {
                         return AddNewCard(
                           isMobile: isMobile,
@@ -106,15 +106,12 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
                                     material,
                                   )
                                 : null,
-                            onTap: () => _navigateToDetails(
-                              context,
-                              material,
-                            ),
+                            onTap: () => _navigateToDetails(context, material),
                           ),
                         ),
                       );
                     },
-                    //* Adjust childCount to include the AddNewCard if Instructor
+                    //* childCount adjusts based on user role to accommodate the action card.
                     childCount: materials.length + (isInstructor ? 1 : 0),
                   ),
                   gridDelegate: AppGridStyles.tapGridDelegate,
@@ -128,7 +125,6 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
     );
   }
 
-  // //* Navigates to details and initiates a background fetch for detailed material data
   void _navigateToDetails(BuildContext context, MaterialModel material) {
     MaterialsNavigationHandler.navigateToDetails(
       context,
@@ -137,15 +133,15 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
     );
   }
 
-  // //* Logic for creating new material; updates the list locally upon success
-  void _navigateToAddMaterial(BuildContext context) async {
+  void _navigateToAddMaterial(BuildContext context) {
     MaterialsNavigationHandler.navigateToManageMaterial(
       context,
       courseId: widget.courseId,
     );
   }
 
-  //* Displays a contextually positioned menu for Instructor actions
+  /// Calculates visual coordinates for the popup menu to ensure it aligns
+  /// with the specific grid card on the web surface.
   void _showWebPopupMenu(
     BuildContext cardContext,
     BuildContext pageContext,
@@ -186,8 +182,8 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
         ),
       ],
     );
+
     if (selected == 'delete' && mounted) {
-      //! Instructor Actions: Confirmation Dialog for material deletion
       MaterialsNavigationHandler.showDeleteDialog(context, material: material);
     }
   }

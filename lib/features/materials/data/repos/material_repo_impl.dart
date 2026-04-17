@@ -285,7 +285,7 @@ class MaterialRepoImpl implements MaterialRepo {
     required String materialId,
   }) async {
     try {
-      // Call the deletion endpoint
+      
       await api.delete(EndPoints.deleteMaterial(materialId));
 
       return right(unit); // Success: returns unit (functional void)

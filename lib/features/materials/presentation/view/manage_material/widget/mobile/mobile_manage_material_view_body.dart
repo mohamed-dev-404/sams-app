@@ -13,6 +13,8 @@ import 'package:sams_app/features/materials/presentation/view/manage_material/wi
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 
+/// A stateful widget that provides the interface for creating or editing course materials.
+/// It utilizes [ManageMaterialMixin] to handle form controllers and validation logic.
 class MobileManageMaterialViewBody extends StatefulWidget {
   const MobileManageMaterialViewBody({
     super.key,
@@ -34,13 +36,14 @@ class _MobileManageMaterialViewBodyState
   @override
   void initState() {
     super.initState();
-    //* Retrieve initial material data for editing and initialize controllers
+    //* Extract initial data from Cubit if in Edit Mode to pre-fill the form.
     final initialMaterial = context.read<MaterialCrudCubit>().initialMaterial;
     initializeControllers(initialMaterial);
   }
 
   @override
   void dispose() {
+    //! Clean up controllers via mixin to prevent memory leaks.
     disposeManageMaterial();
     super.dispose();
   }
@@ -56,9 +59,9 @@ class _MobileManageMaterialViewBodyState
       listener: (context, state) {
         if (state is UpdateMaterialSuccess) {
           AppSnackBar.success(context, state.message);
+          //* Return the updated material object to the previous screen.
           context.pop(state.material);
         } else if (state is CreateMaterialSuccess) {
-          //todo: Consider if we need to manually update MaterialFetchCubit list here or rely on parent refresh
           AppSnackBar.success(context, state.message);
           context.pop(state.material);
         } else if (state is CreateMaterialFailure) {
@@ -66,12 +69,13 @@ class _MobileManageMaterialViewBodyState
         }
       },
       builder: (context, state) {
-        //* Loading state evaluation
+        //* Determine UI state based on specific loading sub-types.
         final isCreateLoading = state is CreateMaterialLoading;
         final isCreateUploading = isCreateLoading && state.isUploadingFiles;
         final isUpdateLoading = state is UpdateMaterialLoading;
         final anyLoading = isCreateLoading || isUpdateLoading;
 
+        //? Extract dynamic message for the update overlay if applicable.
         String updateMsg = '';
         if (state is UpdateMaterialLoading) {
           updateMsg = state.message;
@@ -79,7 +83,8 @@ class _MobileManageMaterialViewBodyState
 
         return Stack(
           children: [
-            //* Main content layer: partially hidden and disabled during heavy operations
+            //* Main UI Layer.
+            //! Interaction is disabled and opacity reduced during blocking operations (uploads/updates).
             IgnorePointer(
               ignoring: isCreateUploading || isUpdateLoading,
               child: Opacity(
@@ -88,7 +93,7 @@ class _MobileManageMaterialViewBodyState
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      buildFormSection(),
+                      _buildFormSection(),
                       const SizedBox(height: 16),
                       CourseMaterialSection(
                         key: materialSectionKey,
@@ -98,14 +103,15 @@ class _MobileManageMaterialViewBodyState
                             ?.materialItems,
                       ),
                       const SizedBox(height: 32),
-                      //* Submit Button - Hidden during loading to prevent double clicks
-                      if (!anyLoading) buildActionButton(anyLoading),
+                      //* Prevent submission if any asynchronous operation is in progress.
+                      if (!anyLoading) _buildActionButton(anyLoading),
                     ],
                   ),
                 ),
               ),
             ),
-            //* Full-screen Overlays for upload and update progress
+
+            //* Overlay Layer: Displayed on top of the form during long-running tasks.
             if (isCreateUploading) const UploadingOverlay(),
             if (isUpdateLoading) UpdateProgressOverlay(message: updateMsg),
           ],
@@ -114,8 +120,8 @@ class _MobileManageMaterialViewBodyState
     );
   }
 
-  //* Builds the text input fields section
-  Widget buildFormSection() {
+  /// Constructs the text input fields for title and subtitle using the provided mixin controllers.
+  Widget _buildFormSection() {
     return Form(
       key: formKey,
       child: CustomBasicInformationSection(
@@ -136,8 +142,9 @@ class _MobileManageMaterialViewBodyState
     );
   }
 
-  //* Logic for the main action button (Add/Edit)
-  Widget buildActionButton(bool isLoading) {
+  /// Constructs the primary action button for submission.
+  /// Disables itself and shows a loading indicator when [isLoading] is true.
+  Widget _buildActionButton(bool isLoading) {
     return CustomAppButton(
       width: 220,
       height: 50,
@@ -145,6 +152,7 @@ class _MobileManageMaterialViewBodyState
       label: widget.isEditMode ? 'Edit Material' : 'Add Material',
       onPressed: isLoading
           ? null
+          //* Triggers the validation and submission logic defined in the mixin.
           : () => onManageMaterialPressed(
               context: context,
               courseId: widget.courseId,

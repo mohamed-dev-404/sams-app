@@ -6,6 +6,8 @@ import 'package:sams_app/features/materials/presentation/logic/material_navigati
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/empty_items.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_item_card.dart';
 
+/// A sliver-based list that categorizes and displays course materials into
+/// Videos and Documents sections.
 class MaterialsSliverList extends StatelessWidget {
   final List<MaterialItemModel> materials;
   final String materialId;
@@ -18,6 +20,7 @@ class MaterialsSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //* Handle the empty state within the sliver protocol.
     if (materials.isEmpty) {
       return const SliverToBoxAdapter(
         child: Center(
@@ -29,11 +32,14 @@ class MaterialsSliverList extends StatelessWidget {
       );
     }
 
+    //? Split data into two categorized lists for better organization.
     final videoItems = materials.where((item) => item.isVideoItem).toList();
     final documentItems = materials.where((item) => !item.isVideoItem).toList();
 
+    //* Using SliverMainAxisGroup to treat multiple slivers as a single logical unit.
     return SliverMainAxisGroup(
       slivers: [
+        //* Video Section
         if (videoItems.isNotEmpty) ...[
           _buildHeader('Videos'),
           SliverList(
@@ -43,7 +49,10 @@ class MaterialsSliverList extends StatelessWidget {
             ),
           ),
         ],
+
+        //* Document Section
         if (documentItems.isNotEmpty) ...[
+          //? Add spacing between sections only if both exist.
           if (videoItems.isNotEmpty)
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           _buildHeader('Documents'),
@@ -58,6 +67,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Builds a section header that scrolls along with the list.
   Widget _buildHeader(String title) {
     return SliverToBoxAdapter(
       child: Padding(
@@ -73,6 +83,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Constructs a material card with interaction callbacks.
   Widget _buildCard(MaterialItemModel file, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -90,6 +101,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Triggers the deletion logic via the navigation handler.
   void _confirmAndDelete(BuildContext context, MaterialItemModel item) {
     MaterialsNavigationHandler.showDeleteSingleItemDialog(
       context,
@@ -99,6 +111,7 @@ class MaterialsSliverList extends StatelessWidget {
     );
   }
 
+  /// Navigates to the appropriate viewer (PDF/Video) based on file type.
   void _handleItemTap(BuildContext context, MaterialItemModel file) async {
     MaterialsNavigationHandler.openMaterialItem(context, file);
   }

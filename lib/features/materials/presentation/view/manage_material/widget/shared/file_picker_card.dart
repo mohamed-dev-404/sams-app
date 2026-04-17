@@ -6,6 +6,8 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/materials/data/model/material_item_model.dart';
 
+/// A specialized card for picking and displaying files.
+/// It handles both newly picked local files ([XFile]) and existing remote files ([MaterialItemModel]).
 class FilePickerCard extends StatelessWidget {
   final String iconPath;
   final String title;
@@ -30,7 +32,7 @@ class FilePickerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //* Animates the card's expansion/contraction when files are modified
+    //* Smoothly animates the card's height as the file list grows or shrinks.
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
@@ -62,12 +64,13 @@ class FilePickerCard extends StatelessWidget {
                   color: AppColors.primaryDarkHover,
                 ),
               ),
+              //? Only render the file list section if there is content to show.
               if (existingFiles.isNotEmpty || pickedFiles.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
                   child: Column(
                     children: [
-                      //* Rendering Remote Assets
+                      //* Rendering Remote Assets (files already on the server).
                       ...existingFiles.map(
                         (item) => _FileTile(
                           name: item.originalFileName ?? 'Untitled',
@@ -75,7 +78,7 @@ class FilePickerCard extends StatelessWidget {
                           isExisting: true,
                         ),
                       ),
-                      //* Rendering Local Picked Files
+                      //* Rendering Local Picked Files (files selected but not yet uploaded).
                       ...pickedFiles.map(
                         (file) => _FileTile(
                           name: file.name,
@@ -94,7 +97,8 @@ class FilePickerCard extends StatelessWidget {
   }
 }
 
-//* Unified and Animated Tile for all file states
+/// A private internal tile that represents a single file entry.
+/// Features a built-in entrance animation (Fade + Slide).
 class _FileTile extends StatelessWidget {
   final String name;
   final VoidCallback onRemove;
@@ -108,7 +112,7 @@ class _FileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //* Integrated Entrance Animation: Slide-up + Fade-in
+    //* Entrance Animation: Slides up from 15px and fades in simultaneously.
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 400),
@@ -125,13 +129,14 @@ class _FileTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          //* Visual distinction: lighter/transparent background for existing cloud files
+          //* Visual distinction: Existing files get a subtle blue-grey tint.
           color: isExisting ? Colors.blueGrey.withAlpha(15) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.secondary.withAlpha(30)),
         ),
         child: ListTile(
           dense: true,
+          //? Helper extensions (fileIcon, fileColor) determine visuals based on extension.
           leading: Icon(name.fileIcon, color: name.fileColor),
           title: Text(
             name,

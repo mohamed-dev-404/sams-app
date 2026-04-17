@@ -6,9 +6,12 @@ import 'package:sams_app/features/materials/presentation/logic/material_navigati
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/empty_items.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_item_card.dart';
 
+/// A grid-based layout for Web/Desktop that displays course materials.
+/// It categorizes items into "Videos" and "Files" and arranges them in a responsive grid.
 class MaterialContentGrid extends StatelessWidget {
   final List<MaterialItemModel> materials;
   final String materialId;
+
   const MaterialContentGrid({
     super.key,
     required this.materials,
@@ -17,23 +20,28 @@ class MaterialContentGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //* Handle state where no materials are available.
     if (materials.isEmpty) {
       return const Center(
         child: EmptyItems(),
       );
     }
 
+    //? Data Segregation: Splitting materials based on their media type.
     final videoItems = materials.where((item) => item.isVideoItem).toList();
     final fileItems = materials.where((item) => !item.isVideoItem).toList();
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       children: [
+        //* Rendering Video Section if items exist.
         if (videoItems.isNotEmpty) ...[
           _buildSectionTitle('Videos'),
           _buildGrid(context, videoItems),
           const SizedBox(height: 24),
         ],
+
+        //* Rendering Files Section if items exist.
         if (fileItems.isNotEmpty) ...[
           _buildSectionTitle('Files & Documents'),
           _buildGrid(context, fileItems),
@@ -42,6 +50,7 @@ class MaterialContentGrid extends StatelessWidget {
     );
   }
 
+  /// Builds a section header styled for the Web interface.
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0, left: 4),
@@ -54,15 +63,19 @@ class MaterialContentGrid extends StatelessWidget {
     );
   }
 
+  /// Creates a responsive grid using [GridView.builder].
+  /// Uses [SliverGridDelegateWithMaxCrossAxisExtent] to handle multi-column layouts automatically.
   Widget _buildGrid(BuildContext context, List<MaterialItemModel> items) {
     return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true, //* Required as it is nested inside a ListView.
+      physics:
+          const NeverScrollableScrollPhysics(), //? The parent ListView handles scrolling.
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 400,
+        maxCrossAxisExtent:
+            400, //* Each card will try to take up to 400px before wrapping.
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        mainAxisExtent: 85,
+        mainAxisExtent: 85, //* Fixed height for each material card in the grid.
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -82,6 +95,7 @@ class MaterialContentGrid extends StatelessWidget {
     );
   }
 
+  /// Triggers a confirmation dialog before deleting an item.
   void _confirmAndDelete(BuildContext context, MaterialItemModel item) {
     MaterialsNavigationHandler.showDeleteSingleItemDialog(
       context,
@@ -91,6 +105,7 @@ class MaterialContentGrid extends StatelessWidget {
     );
   }
 
+  /// Handles opening the material (Video Player or PDF Viewer).
   void _handleItemTap(BuildContext context, MaterialItemModel file) async {
     MaterialsNavigationHandler.openMaterialItem(context, file);
   }

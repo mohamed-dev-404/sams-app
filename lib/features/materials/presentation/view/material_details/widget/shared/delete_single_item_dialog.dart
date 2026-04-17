@@ -10,6 +10,8 @@ import 'package:sams_app/core/widgets/base/custom_app_button.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 
+/// A confirmation dialog for deleting a specific material item (File/Video).
+/// It provides a destructive action warning and handles the asynchronous deletion state.
 class DeleteSingleItemDialog extends StatelessWidget {
   const DeleteSingleItemDialog({
     super.key,
@@ -19,7 +21,8 @@ class DeleteSingleItemDialog extends StatelessWidget {
   });
 
   final String materialId;
-  final String itemKey;
+  final String
+  itemKey; // Unique identifier for the file in storage (e.g., S3 Key).
   final String fileName;
 
   @override
@@ -29,6 +32,7 @@ class DeleteSingleItemDialog extends StatelessWidget {
 
     return AlertDialog(
       backgroundColor: AppColors.whiteLight,
+      //* Adaptive Sizing: Adjusts horizontal padding based on the platform (Web vs Mobile).
       insetPadding: EdgeInsets.symmetric(
         horizontal: isMobile ? 20 : screenWidth * 0.25,
         vertical: 20,
@@ -36,9 +40,7 @@ class DeleteSingleItemDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Delete File?',
-      ),
+      title: const Text('Delete File?'),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
         color: AppColors.primaryDarkHover,
       ),
@@ -68,14 +70,17 @@ class DeleteSingleItemDialog extends StatelessWidget {
         right: 16,
       ),
       actions: [
+        //* Reactive Logic: Using BlocConsumer to listen for failures and build the UI.
         BlocConsumer<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
+            //? Fallback: If deletion fails, close dialog and show error.
             if (state is DeleteMaterialItemFailure) {
               context.pop();
               AppSnackBar.error(context, state.errMessage);
             }
           },
           builder: (context, state) {
+            //* Loading State: Show an indicator and disable further actions during the API call.
             if (state is DeleteMaterialItemLoading) {
               return const Center(
                 child: Padding(
@@ -84,8 +89,10 @@ class DeleteSingleItemDialog extends StatelessWidget {
                 ),
               );
             }
+
             return Row(
               children: [
+                //* Neutral Action: Dismiss without changes.
                 Expanded(
                   child: CustomAppButton(
                     label: 'Cancel',
@@ -96,16 +103,18 @@ class DeleteSingleItemDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
+
+                //* Destructive Action: Proceed with deletion.
                 Expanded(
                   child: CustomAppButton(
                     label: 'Delete',
                     height: 40,
                     textColor: AppColors.whiteLight,
-                    backgroundColor: StatusColors.red,
+                    backgroundColor:
+                        StatusColors.red, // Semantic red for critical actions.
                     onPressed: () {
                       context.read<MaterialCrudCubit>().deleteSingleItem(
-                        materialId:
-                            materialId,
+                        materialId: materialId,
                         itemKey: itemKey,
                       );
                     },

@@ -4,17 +4,20 @@ import 'package:lottie/lottie.dart';
 import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 
-//** Uploading Overlay Widget
+/// A modal overlay used specifically for the initial file upload phase.
+/// Features a blurred backdrop and a progress indicator to block user interaction.
 class UploadingOverlay extends StatelessWidget {
   const UploadingOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //* Positioned.fill ensures the overlay covers the entire parent Stack (usually the whole screen).
     return Positioned.fill(
       child: BackdropFilter(
+        //* Frosted glass effect: Blurs the background content to emphasize the modal.
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
-          color: Colors.black.withAlpha(77),
+          color: Colors.black.withAlpha(77), //? Dimmed background
           child: Center(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -33,6 +36,7 @@ class UploadingOverlay extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  //* Visual feedback: Lottie animation representing upload activity.
                   Lottie.asset(
                     AppLottie.uploadFiles,
                     width: 180,
@@ -49,6 +53,7 @@ class UploadingOverlay extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  //* Indeterminate progress bar since we are waiting for a backend response.
                   const LinearProgressIndicator(
                     color: AppColors.secondary,
                     backgroundColor: Colors.black12,

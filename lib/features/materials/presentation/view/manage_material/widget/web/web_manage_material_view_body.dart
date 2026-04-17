@@ -14,6 +14,8 @@ import 'package:sams_app/features/materials/presentation/view/manage_material/wi
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 
+/// The Web implementation for managing materials (Create/Edit).
+/// Adapts the form layout for larger screens while sharing logic with mobile via [ManageMaterialMixin].
 class WebManageMaterialViewBody extends StatefulWidget {
   const WebManageMaterialViewBody({
     super.key,
@@ -34,13 +36,15 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
   @override
   void initState() {
     super.initState();
-    //* Critical: Initialize controllers with data if we are in Edit Mode
+    //* Critical: Initialize text controllers and internal state.
+    //? If in Edit Mode, this populates fields with existing material data.
     final initialMaterial = context.read<MaterialCrudCubit>().initialMaterial;
     initializeControllers(initialMaterial);
   }
 
   @override
   void dispose() {
+    //? Mixin cleanup to avoid memory leaks from TextControllers.
     disposeManageMaterial();
     super.dispose();
   }
@@ -58,17 +62,17 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
           AppSnackBar.success(context, state.message);
           context.pop(state.material);
         } else if (state is CreateMaterialSuccess) {
-          //* Return the created material and pop the view
+          //* Return the newly created model so the parent list can update locally.
           AppSnackBar.success(context, state.message);
           context.pop(state.material);
-        } else if (state is CreateMaterialFailure) {
-          AppSnackBar.error(context, state.errMessage);
-        } else if (state is UpdateMaterialFailure) {
-          AppSnackBar.error(context, state.errMessage);
+        } else if (state is CreateMaterialFailure ||
+            state is UpdateMaterialFailure) {
+          //! Explicitly cast to dynamic to access errMessage safely if types differ.
+          AppSnackBar.error(context, (state as dynamic).errMessage);
         }
       },
       builder: (context, state) {
-        //* Decouple various loading states for better UI control
+        //* Decouple various loading states to manage UI blocking and overlays.
         final isCreateLoading = state is CreateMaterialLoading;
         final isCreateUploading = isCreateLoading && state.isUploadingFiles;
         final isUpdateLoading = state is UpdateMaterialLoading;
@@ -81,6 +85,8 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
 
         return Stack(
           children: [
+            //* Interactive UI Layer.
+            //! Disable all clicks and dim the screen during active uploads/updates.
             IgnorePointer(
               ignoring: isCreateUploading || isUpdateLoading,
               child: Opacity(
@@ -100,7 +106,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
                             const SizedBox(height: 40),
                             _buildFormContent(),
                             const SizedBox(height: 50),
-                            //* Prevent double submission by hiding the button during any loading state
+                            //* Submission logic: Only show the button if no background task is running.
                             if (!anyLoading) _buildSubmitButton(anyLoading),
                           ],
                         ),
@@ -111,7 +117,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
               ),
             ),
 
-            //* Web Overlays behave exactly like Mobile for consistency
+            //* Feedback Overlays: Appear globally within the Stack during processing.
             if (isCreateUploading) const UploadingOverlay(),
             if (isUpdateLoading) UpdateProgressOverlay(message: updateMsg),
           ],
@@ -120,6 +126,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
     );
   }
 
+  /// Renders the page title based on the current mode (Add vs Edit).
   Widget _buildHeaderTitle() {
     return Text(
       widget.isEditMode ? 'Edit Material' : 'Add Material',
@@ -131,13 +138,14 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
     );
   }
 
+  /// Organizes the input form and material file section in a side-by-side [Row].
   Widget _buildFormContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Form(
-            key: formKey,
+            key: formKey, //? Mixed in from ManageMaterialMixin.
             child: CustomBasicInformationSection(
               sectionTitle: 'Basic Information',
               fields: [
@@ -159,7 +167,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
         Expanded(
           child: CourseMaterialSection(
             key: materialSectionKey,
-            //* Pass existing files for display when in edit mode
+            //* Provides existing items to the file picker widget for editing.
             initialItems: context
                 .read<MaterialCrudCubit>()
                 .initialMaterial
@@ -170,6 +178,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
     );
   }
 
+  /// The main action button that triggers form validation and API calls.
   Widget _buildSubmitButton(bool isLoading) {
     return CustomAppButton(
       width: 220,
@@ -178,6 +187,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
       label: widget.isEditMode ? 'Edit Material' : 'Add Material',
       onPressed: isLoading
           ? null
+          //* Triggers centralized logic in the Mixin to handle file uploads and data mapping.
           : () => onManageMaterialPressed(
               context: context,
               courseId: widget.courseId,

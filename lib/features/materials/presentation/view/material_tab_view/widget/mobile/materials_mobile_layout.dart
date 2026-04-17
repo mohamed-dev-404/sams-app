@@ -15,6 +15,8 @@ import 'package:sams_app/features/materials/presentation/logic/material_refresh_
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
+/// Mobile-specific layout for displaying a course's materials.
+/// It integrates Bloc for state management and supports role-based actions.
 class MaterialsMobileLayout extends StatefulWidget {
   const MaterialsMobileLayout({super.key, required this.courseId});
 
@@ -28,18 +30,18 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
   @override
   void initState() {
     super.initState();
-    //* Subscribe to global refresh triggers for real-time list updates
+    //* Observer Pattern: Listening to global refresh events (e.g., after adding/deleting a material).
     MaterialRefreshTrigger.shouldRefresh.addListener(_fetch);
   }
 
   @override
   void dispose() {
-    //* Clean up listener to prevent memory leaks
+    //* Memory Management: Detach listener to prevent context leaks.
     MaterialRefreshTrigger.shouldRefresh.removeListener(_fetch);
     super.dispose();
   }
 
-  //* Data fetching logic with safety check
+  /// Dispatches the fetch event to the Cubit.
   void _fetch() {
     if (mounted) {
       context.read<MaterialFetchCubit>().fetchMaterials(
@@ -51,7 +53,7 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
-      //* Optimized rebuilds: prevent flickering during background detail fetches
+      //* Performance Optimization: Rebuild only on core state transitions.
       buildWhen: (previous, current) =>
           current is MaterialFetchSuccess ||
           current is MaterialFetchLoading ||
@@ -62,7 +64,7 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              //* 1. Instructor Section: Permission-based Add Card
+              //* 1. Administrative UI: Displayed only for instructors to manage content.
               if (CurrentRole.role == UserRole.instructor)
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(vertical: 7),
@@ -75,21 +77,21 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
                   ),
                 ),
 
-              //* 2. Loading Visuals
+              //* 2. Loading State: Uses a custom animated indicator for brand consistency.
               if (state is MaterialFetchLoading)
                 const SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(child: AppAnimatedLoadingIndicator()),
                 ),
 
-              //* 3. Error Handling View
+              //* 3. Failure State: Basic error reporting.
               if (state is MaterialFetchFailure)
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(child: Text(state.errMessage)),
                 ),
 
-              //* 4. Dynamic Materials List
+              //* 4. Success State: Renders a list of interactive cards.
               if (state is MaterialFetchSuccess)
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -134,15 +136,13 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     );
   }
 
-  //* navigate to manage materials
-  void _navigateToAddMaterial(BuildContext context) async {
+  void _navigateToAddMaterial(BuildContext context) {
     MaterialsNavigationHandler.navigateToManageMaterial(
       context,
       courseId: widget.courseId,
     );
   }
 
-  //* navigate to material details
   void _navigateToDetails(MaterialModel material) {
     MaterialsNavigationHandler.navigateToDetails(
       context,
@@ -151,7 +151,7 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     );
   }
 
-  //* Instructor Actions: Relative position calculation for context menu
+  /// Calculates and displays a context menu relative to the tapped card.
   void _showPopupMenu(BuildContext context, MaterialModel material) async {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
@@ -192,7 +192,6 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
     }
   }
 
-  //! Instructor Actions: Delete Material
   void _confirmDelete(MaterialModel material) {
     MaterialsNavigationHandler.showDeleteDialog(context, material: material);
   }

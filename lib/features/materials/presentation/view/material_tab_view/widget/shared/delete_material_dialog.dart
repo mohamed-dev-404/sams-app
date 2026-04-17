@@ -10,6 +10,8 @@ import 'package:sams_app/core/widgets/base/custom_app_button.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 
+/// A confirmation dialog for deleting course materials.
+/// Handles the deletion logic via [MaterialCrudCubit] and provides visual feedback.
 class DeleteMaterialDialog extends StatelessWidget {
   const DeleteMaterialDialog({
     super.key,
@@ -22,6 +24,7 @@ class DeleteMaterialDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //? Responsive Logic: Adjusting inset padding based on platform/screen size.
     final bool isMobile = SizeConfig.isMobile(context);
     final double screenWidth = SizeConfig.screenWidth(context);
 
@@ -41,9 +44,7 @@ class DeleteMaterialDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: Text(
-        'Delete $materialName?',
-      ),
+      title: Text('Delete $materialName?'),
       titleTextStyle: AppStyles.mobileTitleMediumSb.copyWith(
         color: AppColors.primaryDarkHover,
       ),
@@ -55,22 +56,26 @@ class DeleteMaterialDialog extends StatelessWidget {
         ),
       ),
       actions: [
+        //* BlocConsumer: Listens for success/failure to trigger UI notifications
+        //* and builds the UI based on the current CRUD operation state.
         BlocConsumer<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
             if (state is DeleteMaterialSuccess) {
               AppSnackBar.success(context, state.message);
-              context.pop(context); // Close dialog on success
+              context.pop(); // Close dialog on success
             } else if (state is DeleteMaterialFailure) {
               AppSnackBar.error(context, state.errMessage);
-              context.pop(context); // Close dialog on failure
+              context.pop(); // Close dialog on failure
             }
           },
           builder: (context, state) {
+            //* Loading State: Show indicator while the backend process runs.
             if (state is DeleteMaterialLoading) {
               return const Center(
                 child: AppAnimatedLoadingIndicator(),
               );
             }
+
             return Row(
               children: [
                 Expanded(
@@ -88,9 +93,10 @@ class DeleteMaterialDialog extends StatelessWidget {
                     label: 'Delete',
                     height: 40,
                     textColor: AppColors.whiteLight,
-                    backgroundColor: StatusColors.red,
+                    backgroundColor:
+                        StatusColors.red, // Indicating a destructive action.
                     onPressed: () {
-                      // Trigger the delete operation in the Cubit
+                      //* Dispatch Delete Action
                       context.read<MaterialCrudCubit>().deleteMaterial(
                         materialId: materialId,
                       );

@@ -13,6 +13,8 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
+/// The Web-specific implementation of the Material Details body.
+/// It uses a dual-pane layout: a fixed-width sidebar for metadata and a flexible grid for content.
 class WebMaterialDetailsViewBody extends StatelessWidget {
   const WebMaterialDetailsViewBody({super.key});
 
@@ -20,6 +22,8 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        //* Listener 1: CRUD Success -> Re-fetch data.
+        //* If an item is deleted, we automatically trigger a refresh from the server.
         BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
             if (state is DeleteMaterialItemSuccess) {
@@ -34,6 +38,8 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
             }
           },
         ),
+        //* Listener 2: Fetch Success after Deletion -> UI Feedback.
+        //* Closes the dialog and shows success notification once the UI is synced with the server.
         BlocListener<MaterialFetchCubit, MaterialFetchState>(
           listener: (context, state) {
             final crudState = context.read<MaterialCrudCubit>().state;
@@ -41,7 +47,7 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
             if (state is MaterialFetchDetailsSuccess &&
                 crudState is DeleteMaterialItemSuccess) {
               if (Navigator.canPop(context)) {
-                Navigator.pop(context);
+                Navigator.pop(context); // Close deletion confirmation dialog.
                 AppSnackBar.success(
                   context,
                   'Item deleted and updated successfully!',
@@ -52,7 +58,7 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
         ),
       ],
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
-        // Only rebuild when the state is related to Material Details
+        //_ Optimization: Rebuild only for relevant Material Details states.
         buildWhen: (previous, current) => current is MaterialDetailsState,
         builder: (context, state) {
           if (state is MaterialFetchLoading) {
@@ -68,31 +74,32 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
 
             return Column(
               children: [
+                //* Shared Web Header (Breadcrumbs, Search, Profile).
                 const WebHomeHeader(),
+
                 Expanded(
                   child: TabBodyView(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: Row(
-                        // Force SideCard and Content Column to have the same height
+                        //? Ensures both panes align perfectly at the top and bottom.
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // 1. Sidebar info (Title, Description, Edit Button)
+                          //* 1. Metadata Pane: Sidebar info (Title, Description, Edit Button).
                           ConstrainedBox(
                             constraints: BoxConstraints(
                               minWidth: 230,
                               maxWidth:
                                   (MediaQuery.sizeOf(context).width * 0.28)
-                                      .clamp(
-                                        230,
-                                        double.infinity,
-                                      ),
+                                      .clamp(230, 450),
                             ),
                             child: const MaterialDetailsSideCard(),
                           ),
 
-                          const SizedBox(width: 32), // Clear spacing for Web
-                          // 2. Main content (Items Grid)
+                          const SizedBox(
+                            width: 32,
+                          ), // Layout spacing for Web aesthetics.
+                          //* 2. Content Pane: Scrollable grid of files and videos.
                           Expanded(
                             flex: 5,
                             child: Column(
@@ -108,14 +115,13 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
                                     style: AppStyles.webTitleMediumSb.copyWith(
                                       color: AppColors.primaryDarkHover,
                                       fontSize:
-                                          (MediaQuery.sizeOf(
-                                                    context,
-                                                  ).width *
+                                          (MediaQuery.sizeOf(context).width *
                                                   0.022)
                                               .clamp(24, 32),
                                     ),
                                   ),
                                 ),
+                                //_ Flexible grid that fills the remaining space.
                                 Expanded(
                                   child: MaterialContentGrid(
                                     materials: material.materialItems,

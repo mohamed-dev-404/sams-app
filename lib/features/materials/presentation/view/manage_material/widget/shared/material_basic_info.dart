@@ -6,6 +6,8 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_text_field.dart';
 import 'package:sams_app/core/widgets/shared/titled_input_field.dart';
 
+/// A reusable UI section that dynamically generates a list of input fields.
+/// It takes a [sectionTitle] and a list of [InputFieldData] to build the form content.
 class MaterialBasicInfoSection extends StatelessWidget {
   const MaterialBasicInfoSection({
     super.key,
@@ -18,6 +20,7 @@ class MaterialBasicInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //* Dynamic Mapping: Converts the data model list into a list of interactive UI tiles.
     return _buildFormSection(
       title: sectionTitle,
       children: fields
@@ -32,7 +35,9 @@ class MaterialBasicInfoSection extends StatelessWidget {
           .toList(),
     );
   }
- Widget _buildFormSection({
+
+  /// Constructs the outer container and header for the form section.
+  Widget _buildFormSection({
     required String title,
     required List<Widget> children,
   }) {
@@ -47,7 +52,7 @@ class MaterialBasicInfoSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //* Section Title (e.g., Basic Info, Grade Distribution)
+            //* Section Header: Displays the main category title.
             Text(
               title,
               style: AppStyles.mobileBodyLargeSb.copyWith(
@@ -55,12 +60,15 @@ class MaterialBasicInfoSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            //? Spread operator to inject the mapped list of input fields.
             ...children,
           ],
         ),
       ),
     );
   }
+
+  /// Builds a single labeled input field with consistent styling.
   Widget _buildInputFieldTile({
     required String label,
     required String hint,
@@ -78,7 +86,8 @@ class MaterialBasicInfoSection extends StatelessWidget {
         child: AppTextField(
           controller: controller,
           hintText: hint,
-          textFieldType: textFieldType,
+          textFieldType:
+              textFieldType, //* Determines validation and keyboard logic.
         ),
       ),
     );

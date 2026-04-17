@@ -26,7 +26,8 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        //* Handles the logical trigger to refresh data after a successful item deletion.
+        //* Listener 1: Syncing Deletion with Fetching.
+        //* When an item is deleted successfully, we trigger a refresh of the details.
         BlocListener<MaterialCrudCubit, MaterialCrudState>(
           listener: (context, state) {
             if (state is DeleteMaterialItemSuccess) {
@@ -41,15 +42,16 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
             }
           },
         ),
-        //* Manages UI feedback (SnackBars/Navigation) once the refreshed data is fetched.
+        //* Listener 2: Global UI Feedback.
+        //* Once the data is refreshed after a deletion, we close the dialog and notify the user.
         BlocListener<MaterialFetchCubit, MaterialFetchState>(
           listener: (context, state) {
             final crudState = context.read<MaterialCrudCubit>().state;
-            //? Check if both fetch and delete were successful to notify the user.
+            //? Logical check to ensure SnackBar only shows after a successful CRUD-triggered refresh.
             if (state is MaterialFetchDetailsSuccess &&
                 crudState is DeleteMaterialItemSuccess) {
               if (Navigator.canPop(context)) {
-                Navigator.pop(context);
+                Navigator.pop(context); // Closes deletion dialog
                 AppSnackBar.success(
                   context,
                   'Item deleted and updated successfully!',
@@ -60,7 +62,7 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
         ),
       ],
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
-        //_ Limits rebuilds to relevant MaterialDetailsState changes.
+        //_ Optimized rebuilds: Only listen to states relevant to the details view.
         buildWhen: (previous, current) => current is MaterialDetailsState,
         builder: (context, state) {
           if (state is MaterialFetchLoading) {
@@ -75,7 +77,9 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
             final material = state.material;
 
             return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               slivers: [
+                //* Material Info Header Section
                 SliverToBoxAdapter(
                   child: Container(
                     margin: const EdgeInsets.symmetric(
@@ -106,7 +110,7 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            //? Conditional UI: Only show edit button if the user is an instructor.
+                            //? Role-Based Access: Only instructors can edit material metadata.
                             if (CurrentRole.role == UserRole.instructor)
                               Padding(
                                 padding: const EdgeInsets.only(left: 10),
@@ -131,6 +135,7 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                     ),
                   ),
                 ),
+                //* Section Divider Title
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -145,7 +150,7 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
                     ),
                   ),
                 ),
-                //_ Specialized sliver for rendering the list of files/videos.
+                //_ Specialized sliver for rendering the list of files (Videos/Docs).
                 MaterialsSliverList(
                   materials: material.materialItems,
                   materialId: material.id,
@@ -160,15 +165,11 @@ class MobileMaterialDetailsViewBody extends StatelessWidget {
     );
   }
 
+  /// Extracts navigation parameters and redirects to the edit screen.
   void _onEditPressed(BuildContext context, MaterialModel material) async {
-    //* Retrieve the courseId from the GoRouter's path parameters.
-    final courseId =
-        GoRouterState.of(
-          context,
-        ).pathParameters['courseId'] ??
-        '';
-    //* Wait for updated data from ManageMaterial screen.
-    //! Ensure context is still valid before updating the Cubit state.
+    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
+
+    //* Navigation Logic: Delegated to the handler for clean architecture.
     MaterialsNavigationHandler.navigateToEditMaterial(
       context,
       courseId: courseId,

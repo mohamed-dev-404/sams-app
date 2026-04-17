@@ -4,8 +4,8 @@ import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
-//* Overlay showing Lottie animations based on the current operation
-
+/// A full-screen blocking overlay used to communicate progress during background operations.
+/// It dynamically changes its visual feedback (Lottie animation) based on the [message] provided.
 class UpdateProgressOverlay extends StatelessWidget {
   final String message;
 
@@ -15,17 +15,19 @@ class UpdateProgressOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     String lottieAsset;
 
-    //? Check message content to decide which animation to show
+    //* Logic: Match the Lottie animation to the current CRUD operation.
+    //? We use string matching on the message to avoid passing extra enum flags.
     if (message.contains('Deleting')) {
       lottieAsset = AppLottie.delete;
     } else if (message.contains('Uploading')) {
       lottieAsset = AppLottie.uploadFiles;
     } else {
-      //! Default fallback to edit animation
+      //! Fallback animation for general 'Editing' or 'Saving' states.
       lottieAsset = AppLottie.edit;
     }
 
     return Container(
+      //* Backdrop: High-opacity dark overlay to focus user attention and block interactions.
       color: AppColors.primaryDarker.withAlpha(230),
       child: Center(
         child: Column(
@@ -45,6 +47,7 @@ class UpdateProgressOverlay extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            //* Critical Warning: Advising the user against interrupting the process.
             const Text(
               'Please stay on this screen until completion.',
               textAlign: TextAlign.center,

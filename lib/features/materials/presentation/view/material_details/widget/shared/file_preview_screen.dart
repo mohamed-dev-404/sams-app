@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// A robust preview screen that renders documents using an embedded Webview.
+/// Supports both in-app viewing via Google Docs Viewer and external handling.
 class FilePreviewScreen extends StatefulWidget {
   final String url;
   final String fileName;
@@ -27,7 +28,7 @@ class _FilePreviewScreenState extends State<FilePreviewScreen> {
   void initState() {
     super.initState();
 
-    // Using Google Docs Viewer for In-App Preview
+    //* Integration: Wrapping the file URL with Google GView to handle office/pdf docs in-app.
     final String googleDocUrl =
         'https://docs.google.com/gview?embedded=true&url=${widget.url}';
 
@@ -36,6 +37,7 @@ class _FilePreviewScreenState extends State<FilePreviewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (String url) {
+            //_ Update UI state to hide the loader once the document is rendered.
             if (mounted) setState(() => _isLoading = false);
           },
         ),
@@ -43,7 +45,7 @@ class _FilePreviewScreenState extends State<FilePreviewScreen> {
       ..loadRequest(Uri.parse(googleDocUrl));
   }
 
-  // Method to launch external applications or browser
+  /// Utility to handle external interactions like downloading or opening in specialized apps.
   Future<void> _launchExternal(LaunchMode mode) async {
     final Uri uri = Uri.parse(widget.url);
     if (await canLaunchUrl(uri)) {
@@ -68,11 +70,13 @@ class _FilePreviewScreenState extends State<FilePreviewScreen> {
         backgroundColor: AppColors.primary,
         leading: const BackButton(color: Colors.white),
         actions: [
+          //* Action: Open in Browser/External App.
           IconButton(
             tooltip: 'Open in external app',
             icon: const Icon(Icons.open_in_new_rounded, color: Colors.white),
             onPressed: () => _launchExternal(LaunchMode.externalApplication),
           ),
+          //* Action: Trigger platform-level download.
           IconButton(
             tooltip: 'Download file',
             icon: const Icon(
@@ -85,8 +89,14 @@ class _FilePreviewScreenState extends State<FilePreviewScreen> {
       ),
       body: Stack(
         children: [
+          //* Main Viewer Layer.
           WebViewWidget(controller: _controller),
-          if (_isLoading) const Center(child: CircularProgressIndicator()),
+
+          //* Loading Layer: Overlayed until the WebView signals completion.
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            ),
         ],
       ),
     );

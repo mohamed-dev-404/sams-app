@@ -13,6 +13,8 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
+/// A specialized dialog for adding new files/videos to an existing material topic.
+/// It coordinates the upload process and subsequent data refresh to ensure UI consistency.
 class AddNewMaterialItemsDialog extends StatefulWidget {
   final String courseId;
   final String materialId;
@@ -29,30 +31,32 @@ class AddNewMaterialItemsDialog extends StatefulWidget {
 }
 
 class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
+  //* Accessing the internal state of the material section to retrieve picked files.
   final GlobalKey<CourseMaterialSectionState> _sectionKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final bool isMobile = SizeConfig.isMobile(context);
 
-    var crudBlocListener = BlocListener<MaterialCrudCubit, MaterialCrudState>(
-      listener: (context, state) {
-        if (state is AddMaterialItemsSuccess) {
-          // Start fetching new data immediately after upload success
-          context.read<MaterialFetchCubit>().fetchMaterialDetails(
-            materialId: widget.materialId,
-          );
-        } else if (state is AddMaterialItemsFailure) {
-          AppSnackBar.error(context, state.errMessage);
-        }
-      },
-    );
     return MultiBlocListener(
       listeners: [
-        crudBlocListener,
+        //* Listener 1: Material CRUD Operations.
+        //* On successful upload, immediately trigger a refresh for the specific material details.
+        BlocListener<MaterialCrudCubit, MaterialCrudState>(
+          listener: (context, state) {
+            if (state is AddMaterialItemsSuccess) {
+              context.read<MaterialFetchCubit>().fetchMaterialDetails(
+                materialId: widget.materialId,
+              );
+            } else if (state is AddMaterialItemsFailure) {
+              AppSnackBar.error(context, state.errMessage);
+            }
+          },
+        ),
+        //* Listener 2: Material Fetching Operations.
+        //* The dialog is dismissed ONLY after the new data has been successfully fetched from the server.
         BlocListener<MaterialFetchCubit, MaterialFetchState>(
           listener: (context, state) {
-            // Only pop the dialog when data is successfully refreshed
             if (state is MaterialFetchDetailsSuccess) {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
@@ -86,11 +90,13 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
               child: SingleChildScrollView(
                 child: CourseMaterialSection(
                   key: _sectionKey,
-                  initialItems: const [],
+                  initialItems:
+                      const [], // Starting with an empty selection for new items.
                 ),
               ),
             ),
             actions: [
+              //* Reactive Actions: Hide buttons during loading to prevent duplicate requests.
               BlocBuilder<MaterialCrudCubit, MaterialCrudState>(
                 builder: (context, crudState) {
                   return BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
@@ -120,9 +126,11 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
                               textColor: AppColors.whiteLight,
                               backgroundColor: AppColors.primary,
                               onPressed: () {
+                                //? Extracting the picked files via the GlobalKey before triggering the Cubit.
                                 final allFiles =
                                     _sectionKey.currentState?.allPickedFiles ??
                                     [];
+
                                 if (allFiles.isNotEmpty) {
                                   context
                                       .read<MaterialCrudCubit>()
@@ -148,7 +156,8 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
               ),
             ],
           ),
-          // Overlay stays visible during both Uploading and Fetching
+
+          //* Blocking UI: Shows the uploading overlay during both transmission and post-upload fetching.
           BlocBuilder<MaterialCrudCubit, MaterialCrudState>(
             builder: (context, crudState) {
               return BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
