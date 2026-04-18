@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/materials/data/model/material_item_model.dart';
-import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/logic/material_details_handler.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/empty_items.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_item_card.dart';
 
@@ -27,9 +27,12 @@ class MaterialContentGrid extends StatelessWidget {
       );
     }
 
-    //? Data Segregation: Splitting materials based on their media type.
-    final videoItems = materials.where((item) => item.isVideoItem).toList();
-    final fileItems = materials.where((item) => !item.isVideoItem).toList();
+    //? Data Segregation: Splitting materials based on their media type via Handler.
+    final categorized = MaterialDetailsHandler.getCategorizedMaterials(
+      materials,
+    );
+    final videoItems = categorized['videos']!;
+    final fileItems = categorized['files']!;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -67,15 +70,14 @@ class MaterialContentGrid extends StatelessWidget {
   /// Uses [SliverGridDelegateWithMaxCrossAxisExtent] to handle multi-column layouts automatically.
   Widget _buildGrid(BuildContext context, List<MaterialItemModel> items) {
     return GridView.builder(
-      shrinkWrap: true, //* Required as it is nested inside a ListView.
+      shrinkWrap: true,
       physics:
           const NeverScrollableScrollPhysics(), //? The parent ListView handles scrolling.
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent:
-            400, //* Each card will try to take up to 400px before wrapping.
+        maxCrossAxisExtent: 400,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        mainAxisExtent: 85, //* Fixed height for each material card in the grid.
+        mainAxisExtent: 85,
       ),
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -88,25 +90,14 @@ class MaterialContentGrid extends StatelessWidget {
           materialType: item.isVideoItem
               ? CourseMaterialType.video
               : CourseMaterialType.pdf,
-          onTap: () => _handleItemTap(context, item),
-          onDelete: () => _confirmAndDelete(context, item),
+          onTap: () => MaterialDetailsHandler.onItemTap(context, item),
+          onDelete: () => MaterialDetailsHandler.onDeleteItem(
+            context,
+            materialId: materialId,
+            item: item,
+          ),
         );
       },
     );
-  }
-
-  /// Triggers a confirmation dialog before deleting an item.
-  void _confirmAndDelete(BuildContext context, MaterialItemModel item) {
-    MaterialsNavigationHandler.showDeleteSingleItemDialog(
-      context,
-      materialId: materialId,
-      itemKey: item.key ?? '',
-      fileName: item.originalFileName ?? 'Unknown File',
-    );
-  }
-
-  /// Handles opening the material (Video Player or PDF Viewer).
-  void _handleItemTap(BuildContext context, MaterialItemModel file) async {
-    MaterialsNavigationHandler.openMaterialItem(context, file);
   }
 }
