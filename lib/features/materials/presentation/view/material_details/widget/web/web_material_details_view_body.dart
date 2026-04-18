@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sams_app/core/helper/app_snack_bar.dart';
-import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_header.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_crud_listener.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_content_grid.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_details_side_card.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -20,98 +18,7 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        //* Listener 1: CRUD Success -> Re-fetch data.
-        //* If an item is deleted, we automatically trigger a refresh from the server.
-        BlocListener<MaterialCrudCubit, MaterialCrudState>(
-          listener: (context, state) {
-            if (state is DeleteMaterialItemSuccess) {
-              //? 1. Update the FetchCubit locally using the response data
-              //? This updates both the Details screen and the background List view.
-              context.read<MaterialFetchCubit>().updateMaterialDetails(
-                state.material,
-              );
-
-              //? 2. UI Feedback: Close dialog and show success
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-
-              AppSnackBar.success(
-                context,
-                'Item deleted and updated successfully!',
-              );
-            } else if (state is DeleteMaterialItemFailure) {
-              //? UI Feedback: Close dialog and show error
-              if (Navigator.canPop(context)) Navigator.pop(context);
-
-              AppSnackBar.error(
-                context,
-                state.errMessage,
-              );
-            }
-          },
-        ),
-        BlocListener<MaterialCrudCubit, MaterialCrudState>(
-          listener: (context, state) {
-            if (state is AddMaterialItemsSuccess) {
-              //? 1. Update the FetchCubit locally using the response data
-              //? This updates both the Details screen and the background List view.
-              context.read<MaterialFetchCubit>().updateMaterialDetails(
-                state.material,
-              );
-
-              //? 2. UI Feedback: Close dialog and show success
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-
-              AppSnackBar.success(
-                context,
-                'Item updated successfully!',
-              );
-            } else if (state is AddMaterialItemsFailure) {
-              //? UI Feedback: Close dialog and show error
-              if (Navigator.canPop(context)) Navigator.pop(context);
-
-              AppSnackBar.error(
-                context,
-                state.errMessage,
-              );
-            }
-          },
-        ),
-        BlocListener<MaterialCrudCubit, MaterialCrudState>(
-          listener: (context, state) {
-            if (state is UpdateMaterialSuccess) {
-              //? 1. Update the FetchCubit locally using the response data
-              //? This updates both the Details screen and the background List view.
-              context.read<MaterialFetchCubit>().updateMaterialDetails(
-                state.material,
-              );
-
-              //? 2. UI Feedback: Close dialog and show success
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-
-              AppSnackBar.success(
-                context,
-                'Item updated successfully!',
-              );
-            } else if (state is UpdateMaterialFailure) {
-              //? UI Feedback: Close dialog and show error
-              if (Navigator.canPop(context)) Navigator.pop(context);
-
-              AppSnackBar.error(
-                context,
-                state.errMessage,
-              );
-            }
-          },
-        ),
-      ],
+    return MaterialCrudListener(
       child: BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
         //_ Optimization: Rebuild only for relevant Material Details states.
         buildWhen: (previous, current) => current is MaterialDetailsState,

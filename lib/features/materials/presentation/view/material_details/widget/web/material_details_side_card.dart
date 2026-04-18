@@ -6,8 +6,7 @@ import 'package:sams_app/core/utils/assets/app_icons.dart';
 import 'package:sams_app/core/utils/assets/app_images.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
-import 'package:sams_app/features/materials/data/model/material_model.dart';
-import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/logic/material_details_handler.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
 
@@ -72,7 +71,11 @@ class MaterialDetailsSideCard extends StatelessWidget {
                         //* Role Guard: Management actions are restricted to instructors.
                         if (CurrentRole.role == UserRole.instructor)
                           IconButton(
-                            onPressed: () => _showEditDialog(context, material),
+                            onPressed: () =>
+                                MaterialDetailsHandler.onEditMaterial(
+                                  context,
+                                  material,
+                                ),
                             icon: SvgPicture.asset(
                               AppIcons.iconsEditMaterial,
                               width: 24,
@@ -98,10 +101,5 @@ class MaterialDetailsSideCard extends StatelessWidget {
         );
       },
     );
-  }
-
-  //** Opens the dialog to edit the material title and description.
-  void _showEditDialog(BuildContext context, MaterialModel material) async {
-    MaterialsNavigationHandler.showEdieMaterialDialog(context, material: material);
   }
 }
