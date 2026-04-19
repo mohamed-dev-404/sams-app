@@ -10,6 +10,7 @@ import 'package:sams_app/core/widgets/mobile/mobile_main_card.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/empty_items.dart';
 import 'package:sams_app/features/materials/presentation/view/material_tab_view/logic/material_tap_handler.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
@@ -97,55 +98,61 @@ class _MaterialsMobileLayoutState extends State<MaterialsMobileLayout> {
                 ),
 
               if (state is MaterialFetchSuccess)
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final material = state.materials[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 7),
-                        child: Builder(
-                          builder: (cardContext) => MobileMainCard(
-                            cardModel: MainCardModel(
-                              title: material.title,
-                              description: material.description,
-                              image: AppImages.imagesMaterialCard,
-                              actionWidget: isInstructor
-                                  ? SvgPicture.asset(
-                                      AppIcons.iconsMenu,
-                                      width: 22,
-                                      height: 22,
-                                    )
-                                  : null,
-                              onActionTap: () {
-                                //! Distinct logic for Instructor menu vs Student navigation.
-                                if (isInstructor) {
-                                  MaterialTabHandler.showMaterialActionsMenu(
-                                    context: context,
-                                    anchorContext: cardContext,
-                                    material: material,
-                                    courseId: widget.courseId,
-                                  );
-                                } else {
-                                  MaterialTabHandler.handleCardTap(
-                                    context,
-                                    material,
-                                    widget.courseId,
-                                  );
-                                }
-                              },
-                              onTap: () => MaterialTabHandler.handleCardTap(
-                                context,
-                                material,
-                                widget.courseId,
+                   SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final material = state.materials[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          child: Builder(
+                            builder: (cardContext) => MobileMainCard(
+                              cardModel: MainCardModel(
+                                title: material.title,
+                                description: material.description,
+                                image: AppImages.imagesMaterialCard,
+                                actionWidget: isInstructor
+                                    ? SvgPicture.asset(
+                                        AppIcons.iconsMenu,
+                                        width: 22,
+                                        height: 22,
+                                      )
+                                    : null,
+                                onActionTap: () {
+                                  //! Distinct logic for Instructor menu vs Student navigation.
+                                  if (isInstructor) {
+                                    MaterialTabHandler.showMaterialActionsMenu(
+                                      context: context,
+                                      anchorContext: cardContext,
+                                      material: material,
+                                      courseId: widget.courseId,
+                                    );
+                                  } else {
+                                    MaterialTabHandler.handleCardTap(
+                                      context,
+                                      material,
+                                      widget.courseId,
+                                    );
+                                  }
+                                },
+                                onTap: () => MaterialTabHandler.handleCardTap(
+                                  context,
+                                  material,
+                                  widget.courseId,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    childCount: state.materials.length,
+                        );
+                      },
+                      childCount: state.materials.length,
+                    ),
                   ),
-                ),
+                if (state is MaterialFetchSuccess && state.materials.isEmpty)
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: EmptyItems(),
+                    ),
+                  ),
             ],
           ),
         );

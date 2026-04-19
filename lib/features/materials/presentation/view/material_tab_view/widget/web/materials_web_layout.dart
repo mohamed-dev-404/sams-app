@@ -13,6 +13,7 @@ import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
 import 'package:sams_app/core/widgets/web/web_main_card.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_navigation_handler.dart';
 import 'package:sams_app/features/materials/presentation/logic/material_refresh_trigger.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/empty_items.dart';
 import 'package:sams_app/features/materials/presentation/view/material_tab_view/logic/material_tap_handler.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
@@ -134,6 +135,12 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
                   ),
                   gridDelegate: AppGridStyles.tapGridDelegate,
                 ),
+                if (materials.isEmpty)
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: EmptyItems(),
+                    ),
+                  ),
               ],
             );
           }

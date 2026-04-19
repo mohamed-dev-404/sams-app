@@ -14,29 +14,32 @@ class EmptyItems extends StatelessWidget {
     //* Responsiveness: Adjusting asset dimensions based on the device type.
     final isMobile = SizeConfig.isMobile(context);
 
-    return Column(
-      mainAxisAlignment:
-          MainAxisAlignment.center, //? Center content within its parent.
-      children: [
-        //* Visual Feedback: Lottie animation provides a more engaging "Empty State" than static images.
-        Lottie.asset(
-          AppLottie.empty,
-          width: isMobile ? 180 : 220,
-          height: isMobile ? 180 : 220,
-          fit: BoxFit.contain,
-        ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      child: Column(
+        mainAxisAlignment:
+            MainAxisAlignment.center, //? Center content within its parent.
+        children: [
+          //* Visual Feedback: Lottie animation provides a more engaging "Empty State" than static images.
+          Lottie.asset(
+            AppLottie.empty,
+            width: isMobile ? 180 : 220,
+            height: isMobile ? 180 : 220,
+            fit: BoxFit.contain,
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        //* Informative Message: Clear communication with the user about the missing content.
-        Text(
-          'No files attached to this material.',
-          style: (isMobile)
-              ? AppStyles.mobileBodySmallRg
-              : AppStyles.web15Regular,
-          textAlign: TextAlign.center,
-        ),
-      ],
+          //* Informative Message: Clear communication with the user about the missing content.
+          Text(
+            'No files attached to this material.',
+            style: (isMobile)
+                ? AppStyles.mobileBodySmallRg
+                : AppStyles.web15Regular,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
