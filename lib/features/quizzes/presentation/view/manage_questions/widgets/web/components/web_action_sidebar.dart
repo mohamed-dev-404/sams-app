@@ -188,17 +188,21 @@ class WebActionSidebar extends StatelessWidget {
     final badgeColor = ManageQuestionsUiUtils.getBadgeColor(args.mode);
     final badgeLabel = ManageQuestionsUiUtils.getBadgeLabel(args.mode);
 
+    final effectiveColor = args.mode == QuizMode.edit
+        ? AppColors.primary
+        : badgeColor;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: badgeColor.withAlpha(badgeColor == Colors.white ? 30 : 40),
+        color: effectiveColor.withAlpha(25),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: badgeColor.withAlpha(100), width: 1),
+        border: Border.all(color: effectiveColor.withAlpha(100), width: 1),
       ),
       child: Text(
         badgeLabel,
         style: AppStyles.mobileBodyXsmallMd.copyWith(
-          color: badgeColor == Colors.white ? AppColors.primary : badgeColor,
+          color: effectiveColor,
         ),
       ),
     );
