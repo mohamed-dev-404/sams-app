@@ -68,7 +68,70 @@ abstract class ApiKeys {
   static const String student = 'student';
   static const String confirmPassword = 'confirmPassword';
 
+  // //? --- Material Keys ---
+  // static const String title = 'title';
+  // static const String description = 'description';
+  // static const String materialItems = 'materialItems';
+  // static const String displayUrl = 'displayUrl';
+  // static const String contentReference = 'contentReference';
+  // static const String filesMetadata = 'filesMetadata';
+  // static const String itemKey = 'itemKey';
+  // static const String context = 'context';
 
+  // //? Quiz Model Keys
+  // static const String text = 'text';
+  // static const String questionType = 'questionType';
+  // static const String timeLimit = 'timeLimit';
+  // static const String options = 'options';
+  // static const String isCorrect = 'isCorrect';
+
+  // //? Quiz Model Keys
+  // static const String startTime = 'startTime';
+  // static const String endTime = 'endTime';
+  // static const String totalTime = 'totalTime';
+  // static const String totalScore = 'totalScore';
+  // static const String numberOfQuestions = 'numberOfQuestions';
+  // static const String isPublished = 'isPublished';
+
+  // //? Submit Quiz Keys
+  // static const String answers = 'answers';
+  // static const String questionId = 'questionId';
+  // static const String selectedOptionId = 'selectedOptionId';
+  // static const String writtenAnswer = 'writtenAnswer';
+
+  // //? all Submission Keys
+  // static const String quizId = 'quizId';
+  // static const String studentName = 'studentName';
+  // static const String score = 'score';
+  // static const String submittedAt = 'submittedAt';
+  // static const String isGraded = 'isGraded';
+  // static const String totalPoints = 'totalPoints';
+
+  // //? Submission Details Keys
+  // static const String earnedPoints = 'earnedPoints';
+
+  // //? classwork item model Keys
+  // static const String isVisible = 'isVisible';
+
+  // //? create quiz request body model Keys
+  // static const String duration = 'duration';
+  
+
+  // //? create question request body model Keys
+  // static const String questions = 'questions';
+
+  //? Assignment Keys
+  static const String dueDate = 'dueDate';
+  static const String enablePlagiarismCheck = 'enablePlagiarismCheck';
+  static const String plagiarismThreshold = 'plagiarismThreshold';
+  static const String assignmentItems = 'assignmentItems';
+  static const String classworkId = 'classworkId';
+  static const String createdAt = 'createdAt';
+  static const String submissionStatus = 'submissionStatus';
+  static const String contentReference = 'contentReference';
+  static const String title = 'title';
+  static const String description = 'description';
+  static const String displayUrl = 'displayUrl';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---
