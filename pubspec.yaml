@@ -61,6 +61,7 @@ dependencies:
   pinput: ^6.0.2
   shared_preferences: ^2.5.4
   skeletonizer: ^2.1.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_lints: ^6.0.0
