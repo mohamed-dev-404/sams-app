@@ -227,6 +227,33 @@ class AppRouter {
                   );
                 },
               ),
+//               GoRoute(
+//   name: RoutesName.announcementDetails,
+//   path: RoutesName.announcementDetails, 
+//   builder: (context, state) {
+//     final extra = state.extra as Map<String, dynamic>?;
+
+
+//     final announcementId = extra!['announcementId'] as String? ?? '';
+//     final courseId = extra['courseId'] as String? ?? '';
+
+//     return MultiBlocProvider(
+//       providers: [
+//         BlocProvider(
+//           create: (context) => getIt<AnnouncementsFetchCubit>()
+//             ..fetchAnnouncementDetails(
+//               announcementId: announcementId,
+//             ),
+//         ),
+//         BlocProvider(
+//           create: (context) => getIt<AnnouncementsActionsCubit>(),
+//         ),
+//       ],
+//       child: AnnouncementDetailsView(announcementId: announcementId),
+//     );
+//   },
+// ),
+
               GoRoute(
                 name: RoutesName.addAnnouncement,
                 // Path format: /courses/:courseId/announcements/announcementDetails/:announcementId
@@ -243,6 +270,24 @@ class AppRouter {
                   );
                 },
               ),
+//               GoRoute(
+//   name: RoutesName.addAnnouncement,
+//   path: RoutesName.addAnnouncement, 
+//   parentNavigatorKey: navigatorKey,
+//   builder: (context, state) {
+   
+//     final extra = state.extra as Map<String, dynamic>?;
+
+
+
+//     final courseId = extra['courseId'] as String? ?? '';
+
+//     return BlocProvider(
+//       create: (context) => getIt<AnnouncementsActionsCubit>(),
+//       child: AddAnnouncementMobileView(courseId: courseId),
+//     );
+//   },
+// ),
             ],
           ),
           _buildTabRoute(
