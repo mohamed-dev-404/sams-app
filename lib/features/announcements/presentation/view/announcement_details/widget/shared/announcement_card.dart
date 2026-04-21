@@ -11,7 +11,6 @@ import 'package:sams_app/features/announcements/presentation/view/announcement_a
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_state.dart';
-import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AnnouncementCard extends StatelessWidget {
@@ -58,7 +57,6 @@ class AnnouncementCard extends StatelessWidget {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                       
                         Expanded(
                           child: AutoSizeText(
                             isLoading
@@ -83,6 +81,7 @@ class AnnouncementCard extends StatelessWidget {
                             onTap: () => _handleEditAndDeleteAction(
                               context,
                               announcementDetails!,
+                              announcementDetails.id,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(6),
@@ -131,9 +130,11 @@ class AnnouncementCard extends StatelessWidget {
   Future<void> _handleEditAndDeleteAction(
     BuildContext context,
     AnnouncementDetailsModel announcementDetails,
+    String courseId,
   ) async {
     final fetchCubit = context.read<AnnouncementsFetchCubit>();
     final actionsCubit = context.read<AnnouncementsActionsCubit>();
+  
 
     final result = await showDialog<String>(
       context: context,
@@ -151,8 +152,6 @@ class AnnouncementCard extends StatelessWidget {
     );
 
     if (!context.mounted || result == null) return;
-
-    final courseId = GoRouterState.of(context).pathParameters['courseId'];
 
     if (result == 'updated') {
       _onUpdateSuccess(context, fetchCubit, announcementDetails.id, courseId);

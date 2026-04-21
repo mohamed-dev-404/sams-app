@@ -19,8 +19,8 @@ class RoutesName {
   static const String membersList = 'membersList';
 
   //? announcement sub-routes
-  static const String announcementDetails = 'announcementDetails';
-  static const String addAnnouncement = 'addAnnouncement';
+  static const String announcementDetails = '/announcementDetails';
+  static const String addAnnouncement = '/addAnnouncement';
 
 
   //?auth routes

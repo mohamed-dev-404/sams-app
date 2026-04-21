@@ -47,11 +47,10 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                 isMobile: true,
                 onTap: () async {
                   // Navigate to Create Screen
-                  final result = await context.pushNamed(
+                  final result = await context.push(
                     RoutesName.addAnnouncement,
-                    pathParameters: {
+                    extra: {
                       'courseId': courseId,
-                      'announcementId': '122',
                     },
                   );
                   if (result == true && context.mounted) {
@@ -109,9 +108,9 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                                 announcements[index].id,
                               );
                             } else {
-                              context.pushNamed(
+                              context.push(
                                 RoutesName.announcementDetails,
-                                pathParameters: {
+                                extra: {
                                   'courseId': courseId,
                                   'announcementId': announcements[index].id,
                                 },
@@ -122,28 +121,27 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                           description: announcements[index].content,
                           image: AppImages.imagesAnnouncementCard,
                           onTap: () async {
+                            context
+                                .read<AnnouncementsFetchCubit>()
+                                .fetchAnnouncementDetails(
+                                  announcementId: announcements[index].id,
+                                );
+
+                            await context.push(
+                              RoutesName.announcementDetails,
+                             extra: {
+                               'courseId': courseId,
+                               'announcementId': announcements[index].id,
+                             }
+                            );
+
+                            if (context.mounted) {
                               context
                                   .read<AnnouncementsFetchCubit>()
-                                  .fetchAnnouncementDetails(
-                                    announcementId: announcements[index].id,
+                                  .fetchAnnouncements(
+                                    courseId: courseId,
                                   );
-
-                              await context.pushNamed(
-                                RoutesName.announcementDetails,
-                                pathParameters: {
-                                  'courseId': courseId,
-                                  'announcementId': announcements[index].id,
-                                },
-                              );
-
-                              if (context.mounted) {
-                                context
-                                    .read<AnnouncementsFetchCubit>()
-                                    .fetchAnnouncements(
-                                      courseId: courseId,
-                                    );
-                              }
-                            
+                            }
                           },
                         ),
                       ),

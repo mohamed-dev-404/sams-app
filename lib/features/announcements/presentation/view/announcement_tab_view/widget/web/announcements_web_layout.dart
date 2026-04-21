@@ -112,9 +112,9 @@ class AnnouncementsWebLayout extends StatelessWidget {
                               announcements[dataIndex].id,
                             );
                           } else {
-                            context.pushNamed(
+                            context.push(
                               RoutesName.announcementDetails,
-                              pathParameters: {
+                              extra: {
                                 'courseId': courseId,
                                 'announcementId': announcements[dataIndex].id,
                               },
@@ -129,9 +129,9 @@ class AnnouncementsWebLayout extends StatelessWidget {
                                 announcementId: announcements[dataIndex].id,
                               );
 
-                          await context.pushNamed(
+                          await context.push(
                             RoutesName.announcementDetails,
-                            pathParameters: {
+                            extra: {
                               'courseId': courseId,
                               'announcementId': announcements[dataIndex].id,
                             },
