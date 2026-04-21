@@ -16,10 +16,17 @@ import 'package:sams_app/features/home/data/data_sources/home_local_data_sourse.
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
 import 'package:sams_app/features/home/presentation/view_models/cubit/home_cubit.dart';
+import 'package:sams_app/features/materials/data/data_source/material_local_data_source.dart';
+import 'package:sams_app/features/materials/data/repos/material_repo.dart';
+import 'package:sams_app/features/materials/data/repos/material_repo_impl.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
+import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo.dart';
 import 'package:sams_app/features/profile/data/repos/profile_repo_impl.dart';
 import 'package:sams_app/features/profile/data/services/image_processor.dart';
 import 'package:sams_app/features/profile/presentation/view_model/cubit/profile_cubit.dart';
+import 'package:sams_app/features/quizzes/data/repos/quiz_repository.dart';
+import 'package:sams_app/features/quizzes/data/repos/quiz_repository_impl.dart';
 
 final GetIt getIt = GetIt.instance;
 void setupServiceLocator() {
@@ -53,6 +60,8 @@ void setupServiceLocator() {
     () => HomeCubit(getIt<HomeRepo>(), role: CurrentRole.role),
   );
 
+  //! Profile Feature
+
   //* register S3UploadService
   getIt.registerLazySingleton<S3UploadService>(() => S3UploadService());
 
@@ -71,6 +80,41 @@ void setupServiceLocator() {
   //* register ProfileCubit
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepo>()),
+  );
+
+  //! Quizzes Feature
+
+  //* register QuizRepo
+  getIt.registerLazySingleton<QuizRepository>(
+    () => QuizRepositoryImpl(api: getIt<ApiConsumer>()),
+  );
+
+  //! Materials Feature
+
+  //* register MaterialsLocalDataSource
+  getIt.registerLazySingleton<MaterialLocalDataSource>(
+    () => MaterialLocalDataSource(),
+  );
+
+  //* register MaterialsRepo
+  getIt.registerLazySingleton<MaterialRepo>(
+    () => MaterialRepoImpl(
+      api: getIt<ApiConsumer>(),
+      localDataSource: getIt<MaterialLocalDataSource>(),
+      s3Service: getIt<S3UploadService>(),
+    ),
+  );
+
+  //* register MaterialFetchCubit (Factory to get a new instance for each course)
+  //* This cubit is used to fetch materials 
+  getIt.registerFactory<MaterialFetchCubit>(
+    () => MaterialFetchCubit(getIt<MaterialRepo>()),
+  );
+
+  //* register MaterialCrudCubit (Factory to get a new instance for each course) 
+  //* This cubit is used to upload, update and delete materials
+  getIt.registerFactory<MaterialCrudCubit>(
+    () => MaterialCrudCubit(getIt<MaterialRepo>()),
   );
 
 
