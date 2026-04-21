@@ -14,7 +14,9 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 /// The Web-specific implementation of the Material Details body.
 /// It uses a dual-pane layout: a fixed-width sidebar for metadata and a flexible grid for content.
 class WebMaterialDetailsViewBody extends StatelessWidget {
-  const WebMaterialDetailsViewBody({super.key});
+  final String courseId;
+  final String materialId;
+  const WebMaterialDetailsViewBody({super.key, required this.courseId, required this.materialId});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,9 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
                                   (MediaQuery.sizeOf(context).width * 0.28)
                                       .clamp(230, 450),
                             ),
-                            child: const MaterialDetailsSideCard(),
+                            child: MaterialDetailsSideCard(
+                              courseId: courseId,
+                            ),
                           ),
 
                           const SizedBox(

@@ -78,9 +78,11 @@ class _MaterialsWebLayoutState extends State<MaterialsWebLayout> {
           if (state is MaterialFetchSuccess) {
             final materials = state.materials;
             return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverGrid(
                   delegate: SliverChildBuilderDelegate(
+                    //? Dynamic Grid layout optimized for Web/Tablet
                     (context, index) {
                       //* Role-based UI: Inject "Add" card at the end of the list for Instructors.
                       if (isInstructor && index == 0) {

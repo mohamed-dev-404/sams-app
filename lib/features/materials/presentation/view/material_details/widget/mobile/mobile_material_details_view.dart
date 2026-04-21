@@ -6,9 +6,10 @@ import 'package:sams_app/features/materials/presentation/view/material_details/w
 /// The mobile-specific scaffold for displaying detailed material content.
 /// It integrates the custom app bar, the main scrollable body, and the creation trigger.
 class MobileMaterialDetailsView extends StatelessWidget {
-  const MobileMaterialDetailsView({super.key, required this.courseId});
+  const MobileMaterialDetailsView({super.key, required this.courseId, required this.materialId});
 
   final String courseId;
+  final String materialId;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class MobileMaterialDetailsView extends StatelessWidget {
       appBar: const MobileCustomAppBar(title: 'Material Details'),
 
       //* Floating Action Button (FAB) dedicated to adding new items (Videos/Docs) to the course.
-      floatingActionButton: AddMaterialItemsFloatingBuutton(courseId: courseId),
+      floatingActionButton: AddMaterialItemsFloatingBuutton(courseId: courseId, materialId: materialId ,),
 
       //* The main content area, handled by a separate Body widget for better state management.
       body: const MobileMaterialDetailsViewBody(),

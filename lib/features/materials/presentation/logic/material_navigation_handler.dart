@@ -29,9 +29,9 @@ class MaterialsNavigationHandler {
     context.read<MaterialFetchCubit>().fetchMaterialDetails(
       materialId: material.id,
     );
-    context.pushNamed(
+    context.push(
       RoutesName.materialDetails,
-      pathParameters: {
+      extra: {
         'courseId': courseId,
         'materialId': material.id,
       },
@@ -46,9 +46,12 @@ class MaterialsNavigationHandler {
     //? Capture Cubit reference before the async gap to ensure availability after pop.
     final fetchCubit = context.read<MaterialFetchCubit>();
 
-    final result = await context.pushNamed(
+    final result = await context.push(
       RoutesName.manageMaterial,
-      pathParameters: {'courseId': courseId},
+      extra: {
+        'courseId': courseId,
+        'initialMaterial': null,
+      },
     );
 
     //* Update the list locally if a new material was successfully created.
@@ -84,10 +87,12 @@ class MaterialsNavigationHandler {
     required MaterialModel material,
   }) async {
     final fetchCubit = context.read<MaterialFetchCubit>();
-    final result = await context.pushNamed(
+    final result = await context.push(
       RoutesName.manageMaterial,
-      pathParameters: {'courseId': courseId},
-      extra: material, //? Pass existing object to populate the form fields.
+      extra: {
+        'courseId': courseId,
+        'initialMaterial': material,
+      }, //? Pass existing object to populate the form fields.
     );
 
     if (result is MaterialModel && context.mounted) {
@@ -155,11 +160,8 @@ class MaterialsNavigationHandler {
   static void showAddMaterialItemsDialog(
     BuildContext context, {
     required String courseId,
+    required String materialId,
   }) {
-    //? Extract materialId directly from the path parameters.
-    final String materialId =
-        GoRouterState.of(context).pathParameters['materialId'] ?? '';
-
     final crudCubit = context.read<MaterialCrudCubit>();
     final fetchCubit = context.read<MaterialFetchCubit>();
 
@@ -184,8 +186,8 @@ class MaterialsNavigationHandler {
   static void showEdieMaterialDialog(
     BuildContext context, {
     required MaterialModel material,
+    required String courseId,
   }) {
-    final courseId = GoRouterState.of(context).pathParameters['courseId'] ?? '';
     final crudCubit = context.read<MaterialCrudCubit>();
     showDialog<void>(
       context: context,

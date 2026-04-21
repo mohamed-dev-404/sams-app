@@ -14,7 +14,8 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 /// It displays material metadata (Title, Illustration, Description) and
 /// provides edit access for instructors.
 class MaterialDetailsSideCard extends StatelessWidget {
-  const MaterialDetailsSideCard({super.key});
+  final String courseId;
+  const MaterialDetailsSideCard({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +76,7 @@ class MaterialDetailsSideCard extends StatelessWidget {
                                 MaterialDetailsHandler.onEditMaterialWeb(
                                   context,
                                   material,
+                                  courseId,
                                 ),
                             icon: SvgPicture.asset(
                               AppIcons.iconsEditMaterial,

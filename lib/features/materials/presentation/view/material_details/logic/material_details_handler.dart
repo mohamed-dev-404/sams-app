@@ -74,11 +74,11 @@ class MaterialDetailsHandler {
   /// Triggers the visual interface for updating material metadata.
   /// web  
   /// [material] represents the current state of the document being modified.
-  static void onEditMaterialWeb(BuildContext context, MaterialModel material) {
+  static void onEditMaterialWeb(BuildContext context, MaterialModel material, String courseId) {
     //_ Action: Delegates the Bottom Sheet/Dialog assembly to the Navigation Layer.
     MaterialsNavigationHandler.showEdieMaterialDialog(
       context,
-      material: material,
+      material: material, courseId: courseId,
     );
   }
 

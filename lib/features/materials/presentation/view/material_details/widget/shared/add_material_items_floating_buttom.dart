@@ -8,9 +8,14 @@ import 'package:sams_app/features/materials/presentation/logic/material_navigati
 /// A standardized Floating Action Button used to trigger the "Add Materials" flow.
 /// This widget is shared across Mobile and Web layouts to maintain visual consistency.
 class AddMaterialItemsFloatingBuutton extends StatelessWidget {
-  const AddMaterialItemsFloatingBuutton({super.key, required this.courseId});
+  const AddMaterialItemsFloatingBuutton({
+    super.key,
+    required this.courseId,
+    required this.materialId,
+  });
 
   final String courseId;
+  final String materialId;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,7 @@ class AddMaterialItemsFloatingBuutton extends StatelessWidget {
                 MaterialsNavigationHandler.showAddMaterialItemsDialog(
                   context,
                   courseId: courseId,
+                  materialId: materialId,
                 ),
 
             //* Iconography: Uses a custom SVG icon with a white color filter for contrast.
