@@ -103,40 +103,47 @@ class AnnouncementsMobileLayout extends StatelessWidget {
                                 )
                               : null,
                           onActionTap: () {
-                           if (CurrentRole.role == UserRole.instructor) {
-                             _showDeleteDialog(context, announcements[index].id);
-                           }
-                           context.pushNamed(
-                             RoutesName.announcementDetails,
-                             pathParameters: {
-                               'courseId': courseId,
-                               'announcementId': announcements[index].id,
-                             },
-                           );
+                            if (CurrentRole.role == UserRole.instructor) {
+                              _showDeleteDialog(
+                                context,
+                                announcements[index].id,
+                              );
+                            } else {
+                              context.pushNamed(
+                                RoutesName.announcementDetails,
+                                pathParameters: {
+                                  'courseId': courseId,
+                                  'announcementId': announcements[index].id,
+                                },
+                              );
+                            }
                           },
                           title: announcements[index].title,
                           description: announcements[index].content,
                           image: AppImages.imagesAnnouncementCard,
                           onTap: () async {
-                            context
-                                .read<AnnouncementsFetchCubit>()
-                                .fetchAnnouncementDetails(
-                                  announcementId: announcements[index].id,
-                                );
-                            await context.pushNamed(
-                              RoutesName.announcementDetails,
-                              pathParameters: {
-                                'courseId': courseId,
-                                'announcementId': announcements[index].id,
-                              },
-                            );
-                            if (context.mounted) {
                               context
                                   .read<AnnouncementsFetchCubit>()
-                                  .fetchAnnouncements(
-                                    courseId: courseId,
+                                  .fetchAnnouncementDetails(
+                                    announcementId: announcements[index].id,
                                   );
-                            }
+
+                              await context.pushNamed(
+                                RoutesName.announcementDetails,
+                                pathParameters: {
+                                  'courseId': courseId,
+                                  'announcementId': announcements[index].id,
+                                },
+                              );
+
+                              if (context.mounted) {
+                                context
+                                    .read<AnnouncementsFetchCubit>()
+                                    .fetchAnnouncements(
+                                      courseId: courseId,
+                                    );
+                              }
+                            
                           },
                         ),
                       ),

@@ -98,19 +98,28 @@ class AnnouncementsWebLayout extends StatelessWidget {
                         title: announcements[dataIndex].title,
                         description: announcements[dataIndex].content,
                         image: AppImages.imagesAnnouncementCard,
-                        actionWidget:
-                              (CurrentRole.role == UserRole.instructor)
-                              ? SvgPicture.asset(
-                                  AppIcons.iconsMenu,
-                                  width: 22,
-                                  height: 22,
-                                )
-                              : null,
+                        actionWidget: (CurrentRole.role == UserRole.instructor)
+                            ? SvgPicture.asset(
+                                AppIcons.iconsMenu,
+                                width: 22,
+                                height: 22,
+                              )
+                            : null,
                         onActionTap: () {
-                          _showDeleteDialog(
-                            context,
-                            announcements[dataIndex].id,
-                          );
+                          if (isInstructor) {
+                            _showDeleteDialog(
+                              context,
+                              announcements[dataIndex].id,
+                            );
+                          } else {
+                            context.pushNamed(
+                              RoutesName.announcementDetails,
+                              pathParameters: {
+                                'courseId': courseId,
+                                'announcementId': announcements[dataIndex].id,
+                              },
+                            );
+                          }
                         },
                         onTap: () async {
                           /// Fetch specific details before navigating
@@ -127,10 +136,13 @@ class AnnouncementsWebLayout extends StatelessWidget {
                               'announcementId': announcements[dataIndex].id,
                             },
                           );
+
                           if (context.mounted) {
                             context
                                 .read<AnnouncementsFetchCubit>()
-                                .fetchAnnouncements(courseId: courseId);
+                                .fetchAnnouncements(
+                                  courseId: courseId,
+                                );
                           }
                         },
                       ),
@@ -153,6 +165,7 @@ class AnnouncementsWebLayout extends StatelessWidget {
       ),
     );
   }
+
   Future<void> _showDeleteDialog(
     BuildContext context,
     String announcementId,
