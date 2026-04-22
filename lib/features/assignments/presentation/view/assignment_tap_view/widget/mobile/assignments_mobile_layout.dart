@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_tap_view/widget/mobile/mobile_assignment_card.dart';
+import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignment_fetch/assignment_fetch_cubit.dart';
 
 class AssignmentsMobileLayout extends StatelessWidget {
   final String courseId;
@@ -25,7 +29,7 @@ class AssignmentsMobileLayout extends StatelessWidget {
     return ListView.builder(
       itemCount: headerCount + (assignments.isEmpty ? 1 : assignments.length),
       itemBuilder: (context, index) {
-        // 1. Title
+        // 1. Title Section
         if (index == 0) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
@@ -43,42 +47,72 @@ class AssignmentsMobileLayout extends StatelessWidget {
             child: AddNewCard(
               title: 'Create Assignment',
               isMobile: true,
-              onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => const CreateAssignmentView(),
-                //   ),
-                // );
-              },
+              onTap: () => _navigateToCreateAssignment(context),
             ),
           );
         }
 
-        // 3. Empty State
+        // 3. Handle Empty State or Assignment List
         if (assignments.isEmpty) {
-          // return Center(child: Lottie.asset(AppLottie.empty));
-          return const Center(child: Text('No assignments available yet.'));
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 40),
+            child: Center(
+              child: Text(
+                'No assignments available yet.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
+          );
         }
 
-        // 4. Assignment Cards
         final int assignmentIndex = index - headerCount;
+        
+        // 4. Render Assignment Cards
         final assignment = assignments[assignmentIndex];
-
         return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: MobileAssignmentCard(
             assignment: assignment,
-            onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) =>
-              //         AssignmentDetailsView(assignmentId: assignment.id),
-              //   ),
-              // );
-            },
+            onTap: () => _navigateToAssignmentDetails(context, assignment.id),
           ),
         );
       },
     );
+  }
+
+  void _navigateToCreateAssignment(BuildContext context) {
+    context
+        .push(
+          RoutesName.createAssignment,
+          extra: {
+            'courseId': courseId,
+            'isEditMode': false,
+          },
+        )
+        .then((_) {
+          if (context.mounted) {
+            context.read<AssignmentFetchCubit>().fetchAssignments(
+              courseId: courseId,
+            );
+          }
+        });
+  }
+
+  void _navigateToAssignmentDetails(BuildContext context, String assignmentId) {
+    context
+        .push(
+          RoutesName.assignmentDetails,
+          extra: {
+            'assignmentId': assignmentId.toString(),
+            'courseId': courseId,
+          },
+        )
+        .then((_) {
+          if (context.mounted) {
+            context.read<AssignmentFetchCubit>().fetchAssignments(
+              courseId: courseId,
+            );
+          }
+        });
   }
 }

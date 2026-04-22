@@ -1,11 +1,13 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/shared/add_new_card.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_tap_view/widget/web/web_assignment_card.dart';
+import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignment_fetch/assignment_fetch_cubit.dart';
 
 class AssignmentsWebLayout extends StatelessWidget {
   final String courseId;
@@ -35,14 +37,12 @@ class AssignmentsWebLayout extends StatelessWidget {
           const SizedBox(height: 24),
 
           if (assignments.isEmpty && !isInstructor)
-            _buildEmptyState('No assignments available yet.', 300)
+            _buildStudentEmptyState()
           else
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: isInstructor
-                  ? (assignments.isEmpty ? 2 : assignments.length + 1)
-                  : assignments.length,
+              itemCount: _calculateItemCount(isInstructor),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 300,
                 mainAxisSpacing: 24,
@@ -53,36 +53,28 @@ class AssignmentsWebLayout extends StatelessWidget {
                 if (isInstructor && index == 0) {
                   return AddNewCard(
                     title: 'Create Assignment',
-                    isMobile: false,
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const CreateAssignmentView(),
-                      //   ),
-                      // );
-                    },
+                    hight: double.infinity,
+                    onTap: () => _navigateToCreateAssignment(context),
                   );
                 }
 
                 if (isInstructor && assignments.isEmpty && index == 1) {
-                  return _buildEmptyState('Your assignment list is empty', 180);
+                  return _buildInstructorEmptyPlaceholder();
                 }
 
                 final int dataIndex = isInstructor ? index - 1 : index;
-                if (dataIndex < 0 || dataIndex >= assignments.length)
-                  return const SizedBox.shrink();
+
+                if (dataIndex < 0 || dataIndex >= assignments.length) {
+                  return isInstructor
+                      ? _buildInstructorEmptyPlaceholder()
+                      : const SizedBox.shrink();
+                }
 
                 final assignment = assignments[dataIndex];
                 return WebAssignmentCard(
                   assignment: assignment,
-                  onTap: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         AssignmentDetailsView(assignmentId: assignment.id),
-                    //   ),
-                    // );
-                  },
+                  onTap: () =>
+                      _navigateToAssignmentDetails(context, assignment.id),
                 );
               },
             ),
@@ -91,19 +83,75 @@ class AssignmentsWebLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(String message, double height) {
-    return Center(
+  int _calculateItemCount(bool isInstructor) {
+    if (isInstructor) {
+      return assignments.isEmpty ? 2 : assignments.length + 1;
+    }
+    return assignments.length;
+  }
+
+  Widget _buildStudentEmptyState() {
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Lottie.asset(AppLottie.empty, height: height),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
-            message,
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
+            'No assignments available yet.',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildInstructorEmptyPlaceholder() {
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 12),
+        Text(
+          'Your assignment list is empty',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  void _navigateToCreateAssignment(BuildContext context) {
+    context
+        .push(
+          RoutesName.createAssignment,
+          extra: {
+            'courseId': courseId,
+            'isEditMode': false,
+          },
+        )
+        .then((_) {
+          if (context.mounted) {
+            context.read<AssignmentFetchCubit>().fetchAssignments(
+              courseId: courseId,
+            );
+          }
+        });
+  }
+
+  void _navigateToAssignmentDetails(BuildContext context, String assignmentId) {
+    context
+        .push(
+          RoutesName.assignmentDetails,
+          extra: {
+            'assignmentId': assignmentId.toString(),
+            'courseId': courseId,
+          },
+        )
+        .then((_) {
+          if (context.mounted) {
+            context.read<AssignmentFetchCubit>().fetchAssignments(
+              courseId: courseId,
+            );
+          }
+        });
   }
 }
