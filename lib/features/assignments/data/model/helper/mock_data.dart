@@ -1,3 +1,4 @@
+import 'package:sams_app/features/assignments/data/model/assignment_item_model.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/data/model/helper/assignment_status_enum.dart';
 
@@ -15,7 +16,30 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: false,
     plagiarismThreshold: null,
     classworkId: 'cw_01',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 
   // 2. STUDENT: Submitted (handed_in)
@@ -31,7 +55,30 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: true,
     plagiarismThreshold: 30,
     classworkId: 'cw_01',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 
   // 3. STUDENT: Missed (status: missed)
@@ -47,7 +94,30 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: false,
     plagiarismThreshold: null,
     classworkId: 'cw_01',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 
   // 4. STUDENT: Missed (assigned + overdue - edge case)
@@ -63,7 +133,30 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: false,
     plagiarismThreshold: null,
     classworkId: 'cw_01',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 
   // 5. INSTRUCTOR: Ongoing
@@ -79,7 +172,19 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: true,
     plagiarismThreshold: 20,
     classworkId: 'cw_02',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 
   // 6. INSTRUCTOR: Closed
@@ -95,6 +200,18 @@ List<AssignmentModel> mockAssignments = [
     enablePlagiarismCheck: false,
     plagiarismThreshold: null,
     classworkId: 'cw_02',
-    assignmentItems: [],
+    assignmentItems: [
+      AssignmentItemModel(
+        originalFileName: 'ERD_Requirements.pdf',
+        key: 'files/erd_req.pdf',
+        displayUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      ),
+      AssignmentItemModel(
+        originalFileName: 'Sample_Schema.png',
+        key: 'images/sample.png',
+        displayUrl: 'https://placeholder.com/600x400',
+      ),
+    ],
   ),
 ];
