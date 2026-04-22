@@ -54,7 +54,7 @@ import 'package:sams_app/features/materials/presentation/view_model/cubits/mater
 
 // Assignments
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/assignment_details_view.dart';
-import 'package:sams_app/features/assignments/presentation/view/create_assignment_view/create_assignment_view.dart';
+// import 'package:sams_app/features/assignments/presentation/view/create_assignment_view/create_assignment_view.dart';
 
 // Announcements
 import 'package:sams_app/features/announcements/presentation/view/announcement_actions/widget/mobile/add_announcement_mobile_view.dart';
@@ -385,19 +385,19 @@ class AppRouter {
       // ─────────────────────────────────────────────────────────────────────
       // ASSIGNMENTS
       // ─────────────────────────────────────────────────────────────────────
-      GoRoute(
-        name: RoutesName.createAssignment,
-        path: RoutesName.createAssignment,
-        builder: (context, state) {
-          final extra = RouterPayloadCache.get<Map<String, dynamic>>(
-            RoutesName.createAssignment,
-            state.extra,
-          );
-          if (extra == null) return _fallbackHome();
+      // GoRoute(
+      //   name: RoutesName.createAssignment,
+      //   path: RoutesName.createAssignment,
+      //   builder: (context, state) {
+      //     final extra = RouterPayloadCache.get<Map<String, dynamic>>(
+      //       RoutesName.createAssignment,
+      //       state.extra,
+      //     );
+      //     if (extra == null) return _fallbackHome();
 
-          return const CreateAssignmentView();
-        },
-      ),
+      //     return const CreateAssignmentView();
+      //   },
+      // ),
 
       GoRoute(
         name: RoutesName.assignmentDetails,
