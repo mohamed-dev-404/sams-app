@@ -1,9 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
-import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/data/model/helper/assignment_status_enum.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_attached_files_grid.dart';

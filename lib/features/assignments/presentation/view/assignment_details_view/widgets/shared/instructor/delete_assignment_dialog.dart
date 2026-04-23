@@ -44,9 +44,11 @@ class DeleteAssignmentDialog {
                         Navigator.pop(context);
                         onConfirm();
                       },
-                      child: const Text(
+                      child: Text(
                         'Delete',
-                        style: TextStyle(color: Colors.white),
+                       style: AppStyles.mobileBodySmallMd.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

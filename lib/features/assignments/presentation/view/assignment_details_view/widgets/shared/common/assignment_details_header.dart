@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
@@ -6,6 +7,8 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_details_state_badge.dart';
+import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/instructor/delete_assignment_dialog.dart';
+import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignment_details/assignment_details_cubit.dart';
 import 'package:sams_app/features/quizzes/presentation/view/widgets/shared_back_button.dart';
 
 class AssignmentDetailsHeader extends StatelessWidget {
@@ -69,29 +72,29 @@ class AssignmentDetailsHeader extends StatelessWidget {
 
   Widget _buildInstructorActions(BuildContext context) {
     return Container(
-                          width: 38,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: const BoxDecoration(
-                            color: AppColors.redLight,
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              // DeleteAssignmentDialog.show(
-                              //   context,
-                              //   onConfirm: () {
-                              //     context.read<AssignmentCubit>().deleteAssignment(
-                              //       quiz.id,
-                              //     );
-                              //   },
-                              // );
-                            },
-                            icon: const Icon(
-                              size: 22,
-                              Icons.delete_forever,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        );
+      width: 38,
+      margin: const EdgeInsets.only(right: 8),
+      decoration: const BoxDecoration(
+        color: AppColors.redLight,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        onPressed: () {
+          DeleteAssignmentDialog.show(
+            context,
+            onConfirm: () {
+              context.read<AssignmentDetailsCubit>().deleteAssignment(
+                assignmentId: assignment.id,
+              );
+            },
+          );
+        },
+        icon: const Icon(
+          size: 22,
+          Icons.delete_forever,
+          color: AppColors.red,
+        ),
+      ),
+    );
   }
 }

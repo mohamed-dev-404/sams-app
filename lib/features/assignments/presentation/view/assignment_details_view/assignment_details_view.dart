@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/enums/enum_user_role.dart';
+import 'package:sams_app/core/helper/app_toast.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/mobile/instructor/assignment_details_mobile_instructor_layout.dart';
@@ -23,9 +25,25 @@ class AssignmentDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
+     if (ModalRoute.of(context)?.isCurrent ?? false) {
+      context.read<AssignmentDetailsCubit>().fetchAssignmentDetails(assignmentId: assignmentId);
+    }
+    
 
-    // * UI Direct Rendering (No Bloc/Cubit)
-    return BlocBuilder<AssignmentDetailsCubit, AssignmentDetailsState>(
+    return BlocConsumer<AssignmentDetailsCubit, AssignmentDetailsState>(
+      listener: (context, state) {
+        if (state is AssignmentActionSuccess) {
+          AppToast.success(context, state.message);
+          context.pop();
+        }
+        if (state is AssignmentActionFailure) {
+          AppToast.error(context, state.errMessage);
+        }
+      },
+      buildWhen: (previous, current) =>
+          current is AssignmentDetailsLoading ||
+          current is AssignmentDetailsSuccess ||
+          current is AssignmentDetailsFailure,
       builder: (context, state) {
         if (state is AssignmentDetailsLoading) {
           return const Center(child: AppAnimatedLoadingIndicator());
@@ -33,33 +51,33 @@ class AssignmentDetailsView extends StatelessWidget {
         if (state is AssignmentDetailsFailure) {
           return Center(child: Text(state.errMessage));
         }
-       if (state is AssignmentDetailsSuccess) {
-         final assignment = state.assignment;
+        if (state is AssignmentDetailsSuccess) {
+          final assignment = state.assignment;
           return AdaptiveLayout(
-          // --- Mobile Layouts ---
-          mobileLayout: (context) => CurrentRole.role == UserRole.instructor
-              ? AssignmentDetailsMobileInstructorLayout(
-                  assignment: assignment,
-                  courseId: courseId,
-                )
-              : AssignmentDetailsMobileStudentLayout(
-                  assignment: assignment,
-                  courseId: courseId,
-                ),
+            // --- Mobile Layouts ---
+            mobileLayout: (context) => CurrentRole.role == UserRole.instructor
+                ? AssignmentDetailsMobileInstructorLayout(
+                    assignment: assignment,
+                    courseId: courseId,
+                  )
+                : AssignmentDetailsMobileStudentLayout(
+                    assignment: assignment,
+                    courseId: courseId,
+                  ),
 
-          // --- Web Layouts (Desktop/Tablet) ---
-          webLayout: (context) => CurrentRole.role == UserRole.instructor
-              ? AssignmentDetailsWebInstructorLayout(
-                  assignment: assignment,
-                  courseId: courseId,
-                )
-              : AssignmentDetailsWebStudentLayout(
-                  assignment: assignment,
-                  courseId: courseId,
-                ),
-        );
-       }
-       return Container();
+            // --- Web Layouts (Desktop/Tablet) ---
+            webLayout: (context) => CurrentRole.role == UserRole.instructor
+                ? AssignmentDetailsWebInstructorLayout(
+                    assignment: assignment,
+                    courseId: courseId,
+                  )
+                : AssignmentDetailsWebStudentLayout(
+                    assignment: assignment,
+                    courseId: courseId,
+                  ),
+          );
+        }
+        return Container();
       },
     );
   }
