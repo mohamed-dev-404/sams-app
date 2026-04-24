@@ -7,6 +7,8 @@ import 'package:sams_app/core/utils/router/router_payload_cache.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/widgets/shared/general_error_page.dart';
+import 'package:sams_app/features/assignments/presentation/view/assignment_submission/assignment_submission_view.dart';
+import 'package:sams_app/features/assignments/presentation/view/student_profile/student_profile_view.dart';
 // Auth
 import 'package:sams_app/features/auth/data/repos/auth_repo.dart';
 import 'package:sams_app/features/auth/presentation/view_models/login_cubit/login_cubit.dart';
@@ -61,8 +63,6 @@ import 'package:sams_app/features/announcements/presentation/view/announcement_a
 import 'package:sams_app/features/announcements/presentation/view/announcement_details/announcement_details_view.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcement_actions/announcement_actions_cubit.dart';
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/announcements_fetch/announcements_fetch_cubit.dart';
-
-
 
 /// A robust cache system for GoRouter `extra` payloads.
 ///
@@ -385,19 +385,32 @@ class AppRouter {
       // ─────────────────────────────────────────────────────────────────────
       // ASSIGNMENTS
       // ─────────────────────────────────────────────────────────────────────
-      // GoRoute(
-      //   name: RoutesName.createAssignment,
-      //   path: RoutesName.createAssignment,
-      //   builder: (context, state) {
-      //     final extra = RouterPayloadCache.get<Map<String, dynamic>>(
-      //       RoutesName.createAssignment,
-      //       state.extra,
-      //     );
-      //     if (extra == null) return _fallbackHome();
+      GoRoute(
+        name: RoutesName.assignmentSubmission,
+        path: RoutesName.assignmentSubmission,
+        builder: (context, state) {
+          final extra = RouterPayloadCache.get<Map<String, dynamic>>(
+            RoutesName.assignmentSubmission,
+            state.extra,
+          );
+          if (extra == null) return _fallbackHome();
 
-      //     return const CreateAssignmentView();
-      //   },
-      // ),
+          return const AssignmentSubmissionView();
+        },
+      ),
+      GoRoute(
+        name: RoutesName.studentProfile,
+        path: RoutesName.studentProfile,
+        builder: (context, state) {
+          final extra = RouterPayloadCache.get<Map<String, dynamic>>(
+            RoutesName.studentProfile,
+            state.extra,
+          );
+          if (extra == null) return _fallbackHome();
+
+          return const StudentProfileView();
+        },
+      ),
 
       GoRoute(
         name: RoutesName.assignmentDetails,
@@ -415,7 +428,6 @@ class AppRouter {
           );
         },
       ),
-
 
       // ─────────────────────────────────────────────────────────────────────
       // ANNOUNCEMENT STANDALONE ROUTES
