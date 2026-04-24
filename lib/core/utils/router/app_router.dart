@@ -395,7 +395,7 @@ class AppRouter {
           );
           if (extra == null) return _fallbackHome();
 
-          return const AssignmentSubmissionView();
+          return  AssignmentSubmissionView(assignmentId: extra['assignmentId']);
         },
       ),
       GoRoute(
