@@ -8,7 +8,7 @@ import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/services/service_locator.dart';
 import 'package:sams_app/core/widgets/shared/general_error_page.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission/assignment_submission_view.dart';
-import 'package:sams_app/features/assignments/presentation/view/student_profile/student_profile_view.dart';
+import 'package:sams_app/features/assignments/presentation/view/student_profile/assignment_submission_details_view.dart';
 // Auth
 import 'package:sams_app/features/auth/data/repos/auth_repo.dart';
 import 'package:sams_app/features/auth/presentation/view_models/login_cubit/login_cubit.dart';
@@ -408,7 +408,7 @@ class AppRouter {
           );
           if (extra == null) return _fallbackHome();
 
-          return const StudentProfileView();
+          return const AssignmentSubmissionDetailsView();
         },
       ),
 
