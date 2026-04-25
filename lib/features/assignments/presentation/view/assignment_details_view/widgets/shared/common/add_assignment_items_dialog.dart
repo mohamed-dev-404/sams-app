@@ -5,33 +5,31 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/custom_app_button.dart';
-import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/course_material_section.dart';
-import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/uploading_overlay.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_state.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
-import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_state.dart';
+import 'package:sams_app/features/assignments/presentation/view/create_assignment_view/widgets/shared/course_assignment_section.dart';
+import 'package:sams_app/features/assignments/presentation/view/create_assignment_view/widgets/shared/uploading_overlay.dart';
+import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignment_details/assignment_details_cubit.dart';
+import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignment_details/assignment_details_state.dart';
 
-/// A specialized dialog for adding new files/videos to an existing material topic.
-/// It coordinates the upload process and subsequent data refresh to ensure UI consistency.
-class AddNewMaterialItemsDialog extends StatefulWidget {
+/// A specialized dialog for adding new files to an existing assignment.
+class AddNewAssignmentItemsDialog extends StatefulWidget {
   final String courseId;
-  final String materialId;
+  final String assignmentId;
+  final String classworkId;
 
-  const AddNewMaterialItemsDialog({
+  const AddNewAssignmentItemsDialog({
     super.key,
     required this.courseId,
-    required this.materialId,
+    required this.assignmentId, required this.classworkId,
   });
 
   @override
-  State<AddNewMaterialItemsDialog> createState() =>
-      _AddNewMaterialItemsDialogState();
+  State<AddNewAssignmentItemsDialog> createState() =>
+      _AddNewAssignmentItemsDialogState();
 }
 
-class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
-  //* Accessing the internal state of the material section to retrieve picked files.
-  final GlobalKey<CourseMaterialSectionState> _sectionKey = GlobalKey();
+class _AddNewAssignmentItemsDialogState extends State<AddNewAssignmentItemsDialog> {
+  //* Accessing the internal state of the assignment section to retrieve picked files.
+  final GlobalKey<CourseAssignmentSectionState> _sectionKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +42,12 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
           title: Row(
             children: [
               const Icon(
-                Icons.cloud_upload_outlined,
+                Icons.upload_file_rounded,
                 color: AppColors.primary,
               ),
               const SizedBox(width: 8),
               Text(
-                'Add New Materials',
+                'Add New Assignment Files',
                 style: isMobile
                     ? AppStyles.mobileTitleSmallSb
                     : AppStyles.mobileTitleMediumSb,
@@ -59,18 +57,16 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
           content: SizedBox(
             width: 600,
             child: SingleChildScrollView(
-              child: CourseMaterialSection(
+              child: CourseAssignmentSection(
                 key: _sectionKey,
-                initialItems:
-                    const [], // Starting with an empty selection for new items.
+                initialItems: const [], // Starting with an empty selection.
               ),
             ),
           ),
           actions: [
-            //* Reactive Actions: Hide buttons during loading to prevent duplicate requests.
-            BlocBuilder<MaterialCrudCubit, MaterialCrudState>(
+            BlocBuilder< AssignmentDetailsCubit, AssignmentDetailsState>(
               builder: (context, crudState) {
-                final bool isLoading = crudState is AddMaterialItemsLoading;
+                final bool isLoading = crudState is AddAssignmentItemsLoading;
 
                 if (isLoading) return const SizedBox.shrink();
 
@@ -102,35 +98,30 @@ class _AddNewMaterialItemsDialogState extends State<AddNewMaterialItemsDialog> {
           ],
         ),
 
-        //* Blocking UI: Shows the uploading overlay during both transmission and post-upload fetching.
-        BlocBuilder<MaterialFetchCubit, MaterialFetchState>(
-          builder: (context, state) {
-            return BlocBuilder<MaterialCrudCubit, MaterialCrudState>(
-              builder: (context, crudState) {
-                if (crudState is AddMaterialItemsLoading ||
-                    state is MaterialFetchLoading) {
-                  return const UploadingOverlay();
-                }
-                return const SizedBox.shrink();
-              },
-            );
+        //* Blocking UI Overlay
+        BlocBuilder<AssignmentDetailsCubit, AssignmentDetailsState>(
+          builder: (context, crudState) {
+            if (crudState is AddAssignmentItemsLoading) {
+              return const UploadingOverlay();
+            }
+            return const SizedBox.shrink();
           },
         ),
       ],
     );
   }
 
-  /// Handles the confirmation of adding new files to the material topic.
+  /// Handles the confirmation logic.
   void _handleConfirm() {
-    //? Extracting the picked files via the GlobalKey before triggering the Cubit.
     final allFiles = _sectionKey.currentState?.allPickedFiles ?? [];
 
     if (allFiles.isNotEmpty) {
-      context.read<MaterialCrudCubit>().addNewItemsOnly(
-        materialId: widget.materialId,
-        courseId: widget.courseId,
-        newFiles: allFiles,
-      );
+      context.read<AssignmentDetailsCubit>().uploadNewItems(
+            courseId: widget.courseId,
+            assignmentId: widget.assignmentId,
+            newFiles: allFiles,
+            classworkId: widget.classworkId,
+          );
     } else {
       AppToast.warning(
         context,

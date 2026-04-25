@@ -52,8 +52,8 @@ class AssignmentDetailsScheduleCard extends StatelessWidget {
 
   Widget _buildTimeNode(String label, String time, Color color) {
 
-    final String displayTime = time.contains(',') ? time.split(',')[0] : time;
-
+   final String displayTime = time;
+   
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
