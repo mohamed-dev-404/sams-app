@@ -57,7 +57,8 @@ class AssignmentDetailsView extends StatelessWidget {
             current is AssignmentDetailsLoading ||
             current is AssignmentDetailsSuccess ||
             current is AssignmentDetailsFailure||
-            current is  DeleteAssignmentItemSuccess,
+            current is  DeleteAssignmentItemSuccess||
+            current is  AddAssignmentItemsSuccess,
         builder: (context, state) {
           if (state is AssignmentDetailsLoading) {
             return const Scaffold(body: Center(child: AppAnimatedLoadingIndicator()));
@@ -65,7 +66,8 @@ class AssignmentDetailsView extends StatelessWidget {
           if (state is AssignmentDetailsFailure) {
             return Center(child: Text(state.errMessage));
           }
-          if (state is AssignmentDetailsSuccess|| state is  DeleteAssignmentItemSuccess) {
+          
+          if (state is AssignmentDetailsSuccess|| state is  DeleteAssignmentItemSuccess || state is  AddAssignmentItemsSuccess) {
             final assignment = (state as dynamic).assignment;
       
             return AdaptiveLayout(

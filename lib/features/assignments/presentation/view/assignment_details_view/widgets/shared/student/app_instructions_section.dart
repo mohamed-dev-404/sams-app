@@ -19,7 +19,7 @@ class AssignmentInstructionsSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         double width = constraints.maxWidth;
-        double height = constraints.maxHeight;
+      //  double height = constraints.maxHeight;
 
         return Container(
           padding: const EdgeInsets.all(
