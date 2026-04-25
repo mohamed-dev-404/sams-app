@@ -6,7 +6,6 @@ import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/data/model/helper/assignment_status_enum.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/logic/assignment_action_type.dart';
-import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/logic/assignment_navigation_handler.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/instructor/assignment_instructor_action_card.dart';
 
 class AssignmentActionsList extends StatelessWidget {
