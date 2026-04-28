@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/assignments/data/model/get_all_submissions/ass_submission_model.dart';
@@ -22,9 +24,9 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)?.isCurrent ?? false) {
-      context
-          .read<AssignmentSubmissionCubit>()
-          .getAllSubmissions(assignmentId: assignmentId);
+      context.read<AssignmentSubmissionCubit>().getAllSubmissions(
+        assignmentId: assignmentId,
+      );
     }
 
     return Scaffold(
@@ -59,10 +61,12 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
 
                       const SizedBox(height: 32),
 
-                      BlocBuilder<AssignmentSubmissionCubit,
-                          AssignmentSubmissionState>(
+                      BlocBuilder<
+                        AssignmentSubmissionCubit,
+                        AssignmentSubmissionState
+                      >(
                         builder: (context, state) {
-                          if (state is SubmissionsLoading ) {
+                          if (state is SubmissionsLoading) {
                             return const Center(
                               child: AppAnimatedLoadingIndicator(),
                             );
@@ -190,8 +194,8 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
     final crossAxisCount = width > 1100
         ? 3
         : width > 800
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -207,13 +211,22 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
         final item = list[index];
 
         return SubmissionCard(
-          studentName: item.studentInfo.name,
-          academicId: item.studentInfo.academicId,
+          studentName: item.studentInfo.name ?? '',
+          academicId: item.studentInfo.academicId ?? '',
           formattedTime: item.formattedTime,
           displayScore: item.earnedPoints.toString(),
           maxScore: item.points.toString(),
           isGraded: !item.neededReview,
-          onTap: () {},
+          onTap: () {
+            context.push(
+              RoutesName.submissionDetails,
+              extra: {
+                'submissionId': item.id,
+                'neededReview': item.neededReview,
+                'courseId': '',
+              },
+            );
+          },
         );
       },
     );

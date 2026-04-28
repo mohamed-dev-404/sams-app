@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/mobile/mobile_custom_app_bar.dart';
@@ -14,17 +16,14 @@ import 'package:sams_app/features/assignments/presentation/view_model/cubits/ass
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_state.dart';
 
 class AssignmentSubmissionMobileLayout extends StatelessWidget {
-  const AssignmentSubmissionMobileLayout({super.key, required this.assignmentId});
+  const AssignmentSubmissionMobileLayout({
+    super.key,
+    required this.assignmentId,
+  });
   final String assignmentId;
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.isCurrent ?? false) {
-      context
-          .read<AssignmentSubmissionCubit>()
-          .getAllSubmissions(assignmentId: assignmentId);
-    }
-
     return Scaffold(
       appBar: const MobileCustomAppBar(
         title: 'Assignmet Submission',
@@ -37,11 +36,11 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
               builder: (context, state) {
                 if (state is SubmissionsLoading) {
                   return const Center(
-                              child: AppAnimatedLoadingIndicator(),
-                            );
+                    child: AppAnimatedLoadingIndicator(),
+                  );
                 } else if (state is SubmissionsFailure) {
-                  return const Center(
-                    child: Text('Failed to load submissions'),
+                  return Center(
+                    child: Text(state.errMessage),
                   );
                 }
                 int totalSubmitted = 0;
@@ -52,10 +51,10 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                 if (state is SubmissionsSuccess) {
                   final allList = state.submissions.submissions;
                   gradedList = allList
-                      .where((e) => e.neededReview == true)
+                      .where((e) => e.neededReview == false)
                       .toList();
                   neddedReviewList = allList
-                      .where((e) => e.neededReview == false)
+                      .where((e) => e.neededReview == true)
                       .toList();
                   final submissions = state.submissions;
                   totalSubmitted = submissions.stats.submitted;
@@ -125,7 +124,9 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                               Colors.orange,
                             ),
                           ),
-                          _buildSubmissionSliverList(neddedReviewList),
+                          _buildSubmissionSliverList(
+                            list: neddedReviewList,
+                          ), // تأكدي إن دي neddedReviewList
                         ],
 
                         /// ================= GRADED =================
@@ -133,7 +134,9 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                           SliverToBoxAdapter(
                             child: _buildSectionTitle('Graded', Colors.green),
                           ),
-                          _buildSubmissionSliverList(gradedList),
+                          _buildSubmissionSliverList(
+                            list: gradedList,
+                          ),
                         ],
                       ],
 
@@ -180,7 +183,9 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
     );
   }
 
-  SliverList _buildSubmissionSliverList(List<AssSubmissionModel> list) {
+  SliverList _buildSubmissionSliverList({
+    required List<AssSubmissionModel> list,
+  }) {
     return SliverList.builder(
       itemCount: list.length,
       itemBuilder: (context, index) {
@@ -189,14 +194,21 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: SubmissionCard(
-            studentName: item.studentInfo.name,
-            academicId: item.studentInfo.academicId,
+            studentName: item.studentInfo.name??'',
+            academicId: item.studentInfo.academicId??'',
             formattedTime: item.formattedTime,
             displayScore: item.earnedPoints.toString(),
             maxScore: item.points.toString(),
             isGraded: !item.neededReview,
             onTap: () {
-              // TODO: navigate
+              context.push(
+                RoutesName.submissionDetails,
+                extra: {
+                  'submissionId': item.id,
+                  'neededReview':item.neededReview,
+                  'courseId': '',
+                },
+              );
             },
           ),
         );
