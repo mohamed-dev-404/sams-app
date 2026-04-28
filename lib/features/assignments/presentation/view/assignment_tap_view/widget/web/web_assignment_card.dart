@@ -35,7 +35,7 @@ class _WebAssignmentCardState extends State<WebAssignmentCard> {
       onExit: (_) => setState(() => isHovered = false),
       cursor: isClosed ? SystemMouseCursors.basic : SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: isClosed ? null : widget.onTap,
+        onTap: widget.onTap,
         child: Container(
           decoration: BoxDecoration(
             color: style.backgroundColor,

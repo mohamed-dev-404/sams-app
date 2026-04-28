@@ -5,7 +5,7 @@ import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
-import 'package:sams_app/features/assignments/data/model/get_all_submissions/ass_submission_model.dart';
+import 'package:sams_app/features/assignments/data/model/get_all_submissions/assignment_submission_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission/shared/assign_submission_states_bar.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission/shared/submission_card.dart';
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_cubit.dart';

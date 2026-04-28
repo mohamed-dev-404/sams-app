@@ -20,8 +20,6 @@ class AssignmentActionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (assignment.state == AssignmentState.closed)
-      return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,6 +88,7 @@ class AssignmentActionsList extends StatelessWidget {
         ];
       case AssignmentState.closed:
         return [
+       //    AssignmentActionType.viewSubmissions,
           AssignmentActionType.gradeSubmissions,
           //AssignmentActionType.viewAnalytics,
         ];

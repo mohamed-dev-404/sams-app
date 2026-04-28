@@ -1,12 +1,9 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
-import 'package:sams_app/features/assignments/data/model/helper/assignment_status_enum.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/logic/assignment_details_handler.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_attached_files_grid.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_details_header.dart';
@@ -66,9 +63,8 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
         // Right Column: Action List Container
         Expanded(
           flex: 4,
-          child: _isDraft()
-              ? Center(child: Lottie.asset(AppLottie.empty, height: 250))
-              : _buildSideContent(),
+          child: 
+               _buildSideContent(),
         ),
       ],
     );
@@ -81,7 +77,7 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
       children: [
         _buildMainBody(context),
         const SizedBox(height: 32),
-        _isDraft() ? const SizedBox() : _buildSideContent(),
+         _buildSideContent(),
       ],
     );
   }
@@ -129,10 +125,10 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
     );
   }
 
-  bool _isDraft() {
-    return assignment.status == AssignmentStatus.assigned &&
-        assignment.points == 0;
-  }
+  // bool _isDraft() {
+  //   return assignment.status == AssignmentStatus.assigned &&
+  //       assignment.points == 0;
+  // }
 
   Widget _buildPremiumUploadZone(BuildContext context) {
     return DottedBorder(
@@ -184,7 +180,7 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Click to upload new materials',
+                    'Click to upload new assignment',
                     style: AppStyles.mobileBodyLargeMd.copyWith(
                       color: AppColors.primaryDark,
                     ),

@@ -11,7 +11,7 @@ class ApproveAllButton extends StatelessWidget {
       onPressed: onTap,
       icon: const Icon(Icons.check, color: Colors.white, size: 18),
       label: const Text(
-        "Approve All",
+        'Approve All',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 14,
@@ -19,13 +19,13 @@ class ApproveAllButton extends StatelessWidget {
       ),
 
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8A00), // 🔥 Orange color
+        backgroundColor: const Color(0xFFFF8A00),
         foregroundColor: Colors.white,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
 
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // 👈 Rounded زي الصورة
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

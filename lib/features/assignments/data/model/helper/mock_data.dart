@@ -39,7 +39,7 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 
   // 2. STUDENT: Submitted (handed_in)
@@ -78,7 +78,7 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 
   // 3. STUDENT: Missed (status: missed)
@@ -117,7 +117,7 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 
   // 4. STUDENT: Missed (assigned + overdue - edge case)
@@ -156,7 +156,7 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 
   // 5. INSTRUCTOR: Ongoing
@@ -184,7 +184,7 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 
   // 6. INSTRUCTOR: Closed
@@ -212,6 +212,6 @@ List<AssignmentModel> mockAssignments = [
         key: 'images/sample.png',
         displayUrl: 'https://placeholder.com/600x400',
       ),
-    ],
+    ], submittedItems: [],
   ),
 ];
