@@ -448,11 +448,11 @@ class AppRouter {
       ),
 
       GoRoute(
-        name: RoutesName.studentProfile,
-        path: RoutesName.studentProfile,
+        name: RoutesName.submissionDetails,
+        path: RoutesName.submissionDetails,
         builder: (context, state) {
           final extra = RouterPayloadCache.get<Map<String, dynamic>>(
-            RoutesName.studentProfile,
+            RoutesName.submissionDetails,
             state.extra,
           );
           if (extra == null) return _fallbackHome();

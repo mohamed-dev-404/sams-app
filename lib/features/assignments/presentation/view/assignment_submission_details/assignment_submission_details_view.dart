@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/mobile/assignment_submission_details_mobile_layout.dart';
+import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/web/assignment_submission_details_web_layout.dart';
 
 class AssignmentSubmissionDetailsView extends StatelessWidget {
   const AssignmentSubmissionDetailsView({super.key});
@@ -10,7 +11,7 @@ class AssignmentSubmissionDetailsView extends StatelessWidget {
     return AdaptiveLayout(
       mobileLayout: (context) =>
           const AssignmentSubmissionDetailsMobileLayout(),
-      webLayout: (context) => const Placeholder(),
+      webLayout: (context) =>  const AssignmentSubmissionDetailsWebLayout(neededReview: true,),
     );
   }
 }

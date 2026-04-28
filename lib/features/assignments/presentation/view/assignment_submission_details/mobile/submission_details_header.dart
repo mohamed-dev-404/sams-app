@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/widgets/shared/general_arrow_back.dart';
 
 class SubmissionDetailsHeader extends StatelessWidget {
@@ -17,13 +18,17 @@ class SubmissionDetailsHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const GeneralArrowBack(
-                    color: AppColors.white,
-                  ),
-                ),
-                const SizedBox(width: 40),
+                SizeConfig.isMobile(context)
+                    ? IconButton(
+                        onPressed: () => context.pop(),
+                        icon: const GeneralArrowBack(
+                          color: AppColors.white,
+                        ),
+                      )
+                    : const SizedBox(width: 40),
+                SizeConfig.isMobile(context)
+                    ? const SizedBox(width: 40)
+                    : const Expanded(child: SizedBox()),
                 const Text(
                   'Student Profile',
                   style: TextStyle(
@@ -32,6 +37,9 @@ class SubmissionDetailsHeader extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+                SizeConfig.isMobile(context)
+                    ? const SizedBox(width: 40)
+                    : const Expanded(child: SizedBox()),
               ],
             ),
           ),

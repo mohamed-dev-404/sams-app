@@ -12,7 +12,7 @@ List<AssignmentModel> mockAssignments = [
     createdAt: DateTime.now().subtract(const Duration(days: 1)),
     dueDate: DateTime.now().add(const Duration(days: 3)),
     points: 100,
-    status: AssignmentStatus.assigned,
+    status: AssignmentStatus.ongoing,
     enablePlagiarismCheck: false,
     plagiarismThreshold: null,
     classworkId: 'cw_01',
