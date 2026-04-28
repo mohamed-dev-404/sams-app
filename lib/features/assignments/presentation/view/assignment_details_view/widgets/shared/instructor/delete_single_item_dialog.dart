@@ -45,18 +45,12 @@ class DeleteAssignmentItemDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Are you sure you want to remove "${item.originalFileName}" from this assignment?',
+            'Are you sure you want to remove "${item.originalFileName}" from this assignment?\n\n This will permanently delete the file resource.',
             style: AppStyles.mobileBodyMediumRg.copyWith(
               color: AppColors.primaryDark,
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'This will permanently delete the file resource.',
-            style: AppStyles.mobileBodySmallRg.copyWith(
-              color: Colors.red.shade700,
-            ),
-          ),
+          const SizedBox(height: 20),
         ],
       ),
       actionsPadding: const EdgeInsets.fromLTRB(16, 10, 16, 20),

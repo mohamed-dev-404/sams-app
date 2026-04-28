@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/helper/app_toast.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/configs/size_config.dart';
@@ -19,7 +20,8 @@ class AddNewAssignmentItemsDialog extends StatefulWidget {
   const AddNewAssignmentItemsDialog({
     super.key,
     required this.courseId,
-    required this.assignmentId, required this.classworkId,
+    required this.assignmentId,
+    required this.classworkId,
   });
 
   @override
@@ -27,7 +29,8 @@ class AddNewAssignmentItemsDialog extends StatefulWidget {
       _AddNewAssignmentItemsDialogState();
 }
 
-class _AddNewAssignmentItemsDialogState extends State<AddNewAssignmentItemsDialog> {
+class _AddNewAssignmentItemsDialogState
+    extends State<AddNewAssignmentItemsDialog> {
   //* Accessing the internal state of the assignment section to retrieve picked files.
   final GlobalKey<CourseAssignmentSectionState> _sectionKey = GlobalKey();
 
@@ -64,7 +67,7 @@ class _AddNewAssignmentItemsDialogState extends State<AddNewAssignmentItemsDialo
             ),
           ),
           actions: [
-            BlocBuilder< AssignmentDetailsCubit, AssignmentDetailsState>(
+            BlocBuilder<AssignmentDetailsCubit, AssignmentDetailsState>(
               builder: (context, crudState) {
                 final bool isLoading = crudState is AddAssignmentItemsLoading;
 
@@ -115,13 +118,13 @@ class _AddNewAssignmentItemsDialogState extends State<AddNewAssignmentItemsDialo
   void _handleConfirm() {
     final allFiles = _sectionKey.currentState?.allPickedFiles ?? [];
 
-    if (allFiles.isNotEmpty) {
+    if (allFiles.isNotEmpty && CurrentRole.role == UserRole.instructor) {
       context.read<AssignmentDetailsCubit>().uploadNewItems(
-            courseId: widget.courseId,
-            assignmentId: widget.assignmentId,
-            newFiles: allFiles,
-            classworkId: widget.classworkId,
-          );
+        courseId: widget.courseId,
+        assignmentId: widget.assignmentId,
+        newFiles: allFiles,
+        classworkId: widget.classworkId,
+      );
     } else {
       AppToast.warning(
         context,
