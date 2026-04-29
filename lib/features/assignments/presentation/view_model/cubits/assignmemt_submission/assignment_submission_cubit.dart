@@ -37,8 +37,12 @@ class AssignmentSubmissionCubit extends Cubit<AssignmentSubmissionState>
 
   Future<void> getSubmissionDetails({
     required String submissionId,
+    bool showLoading = true,
   }) async {
-    emit(SubmissionDetailsLoading());
+    // Added showLoading parameter to allow silent refresh after grading
+    if (showLoading) {
+      emit(SubmissionDetailsLoading());
+    }
 
     final result = await repo.getSubmissionDetails(
       submissionId: submissionId,

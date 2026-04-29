@@ -442,8 +442,11 @@ class AppRouter {
             state.extra,
           );
           if (extra == null) return _fallbackHome();
+         final assignmentId = extra['assignmentId'] as String;
+          final enablePlagiarismCheck = extra['enablePlagiarismCheck'] as bool;
 
-          return AssignmentSubmissionView(assignmentId: extra['assignmentId']);
+          return AssignmentSubmissionView(assignmentId: assignmentId,enablePlagiarismCheck: enablePlagiarismCheck,);
+
         },
       ),
 
@@ -456,10 +459,9 @@ class AppRouter {
             state.extra,
           );
           if (extra == null) return _fallbackHome();
-          final submissionId = extra['submissionId'] as String? ?? '';
-          final needeReview = extra['neededReview'] as bool;
+           final submissionId = extra['submissionId'] as String;
 
-          return  AssignmentSubmissionDetailsView(submissionId:submissionId,neededReview: needeReview, );
+          return  AssignmentSubmissionDetailsView(submissionId:submissionId );
         },
       ),
 

@@ -222,7 +222,6 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
               RoutesName.submissionDetails,
               extra: {
                 'submissionId': item.id,
-                'neededReview': item.neededReview,
                 'courseId': '',
               },
             );

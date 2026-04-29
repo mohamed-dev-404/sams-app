@@ -14,121 +14,106 @@ import 'package:sams_app/features/assignments/presentation/view_model/cubits/ass
 class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
   const AssignmentSubmissionDetailsMobileLayout({
     super.key,
-    required this.neededReview,
+    required this.submissionId, // Use this for refreshing data
   });
-  final bool neededReview;
+  
+  final String submissionId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF158A9E),
-      body: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
-        builder: (context, state) {
-          if (state is SubmissionDetailsLoading) {
-            return const Center(
-              child: AppAnimatedLoadingIndicator(),
-            );
-          } else if (state is SubmissionDetailsFailure) {
-            return Center(
-              child: Text(state.errMessage),
-            );
-          } else if (state is SubmissionDetailsSuccess) {
-            final items = state.details.submittedItems;
-            return Column(
-              children: [
-                ///  Header
-                SubmissionDetailsHeader(
-                  studentInfo: state.details.studentInfo,
-                ),
+      // BlocListener handles the logic of what happens AFTER a successful grade
+      body: BlocListener<AssignmentSubmissionCubit, AssignmentSubmissionState>(
+        listener: (context, state) {
+          if (state is GradeSubmissionSuccess) {
+            // Re-fetch data silently (without showing a full-screen loader)
+            context.read<AssignmentSubmissionCubit>().getSubmissionDetails(
+                  submissionId: submissionId,
+                  showLoading: false, 
+                );
+          }
+        },
+        child: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
+          builder: (context, state) {
+            if (state is SubmissionDetailsLoading) {
+              return const Center(child: AppAnimatedLoadingIndicator());
+            } 
+            
+            if (state is SubmissionDetailsFailure) {
+              return Center(child: Text(state.errMessage));
+            } 
+            
+            if (state is SubmissionDetailsSuccess) {
+              final items = state.details.submittedItems;
+              // Check if review is still needed based on fetched data
+              final bool isReviewRequired = state.details.neededReview; 
 
-                ///  Bottom Container
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF4F4F4),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
+              return Column(
+                children: [
+                  SubmissionDetailsHeader(studentInfo: state.details.studentInfo),
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF4F4F4),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                       ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Documents',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Documents', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 16),
+                            // Map through submitted files
+                            ...items.map((file) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: AnimatedDocumentCard(
+                                    title: file.originalFileName ?? '',
+                                    subtitle: 'Tap to open document',
+                                    type: file.displayUrl?.fileContentType.split('/').last ?? '',
+                                    icon: Icons.picture_as_pdf,
+                                    color: Colors.red,
+                                    onTap: () {
+                                      AssignmentDetailsHandler.openMaterialItem(
+                                        context,
+                                        AssignmentItemModel(
+                                          displayUrl: file.displayUrl,
+                                          originalFileName: file.originalFileName,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )),
+                            AnimatedDocumentCard(
+                              title: 'Similarity Report',
+                              subtitle: 'Preview plagiarism check',
+                              type: 'View',
+                              icon: Icons.search,
+                              color: Colors.blue,
+                              onTap: () => _showSimilarityDialog(context),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          ...items.map(
-                            (file) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: AnimatedDocumentCard(
-                                title: file.originalFileName ?? '',
-                                subtitle: 'Tap to open document',
-                                type:
-                                    file.displayUrl?.fileContentType
-                                        .split('/')
-                                        .last ??
-                                    '',
-                                icon: Icons.picture_as_pdf,
-                                color: Colors.red,
-                                onTap: () {
-                                  final url = file.displayUrl ?? '';
-                                  final itemToOpen = AssignmentItemModel(
-                                    displayUrl: file.displayUrl,
-                                    originalFileName: file.originalFileName,
-                                  );
-
-                                  AssignmentDetailsHandler.openMaterialItem(
-                                    context,
-                                    itemToOpen,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-
-                          AnimatedDocumentCard(
-                            title: 'Similarity Report',
-                            subtitle: 'Preview plagiarism check',
-                            type: 'View',
-                            icon: Icons.search,
-                            color: Colors.blue,
-                            onTap: () {
-                              _showSimilarityDialog(context);
-                            },
-                          ),
-
-                          const SizedBox(height: 24),
-                          if (neededReview)
-                            const Text(
-                              'Decision',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-
-                          const SizedBox(height: 16),
-
-                          /// Condition: only show buttons if neededReview == true
-                          if (neededReview) const MobileDecisionButtons(),
-                        ],
+                            const SizedBox(height: 24),
+                            // Section disappears automatically if isReviewRequired becomes false
+                            if (isReviewRequired) ...[
+                              const Text('Decision', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 16),
+                              MobileDecisionButtons(submissionId: submissionId),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
+                ],
+              );
+            }
+            
+            // Default fallback to avoid "dead code" warning and ensure a widget is returned
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

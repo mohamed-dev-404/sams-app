@@ -9,10 +9,9 @@ import 'package:sams_app/features/assignments/presentation/view_model/cubits/ass
 class AssignmentSubmissionDetailsView extends StatelessWidget {
   const AssignmentSubmissionDetailsView({
     super.key,
-    required this.submissionId, required this.neededReview,
+    required this.submissionId,
   });
   final String submissionId;
-  final bool neededReview;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +19,8 @@ class AssignmentSubmissionDetailsView extends StatelessWidget {
       create: (context) => getIt<AssignmentSubmissionCubit>()..getSubmissionDetails(submissionId: submissionId),
       child: AdaptiveLayout(
         mobileLayout: (context) =>
-              AssignmentSubmissionDetailsMobileLayout(neededReview: neededReview,),
-        webLayout: (context) =>  AssignmentSubmissionDetailsWebLayout(
-          neededReview: neededReview,
+              AssignmentSubmissionDetailsMobileLayout(submissionId: submissionId,),
+        webLayout: (context) =>  AssignmentSubmissionDetailsWebLayout(submissionId: submissionId,
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/extentions/filter_files_helper.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_item_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/logic/assignment_details_handler.dart';
@@ -13,147 +14,121 @@ import 'package:sams_app/features/assignments/presentation/view_model/cubits/ass
 class AssignmentSubmissionDetailsWebLayout extends StatelessWidget {
   const AssignmentSubmissionDetailsWebLayout({
     super.key,
-    required this.neededReview,
+    required this.submissionId, // 1. Added submissionId to the constructor
   });
 
-  final bool neededReview;
+  final String submissionId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF158A9E),
-      body: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
-        builder: (context, state) {
-          if (state is SubmissionDetailsLoading) {
-            return const Center(
-              child: AppAnimatedLoadingIndicator(),
-            );
-          } else if (state is SubmissionDetailsFailure) {
-            return Center(
-              child: Text(
-                state.errMessage,
-                style: const TextStyle(color: Colors.white),
-              ),
-            );
-          } else if (state is SubmissionDetailsSuccess) {
-            final details = state.details;
-            final items = details.submittedItems;
-            return Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1000),
-                child: Column(
-                  children: [
-                    /// HEADER (same as mobile)
-                    SubmissionDetailsHeader(
-                      studentInfo: details.studentInfo,
-                    ),
+      // 2. Added BlocListener to handle the post-grading refresh logic
+      body: BlocListener<AssignmentSubmissionCubit, AssignmentSubmissionState>(
+        listener: (context, state) {
+          if (state is GradeSubmissionSuccess) {
+            // Trigger a silent refresh (no full-screen loader) to update UI after grading
+            context.read<AssignmentSubmissionCubit>().getSubmissionDetails(
+                  submissionId: submissionId,
+                  showLoading: false,
+                );
+          }
+        },
+        child: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
+          builder: (context, state) {
+            if (state is SubmissionDetailsLoading) {
+              return const Center(child: AppAnimatedLoadingIndicator());
+            } else if (state is SubmissionDetailsFailure) {
+              return Center(
+                child: Text(
+                  state.errMessage,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            } else if (state is SubmissionDetailsSuccess) {
+              final details = state.details;
+              final items = details.submittedItems;
+              // 3. Extract the current review status from the state to control UI rebuilds
+              final bool isReviewRequired = details.neededReview;
 
-                    const SizedBox(height: 20),
-
-                    /// MAIN CARD
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.symmetric(horizontal: 60),
-                        padding: const EdgeInsets.all(32),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF4F4F4),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30),
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: Column(
+                    children: [
+                      SubmissionDetailsHeader(studentInfo: details.studentInfo),
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.symmetric(horizontal: 60),
+                          padding: const EdgeInsets.all(32),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF4F4F4),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                           ),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// DOCUMENTS TITLE
-                              const Text(
-                                'Documents',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              /// PDF CARD
-                              AnimatedDocumentCard(
-                                title: 'Assignment PDF',
-                                subtitle: 'Tap to open document',
-                                type: 'PDF',
-                                icon: Icons.picture_as_pdf,
-                                color: Colors.red,
-                                onTap: () {},
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              /// DYNAMIC DOCUMENTS LIST
-                              ...items.map(
-                                (file) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: AnimatedDocumentCard(
-                                    title:
-                                        file.originalFileName ??
-                                        'Assignment PDF',
-                                    subtitle: 'Tap to open document',
-                                    type: 'File',
-                                    icon: Icons.picture_as_pdf,
-                                    color: Colors.red,
-                                    onTap: () {
-                                      // Logic to open item using the same Handler logic
-                                      final itemToOpen = AssignmentItemModel(
-                                        displayUrl: file.displayUrl,
-                                        originalFileName: file.originalFileName,
-                                      );
-                                      AssignmentDetailsHandler.openMaterialItem(
-                                        context,
-                                        itemToOpen,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              AnimatedDocumentCard(
-                                title: 'Similarity Report',
-                                subtitle: 'Preview plagiarism check',
-                                type: 'View',
-                                icon: Icons.search,
-                                color: Colors.blue,
-                                onTap: () {
-                                  _showSimilarityDialog(context);
-                                },
-                              ),
-
-                              const SizedBox(height: 30),
-
-                              /// DECISION TITLE
-                              if (neededReview)
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 const Text(
-                                  'Decision',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
+                                  'Documents',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(height: 20),
+                                ...items.map(
+                                  (file) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: AnimatedDocumentCard(
+                                      title: file.originalFileName ?? 'Assignment PDF',
+                                      subtitle: 'Tap to open document',
+                                      type: file.displayUrl?.fileContentType.split('/').last ?? 'File',
+                                      icon: Icons.picture_as_pdf,
+                                      color: Colors.red,
+                                      onTap: () {
+                                        AssignmentDetailsHandler.openMaterialItem(
+                                          context,
+                                          AssignmentItemModel(
+                                            displayUrl: file.displayUrl,
+                                            originalFileName: file.originalFileName,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-
-                              const SizedBox(height: 16),
-
-                              ///  condition: only show buttons if neededReview == true
-                              if (neededReview) const MobileDecisionButtons(),
-                            ],
+                                AnimatedDocumentCard(
+                                  title: 'Similarity Report',
+                                  subtitle: 'Preview plagiarism check',
+                                  type: 'View',
+                                  icon: Icons.search,
+                                  color: Colors.blue,
+                                  onTap: () => _showSimilarityDialog(context),
+                                ),
+                                const SizedBox(height: 30),
+                                // 4. This section will automatically disappear when isReviewRequired becomes false
+                                if (isReviewRequired) ...[
+                                  const Text(
+                                    'Decision',
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  // Pass submissionId to buttons to trigger the grade request
+                                  MobileDecisionButtons(submissionId: submissionId),
+                                ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
