@@ -77,22 +77,27 @@ class AssignmentSubmissionDetailsWebLayout extends StatelessWidget {
               return Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1000),
-                  child: Column(
-                    children: [
-                      SubmissionDetailsHeader(studentInfo: details.studentInfo),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.symmetric(horizontal: 60),
-                          padding: const EdgeInsets.all(32),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF4F4F4),
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(30),
-                            ),
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(
+                      context,
+                    ).copyWith(scrollbars: false),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SubmissionDetailsHeader(
+                            studentInfo: details.studentInfo,
                           ),
-                          child: SingleChildScrollView(
+                          const SizedBox(height: 20),
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 60),
+                            padding: const EdgeInsets.all(32),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF4F4F4),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -159,9 +164,9 @@ class AssignmentSubmissionDetailsWebLayout extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               );

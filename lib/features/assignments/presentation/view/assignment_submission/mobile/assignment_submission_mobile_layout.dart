@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sams_app/core/utils/assets/app_lottie.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/utils/router/routes_name.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
@@ -30,8 +31,8 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
     // Initial data fetch when the screen is first opened
     if (ModalRoute.of(context)?.isCurrent ?? false) {
       context.read<AssignmentSubmissionCubit>().getAllSubmissions(
-            assignmentId: assignmentId,
-          );
+        assignmentId: assignmentId,
+      );
     }
 
     return BlocListener<AssignmentSubmissionCubit, AssignmentSubmissionState>(
@@ -41,7 +42,7 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                state.response.message ,
+                state.response.message,
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.green,
@@ -49,13 +50,13 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
               duration: const Duration(seconds: 3),
             ),
           );
-         // Silent refresh to fetch updated data without showing full-screen loading
+          // Silent refresh to fetch updated data without showing full-screen loading
           context.read<AssignmentSubmissionCubit>().getAllSubmissions(
-                assignmentId: assignmentId,
-                showLoading: false,
-              );
+            assignmentId: assignmentId,
+            showLoading: false,
+          );
         }
-       // Show error message if "Approve All" fails
+        // Show error message if "Approve All" fails
         if (state is ApproveAllFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -75,7 +76,7 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
             builder: (context, state) {
-               // Determine the data source to keep UI stable during button loading states
+              // Determine the data source to keep UI stable during button loading states
               dynamic displayData;
               if (state is SubmissionsSuccess) {
                 displayData = state.submissions;
@@ -84,7 +85,7 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
               } else if (state is ApproveAllSuccess) {
                 displayData = state.submissions;
               }
-               // Show full-screen loading only if there is no existing data
+              // Show full-screen loading only if there is no existing data
               if (state is SubmissionsLoading && displayData == null) {
                 return const Center(child: AppAnimatedLoadingIndicator());
               }
@@ -95,9 +96,14 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
               // If data exists, build the UI
               if (displayData != null) {
                 // Extract full submissions list
-                final List<AssSubmissionModel> allList = displayData.submissions;
-                final gradedList = allList.where((e) => e.neededReview == false).toList();
-                final neddedReviewList = allList.where((e) => e.neededReview == true).toList();
+                final List<AssSubmissionModel> allList =
+                    displayData.submissions;
+                final gradedList = allList
+                    .where((e) => e.neededReview == false)
+                    .toList();
+                final neddedReviewList = allList
+                    .where((e) => e.neededReview == true)
+                    .toList();
 
                 return CustomScrollView(
                   slivers: [
@@ -108,7 +114,9 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppColors.primaryLight,
                           borderRadius: BorderRadius.circular(35),
-                          border: Border.all(color: AppColors.secondaryLightActive),
+                          border: Border.all(
+                            color: AppColors.secondaryLightActive,
+                          ),
                         ),
                         child: Column(
                           children: [
@@ -124,7 +132,7 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                     ),
                     const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-                     /// STATS BAR (submitted / marked / unmarked)
+                    /// STATS BAR (submitted / marked / unmarked)
                     SliverToBoxAdapter(
                       child: AssignSubmissionsStatsBar(
                         totalSubmitted: displayData.stats.submitted,
@@ -134,6 +142,7 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                     ),
 
                     const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
                     /// EMPTY STATE
                     if (allList.isEmpty)
                       SliverToBoxAdapter(
@@ -151,7 +160,10 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                       /// NEEDS REVIEW SECTION
                       if (neddedReviewList.isNotEmpty) ...[
                         SliverToBoxAdapter(
-                          child: _buildSectionTitle('Needs Review', Colors.orange),
+                          child: _buildSectionTitle(
+                            'Needs Review',
+                            Colors.orange,
+                          ),
                         ),
                         _buildSubmissionSliverList(list: neddedReviewList),
                       ],
@@ -176,7 +188,9 @@ class AssignmentSubmissionMobileLayout extends StatelessWidget {
                                   isLoading: state is ApproveAllLoading,
                                   isSuccess: state is ApproveAllSuccess,
                                   onTap: () {
-                                    context.read<AssignmentSubmissionCubit>().approveAllSubmissions(
+                                    context
+                                        .read<AssignmentSubmissionCubit>()
+                                        .approveAllSubmissions(
                                           assignmentId: assignmentId,
                                         );
                                   },

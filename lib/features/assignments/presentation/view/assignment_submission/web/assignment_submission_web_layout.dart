@@ -29,8 +29,8 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
     /// Initial data fetch when screen opens
     if (ModalRoute.of(context)?.isCurrent ?? false) {
       context.read<AssignmentSubmissionCubit>().getAllSubmissions(
-            assignmentId: assignmentId,
-          );
+        assignmentId: assignmentId,
+      );
     }
 
     return BlocListener<AssignmentSubmissionCubit, AssignmentSubmissionState>(
@@ -46,9 +46,9 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
 
           /// Silent refresh (no full screen loading)
           context.read<AssignmentSubmissionCubit>().getAllSubmissions(
-                assignmentId: assignmentId,
-                showLoading: false,
-              );
+            assignmentId: assignmentId,
+            showLoading: false,
+          );
         }
 
         /// Show error message
@@ -81,11 +81,17 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                               AppLottie.quizSubmissions,
                               width: 200,
                             ),
-                            const SizedBox(width: 16),
-                            Text(
-                              'Assignment Submissions',
-                              style: AppStyles.mobileBodyXXlargeMd.copyWith(
-                                color: AppColors.primaryDark,
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Assignment Submissions',
+                                  style: AppStyles.mobileBodyXXlargeMd.copyWith(
+                                    color: AppColors.primaryDark,
+                                    fontSize: 24,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -94,8 +100,9 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                         const SizedBox(height: 32),
 
                         BlocBuilder<
-                            AssignmentSubmissionCubit,
-                            AssignmentSubmissionState>(
+                          AssignmentSubmissionCubit,
+                          AssignmentSubmissionState
+                        >(
                           builder: (context, state) {
                             /// Determine data source to keep UI stable
                             dynamic displayData;
@@ -145,14 +152,11 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
 
                               final totalSubmitted =
                                   displayData.stats.submitted;
-                              final totalMarked =
-                                  displayData.stats.marked;
-                              final totalUnmarked =
-                                  displayData.stats.unmarked;
+                              final totalMarked = displayData.stats.marked;
+                              final totalUnmarked = displayData.stats.unmarked;
 
                               return Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   /// STATS BAR
                                   AssignSubmissionsStatsBar(
@@ -175,8 +179,7 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                                     Center(
                                       child: Text(
                                         'No submissions yet!',
-                                        style:
-                                            AppStyles.mobileBodyLargeSb,
+                                        style: AppStyles.mobileBodyLargeSb,
                                       ),
                                     ),
                                   ] else ...[
@@ -187,15 +190,16 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                                         Colors.orange,
                                       ),
                                       const SizedBox(height: 20),
-                                      _buildGrid(
-                                          needsReviewList, context),
+                                      _buildGrid(needsReviewList, context),
                                       const SizedBox(height: 40),
                                     ],
 
                                     /// GRADED SECTION
                                     if (gradedList.isNotEmpty) ...[
                                       _buildSectionTitle(
-                                          'Graded', Colors.green),
+                                        'Graded',
+                                        Colors.green,
+                                      ),
                                       const SizedBox(height: 20),
                                       _buildGrid(gradedList, context),
                                     ],
@@ -205,9 +209,9 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                                     if (enablePlagiarismCheck &&
                                         needsReviewList.isNotEmpty)
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 20),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 20,
+                                        ),
                                         child: Center(
                                           child: SizedBox(
                                             width: 200,
@@ -224,7 +228,8 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
                                               onTap: () {
                                                 context
                                                     .read<
-                                                        AssignmentSubmissionCubit>()
+                                                      AssignmentSubmissionCubit
+                                                    >()
                                                     .approveAllSubmissions(
                                                       assignmentId:
                                                           assignmentId,
@@ -279,8 +284,8 @@ class AssignmentSubmissionWebLayout extends StatelessWidget {
     final crossAxisCount = width > 1100
         ? 3
         : width > 800
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return GridView.builder(
       shrinkWrap: true,
