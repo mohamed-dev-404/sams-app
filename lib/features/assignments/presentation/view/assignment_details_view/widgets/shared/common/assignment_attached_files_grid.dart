@@ -43,7 +43,6 @@ class AssignmentContentGrid extends StatelessWidget {
 
   Widget _buildResponsiveGrid(BuildContext context, List<dynamic> items) {
     return GridView.builder(
-     
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -57,12 +56,12 @@ class AssignmentContentGrid extends StatelessWidget {
         final item = items[index];
 
         return AssignmentItemCard(
-      
           fileName: item.originalFileName ?? 'Attachment ${index + 1}',
           description: '',
           icon: item.icon,
           iconColor: item.color,
-         onTap: () => AssignmentDetailsHandler.openMaterialItem(context, item),
+          onTap: () =>
+              AssignmentDetailsHandler.openAssignmentItem(context, item),
           onDelete: () => AssignmentDetailsHandler.onDeleteItem(
             context,
             assignmentId: assignment.id,

@@ -54,7 +54,7 @@ class AssignmentItemsList extends StatelessWidget {
                 iconColor: item.color,
 
                 onTap: () =>
-                    AssignmentDetailsHandler.openMaterialItem(context, item),
+                    AssignmentDetailsHandler.openAssignmentItem(context, item),
                 onDelete: () => AssignmentDetailsHandler.onDeleteItem(
                   context,
                   assignmentId: assignment.id,

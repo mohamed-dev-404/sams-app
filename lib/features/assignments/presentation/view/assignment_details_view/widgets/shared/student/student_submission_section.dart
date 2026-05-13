@@ -48,7 +48,6 @@ class StudentSubmissionSection extends StatelessWidget {
       ),
       child: Column(
         children: [
-
           Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -78,20 +77,21 @@ class StudentSubmissionSection extends StatelessWidget {
                 ),
 
                 IconButton.filledTonal(
-                  onPressed: () =>
-                   (isMobile)? AssignmentDetailsHandler.onAddSubmissionSheet(
-                        context,
-                        assignment: assignment,
-                        assignmentId: assignment.id,
-                        courseId: courseId,
-                        classworkId: assignment.classworkId,
-                      ):   AssignmentDetailsHandler.onAddSubmissionDialog(
-                        context,
-                        assignment: assignment,
-                        assignmentId: assignment.id,
-                        courseId: courseId,
-                        classworkId: assignment.classworkId,
-                      ),
+                  onPressed: () => (isMobile)
+                      ? AssignmentDetailsHandler.onAddSubmissionSheet(
+                          context,
+                          assignment: assignment,
+                          assignmentId: assignment.id,
+                          courseId: courseId,
+                          classworkId: assignment.classworkId,
+                        )
+                      : AssignmentDetailsHandler.onAddSubmissionDialog(
+                          context,
+                          assignment: assignment,
+                          assignmentId: assignment.id,
+                          courseId: courseId,
+                          classworkId: assignment.classworkId,
+                        ),
 
                   icon: Icon(
                     isSubmitted ? Icons.edit_note_rounded : Icons.add_rounded,
@@ -166,10 +166,11 @@ class StudentSubmissionSection extends StatelessWidget {
                         description: 'submitted',
                         icon: item.icon,
                         iconColor: item.color,
-                        onTap: () => AssignmentDetailsHandler.openMaterialItem(
-                          context,
-                          item,
-                        ),
+                        onTap: () =>
+                            AssignmentDetailsHandler.openAssignmentItem(
+                              context,
+                              item,
+                            ),
                         onDelete: null,
                       ),
                     ),
@@ -182,8 +183,6 @@ class StudentSubmissionSection extends StatelessWidget {
       ),
     );
   }
-
-
 
   Widget _buildStatusIcon(bool isSubmitted) {
     return Container(

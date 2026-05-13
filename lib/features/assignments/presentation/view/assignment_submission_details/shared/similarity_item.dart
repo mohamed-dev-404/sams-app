@@ -61,11 +61,11 @@ class SimilarityItem extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (url != null) {
-                AssignmentDetailsHandler.openMaterialItem(
+                AssignmentDetailsHandler.openAssignmentItem(
                   context,
                   AssignmentItemModel(
                     displayUrl: url!,
-                    originalFileName: "Reference File",
+                    originalFileName: 'Reference File',
                   ),
                 );
               }

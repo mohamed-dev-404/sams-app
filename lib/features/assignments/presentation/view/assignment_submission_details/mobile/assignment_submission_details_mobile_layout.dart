@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sams_app/core/extentions/filter_files_helper.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_item_model.dart';
 import 'package:sams_app/features/assignments/data/model/helper/file_extension_helper.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/logic/assignment_details_handler.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/mobile/mobile_decision_buttons.dart';
+import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/animated_document_card.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/similarity_report_dialog.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/submission_details_header.dart';
-import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/animated_document_card.dart';
-import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/similarity_item.dart';
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_cubit.dart';
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_state.dart';
 
@@ -27,7 +25,6 @@ class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
       backgroundColor: const Color(0xFF158A9E),
       // BlocListener handles the logic of what happens AFTER a successful grade
       body: BlocListener<AssignmentSubmissionCubit, AssignmentSubmissionState>(
-        
         listener: (context, state) {
           if (state is GradeSubmissionSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -61,10 +58,10 @@ class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
           }
         },
         child: BlocBuilder<AssignmentSubmissionCubit, AssignmentSubmissionState>(
-          buildWhen: (previous, current) => 
-      current is SubmissionDetailsLoading || 
-      current is SubmissionDetailsSuccess || 
-      current is SubmissionDetailsFailure,
+          buildWhen: (previous, current) =>
+              current is SubmissionDetailsLoading ||
+              current is SubmissionDetailsSuccess ||
+              current is SubmissionDetailsFailure,
           builder: (context, state) {
             if (state is SubmissionDetailsLoading) {
               return const Center(child: AppAnimatedLoadingIndicator());
@@ -129,7 +126,7 @@ class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
                                   icon: fileIcon,
                                   color: fileColor,
                                   onTap: () {
-                                    AssignmentDetailsHandler.openMaterialItem(
+                                    AssignmentDetailsHandler.openAssignmentItem(
                                       context,
                                       AssignmentItemModel(
                                         displayUrl: file.displayUrl,
@@ -146,7 +143,11 @@ class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
                               type: 'View',
                               icon: Icons.search,
                               color: Colors.blue,
-                              onTap: () => _showSimilarityDialog(context, submissionId, context.read<AssignmentSubmissionCubit>()),
+                              onTap: () => _showSimilarityDialog(
+                                context,
+                                submissionId,
+                                context.read<AssignmentSubmissionCubit>(),
+                              ),
                             ),
                             const SizedBox(height: 24),
                             // Section disappears automatically if isReviewRequired becomes false
@@ -177,16 +178,18 @@ class AssignmentSubmissionDetailsMobileLayout extends StatelessWidget {
       ),
     );
   }
-  void _showSimilarityDialog(BuildContext context, String submissionId, AssignmentSubmissionCubit cubit) {
-  
-  showDialog(
-    context: context,
-    builder: (context) => SimilarityReportDialog(
-      submissionId: submissionId,
-      cubit: cubit,
-    ),
-  );
-}
-}
 
-
+  void _showSimilarityDialog(
+    BuildContext context,
+    String submissionId,
+    AssignmentSubmissionCubit cubit,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => SimilarityReportDialog(
+        submissionId: submissionId,
+        cubit: cubit,
+      ),
+    );
+  }
+}

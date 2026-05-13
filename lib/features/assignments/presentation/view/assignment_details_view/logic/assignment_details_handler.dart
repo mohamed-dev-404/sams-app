@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/utils/constants/app_constants.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_item_model.dart';
 import 'package:sams_app/features/assignments/data/model/assignment_model.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/add_assignment_items_dialog.dart';
@@ -12,15 +13,45 @@ import 'package:sams_app/features/assignments/presentation/view_model/cubits/ass
 import 'package:url_launcher/url_launcher.dart';
 
 class AssignmentDetailsHandler {
-  static void openMaterialItem(BuildContext context, AssignmentItemModel item) {
+  // static void openMaterialItem(BuildContext context, AssignmentItemModel item) {
+  //   final String url = item.displayUrl ?? '';
+  //   if (url.isEmpty) return;
+
+  //   if (kIsWeb) {
+  //     //? Web-specific: Open URLs in a new browser tab.
+  //     launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
+  //   } else {
+  //     //* Mobile-specific: Route to internal preview screens.
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => FilePreviewScreen(
+  //           url: url,
+  //           fileName: item.originalFileName ?? 'File',
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
+
+  static void openAssignmentItem(
+    BuildContext context,
+    AssignmentItemModel item,
+  ) {
     final String url = item.displayUrl ?? '';
     if (url.isEmpty) return;
 
     if (kIsWeb) {
-      //? Web-specific: Open URLs in a new browser tab.
-      launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
+      //* Web-specific: Wrap the URL with Google Viewer to prevent auto-download and show preview.
+      final String googleDocsPreviewUrl =
+          '${AppConstants.googleDocUrl}${Uri.encodeComponent(url)}';
+
+      launchUrl(
+        Uri.parse(googleDocsPreviewUrl),
+        webOnlyWindowName: '_blank',
+      );
     } else {
-      //* Mobile-specific: Route to internal preview screens.
+      //* Mobile-specific: Keep your current working logic.
       Navigator.push(
         context,
         MaterialPageRoute(
