@@ -3,6 +3,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sams_app/core/cache/get_storage.dart';
 import 'package:sams_app/core/cache/secure_storage.dart';
+import 'package:sams_app/core/utils/constants/cache_keys.dart';
 import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/profile/data/models/user_model.dart';
@@ -34,7 +35,11 @@ class ProfileCubit extends HydratedCubit<ProfileState>
           emit(ProfileFailure(failure));
         }
       },
-      (userModel) => emit(ProfileSuccess(userModel)),
+      (userModel) {
+        GetStorageHelper.write(CacheKeys.name, userModel.name);
+        GetStorageHelper.write(CacheKeys.profilePic, userModel.profilePic);
+        emit(ProfileSuccess(userModel));
+      },
     );
   }
 
@@ -84,7 +89,9 @@ class ProfileCubit extends HydratedCubit<ProfileState>
         emit(UploadProfilePicFailure(failure));
       },
       (user) {
+        GetStorageHelper.write(CacheKeys.profilePic, user.profilePic);
         emit(UploadProfilePicSuccess(user));
+        emit(ProfileSuccess(user));
       },
     );
   }
@@ -100,6 +107,7 @@ class ProfileCubit extends HydratedCubit<ProfileState>
     result.fold(
       (failure) => emit(DeleteProfilePicFailure(failure)),
       (user) {
+        GetStorageHelper.remove(CacheKeys.profilePic);
         emit(DeleteProfilePicSuccess(user));
         emit(ProfileSuccess(user));
       },
@@ -115,6 +123,9 @@ class ProfileCubit extends HydratedCubit<ProfileState>
     result.fold(
       (failure) => emit(UpdateNameFailure(failure)),
       (user) {
+        GetStorageHelper.write(CacheKeys.name, user.name);
+        GetStorageHelper.write(CacheKeys.profilePic, user.profilePic);
+
         emit(UpdateNameSuccess(user));
         emit(ProfileSuccess(user));
       },
