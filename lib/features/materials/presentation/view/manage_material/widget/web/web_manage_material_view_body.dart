@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/models/input_field_model.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/features/home/presentation/views/create_course/widgets/shared/basic_information_section.dart';
-import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_header.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/logic/manage_material_mixin.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/course_material_section.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/manage_material_base_layout.dart';
 import 'package:sams_app/features/materials/presentation/view/manage_material/widget/shared/manage_material_submit_button.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/web_header_section.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 
 /// The Web implementation for managing materials (Create/Edit).
@@ -52,7 +52,7 @@ class _WebManageMaterialViewBodyState extends State<WebManageMaterialViewBody>
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const WebHomeHeader(),
+             const WebHeaderSection(title: 'Manage Material',),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,
