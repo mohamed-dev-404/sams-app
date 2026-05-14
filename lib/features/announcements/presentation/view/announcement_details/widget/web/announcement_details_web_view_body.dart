@@ -18,7 +18,7 @@ class AnnouncementDetailsWebViewBody extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 1200),
         child: Column(
           children: [
-            const WebHeaderSection(),
+            const WebHeaderSection(title: 'Announcement Details',),
             const Divider(height: 1, color: AppColors.primaryLight),
             Expanded(
               child: Padding(
