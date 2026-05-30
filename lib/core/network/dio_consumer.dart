@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -118,6 +120,24 @@ class DioConsumer extends ApiConsumer {
         queryParameters: queryParameters,
       );
       return response.data;
+    } catch (e) {
+      _handleException(e);
+    }
+  }
+
+  /// Downloads raw bytes from [path] using [ResponseType.bytes].
+  @override
+  Future<Uint8List> download(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await dio.get<List<int>>(
+        path,
+        queryParameters: queryParameters,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return Uint8List.fromList(response.data ?? []);
     } catch (e) {
       _handleException(e);
     }
