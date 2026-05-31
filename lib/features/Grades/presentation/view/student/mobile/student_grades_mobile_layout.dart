@@ -52,8 +52,6 @@ class StudentGradesMobileLayout extends StatelessWidget {
           );
         }
 
-        final visibleGrades = allGrades.where((g) => g.isVisible).toList();
-
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +70,7 @@ class StudentGradesMobileLayout extends StatelessWidget {
               // ─── Summary Card ───
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: _GradesSummaryCard(grades: visibleGrades),
+                child: _GradesSummaryCard(grades: allGrades),
               ),
 
               // ─── Grades List ───
