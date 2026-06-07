@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_submission_details/shared/similarity_item.dart';
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_cubit.dart';
 import 'package:sams_app/features/assignments/presentation/view_model/cubits/assignmemt_submission/assignment_submission_state.dart';
@@ -42,7 +43,7 @@ class SimilarityReportDialog extends StatelessWidget {
               ),
               child: SizedBox(
                 width: double.maxFinite,
-                child: _buildDialogContent(state),
+                child: _buildDialogContent(context, state),
               ),
             ),
             actions: [
@@ -60,21 +61,50 @@ class SimilarityReportDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildDialogContent(AssignmentSubmissionState state) {
+  Widget _buildDialogContent(
+    BuildContext context,
+    AssignmentSubmissionState state,
+  ) {
     if (state is SimilarityReportLoading) {
       return const SizedBox(
         height: 150,
         child: Center(child: CircularProgressIndicator()),
       );
     } else if (state is SimilarityReportFailure) {
-      return Text(state.errMessage);
+      return SizedBox(
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: AppColors.red, size: 40),
+            const SizedBox(height: 12),
+            Text(
+              state.errMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppColors.red, fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            // TextButton.icon(
+            //   onPressed: () {
+            //     context.read<AssignmentSubmissionCubit>().getSimilarityReport(
+            //       submissionId: submissionId,
+            //     );
+            //   },
+            //   icon: const Icon(Icons.refresh, color: Color(0xFF007A92)),
+            //   label: const Text(
+            //     'Retry',
+            //     style: TextStyle(color: Color(0xFF007A92)),
+            //   ),
+            // ),
+          ],
+        ),
+      );
     } else if (state is SimilarityReportSuccess) {
       final report = state.report;
       return SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            //  Text('Threshold: ${report.assignmentPlagiarismThreshold}%'),
             const Divider(),
             ...report.similarities
                     ?.map(
@@ -95,6 +125,7 @@ class SimilarityReportDialog extends StatelessWidget {
         ),
       );
     }
+
     return const SizedBox.shrink();
   }
 }
