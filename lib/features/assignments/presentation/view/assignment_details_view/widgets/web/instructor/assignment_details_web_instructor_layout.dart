@@ -10,6 +10,7 @@ import 'package:sams_app/features/assignments/presentation/view/assignment_detai
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_details_schedule_card.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/common/assignment_stats_row.dart';
 import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/instructor/assignment_actions_list.dart';
+import 'package:sams_app/features/assignments/presentation/view/assignment_details_view/widgets/shared/instructor/assignment_instructor_banner.dart';
 
 class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
   final AssignmentModel assignment;
@@ -63,8 +64,7 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
         // Right Column: Action List Container
         Expanded(
           flex: 4,
-          child: 
-               _buildSideContent(),
+          child: _buildSideContent(),
         ),
       ],
     );
@@ -77,7 +77,7 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
       children: [
         _buildMainBody(context),
         const SizedBox(height: 32),
-         _buildSideContent(),
+        _buildSideContent(),
       ],
     );
   }
@@ -104,24 +104,34 @@ class AssignmentDetailsWebInstructorLayout extends StatelessWidget {
 
   // * Sidebar Container for Instructor Actions
   Widget _buildSideContent() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primaryLightActive),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: AppColors.primaryLightActive),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withValues(alpha: 0.03),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: AssignmentActionsList(
-        assignment: assignment,
-        courseId: courseId,
-      ),
+          child: AssignmentActionsList(
+            assignment: assignment,
+            courseId: courseId,
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        AssignmentInstructorBanner(
+          assignment: assignment,
+        ),
+      ],
     );
   }
 
