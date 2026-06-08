@@ -27,4 +27,8 @@ jobs:
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel deploy ./build/web --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel deploy ./build/web \
+            --prod \
+            --yes \
+            --token=${{ secrets.VERCEL_TOKEN }}
