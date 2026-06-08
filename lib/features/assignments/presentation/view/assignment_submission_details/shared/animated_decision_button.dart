@@ -31,6 +31,7 @@ class _AnimatedDecisionButtonState extends State<AnimatedDecisionButton> {
 
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        // ignore: deprecated_member_use
         transform: Matrix4.identity()..scale(isHovered ? 1.03 : 1.0),
 
         decoration: BoxDecoration(
@@ -39,7 +40,7 @@ class _AnimatedDecisionButtonState extends State<AnimatedDecisionButton> {
           boxShadow: isHovered
               ? [
                   BoxShadow(
-                    color: widget.color.withOpacity(0.2),
+                    color: widget.color.withValues( alpha: 0.2),
                     blurRadius: 10,
                   ),
                 ]

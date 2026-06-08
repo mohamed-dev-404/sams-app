@@ -34,7 +34,6 @@ class _AddAnnouncementMobileViewBodyState
   Widget build(BuildContext context) {
     return BlocListener<AnnouncementsActionsCubit, AnnouncementsActionsState>(
       listener: (context, state) {
-        // TODO: implement listener
         if (state is AddAnnouncementSuccess) {
           ScaffoldMessenger.of(
             context,

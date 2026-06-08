@@ -139,7 +139,6 @@ class QuizRepositoryImpl implements QuizRepository {
 
   @override
   Future<Either<String, String>> toggleQuizPublished(String quizId) async {
-    // TODO: implement toggleQuizPublished
     throw UnimplementedError();
   }
 

@@ -46,7 +46,6 @@ class _AddAnnouncementDialogState extends State<AddAnnouncementDialog> {
                   AnnouncementsActionsState
                 >(
                   listener: (context, state) {
-                    // TODO: implement listener
                     if (state is AddAnnouncementSuccess) {
                       ScaffoldMessenger.of(
                         context,
@@ -105,7 +104,6 @@ class _AddAnnouncementDialogState extends State<AddAnnouncementDialog> {
                               label: 'Add Announcement',
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  // TODO: context.read<AnnouncementsCubit>().addAnnouncement(...)
                                   newContext
                                       .read<AnnouncementsActionsCubit>()
                                       .addAnnouncement(

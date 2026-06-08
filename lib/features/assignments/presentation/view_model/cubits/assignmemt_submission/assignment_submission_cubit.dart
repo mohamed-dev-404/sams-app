@@ -3,9 +3,6 @@ import 'package:sams_app/core/utils/mixins/cubit_message_mixin.dart';
 import 'package:sams_app/core/utils/mixins/safe_emit_mixin.dart';
 import 'package:sams_app/features/assignments/data/model/get_all_submissions/all_submissions_model.dart';
 import 'package:sams_app/features/assignments/data/model/get_all_submissions/assignment_submission_model.dart';
-import 'package:sams_app/features/assignments/data/model/get_all_submissions/pagination_model.dart';
-import 'package:sams_app/features/assignments/data/model/get_all_submissions/state_model.dart';
-import 'package:sams_app/features/assignments/data/model/get_all_submissions/student_info_model.dart';
 import 'package:sams_app/features/assignments/data/model/grade_submission/grade_submission_request.dart';
 import 'package:sams_app/features/assignments/data/repos/assignment_submission_reop.dart';
 
@@ -116,124 +113,6 @@ Future<void> getAllSubmissions({
     },
   );
 }
-///// Fake Data To Test Pagination and Loading More
-// Future<void> getAllSubmissions({
-//     required String assignmentId,
-//     int page = 1,
-//     int size = 20,
-//     bool showLoading = true,
-//   }) async {
-
-//     /// First loading
-//     if (showLoading && page == 1) {
-//       emit(SubmissionsLoading());
-//     }
-
-//     /// Load more
-//     if (page > 1) {
-
-//       isLoadingMore = true;
-
-//       /// IMPORTANT
-//       /// Rebuild UI to show bottom loader
-//       if (currentSubmissions != null) {
-//         emit(
-//           SubmissionsSuccess(
-//             currentSubmissions!,
-//           ),
-//         );
-//       }
-//     }
-
-//     /// Fake API delay
-//     await Future.delayed(
-//       const Duration(seconds: 1),
-//     );
-
-//     /// Fake Data
-//     final fakeList = List.generate(
-//       size,
-//       (index) {
-
-//         final itemNumber =
-//             ((page - 1) * size) + index + 1;
-
-//         return AssSubmissionModel(
-
-//           id: '$itemNumber',
-
-//           studentInfo: StudentInfoModel(
-//             name: 'Student $itemNumber',
-//             academicId: '20220$itemNumber',
-//           ),
-
-//           submittedAt:
-//               DateTime.now().toIso8601String(),
-
-//           submittedItems: [],
-
-//           neededReview:
-//               itemNumber % 2 == 0,
-
-//           points: 10,
-
-//           earnedPoints: 8,
-//         );
-//       },
-//     );
-
-//     /// First page
-//     if (page == 1) {
-//       allSubmissions = fakeList;
-//     }
-
-//     /// Next pages
-//     else {
-//       allSubmissions.addAll(fakeList);
-//     }
-
-//     /// Pagination info
-//     currentPage = page;
-
-//     hasNextPage = page < 5;
-
-//     /// Build fake response
-//     final fakeData = AllSubmissionsModel(
-
-//       stats: StateModel(
-
-//         submitted:
-//             allSubmissions.length,
-
-//         marked: allSubmissions
-//             .where((e) => !e.neededReview)
-//             .length,
-
-//         unmarked: allSubmissions
-//             .where((e) => e.neededReview)
-//             .length,
-//       ),
-
-//       submissions: allSubmissions,
-
-//       pagination: PaginationModel(
-//         totalElements: 100,
-//         currentPage: page,
-//         size: size,
-//         totalPages: 5,
-//         hasNextPage: hasNextPage,
-//         hasPrevPage: page > 1,
-//       ),
-//     );
-
-//     currentSubmissions = fakeData;
-
-//     isLoadingMore = false;
-
-//     emit(
-//       SubmissionsSuccess(fakeData),
-//     );
-//   }
 
   // =================  DETAILS =================
 

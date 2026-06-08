@@ -20,7 +20,7 @@ class ApproveAllButton extends StatelessWidget {
     onPressed: (isLoading || isSuccess) ? null : onTap,
     style: ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFFFF8A00),
-      disabledBackgroundColor: isSuccess ? const Color(0xff4CAF50) : const Color(0xFFFF8A00).withOpacity(0.6),
+      disabledBackgroundColor: isSuccess ? const Color(0xff4CAF50) : const Color(0xFFFF8A00).withValues(alpha: 0.6),
       disabledForegroundColor: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

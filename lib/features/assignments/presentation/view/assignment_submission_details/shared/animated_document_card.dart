@@ -35,6 +35,7 @@ class _AnimatedDocumentCardState extends State<AnimatedDocumentCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
+        // ignore: deprecated_member_use
         transform: Matrix4.identity()..scale(isHovered ? 1.02 : 1.0),
 
         decoration: BoxDecoration(
@@ -44,6 +45,7 @@ class _AnimatedDocumentCardState extends State<AnimatedDocumentCard> {
           boxShadow: isHovered
               ? [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.08),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
@@ -64,6 +66,7 @@ class _AnimatedDocumentCardState extends State<AnimatedDocumentCard> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: widget.color.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -99,6 +102,7 @@ class _AnimatedDocumentCardState extends State<AnimatedDocumentCard> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: widget.color.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),

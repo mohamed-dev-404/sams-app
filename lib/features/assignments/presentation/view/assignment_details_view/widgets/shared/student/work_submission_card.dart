@@ -111,7 +111,7 @@ class WorkSubmissionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: (0.1)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -144,6 +144,7 @@ class WorkSubmissionCard extends StatelessWidget {
                 index,
               ), 
             );
+          // ignore: unnecessary_to_list_in_spreads
           }).toList(),
 
           const SizedBox(height: 12),
@@ -232,7 +233,7 @@ class WorkSubmissionCard extends StatelessWidget {
           Icon(Icons.add, color: AppColors.primary, size: 18),
           SizedBox(width: 4),
           Text(
-            "Add more files",
+            'Add more files',
             style: TextStyle(color: AppColors.primary, fontSize: 13),
           ),
         ],
