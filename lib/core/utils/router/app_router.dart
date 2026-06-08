@@ -155,15 +155,29 @@ class AppRouter {
       // ─────────────────────────────────────────────────────────────────────
       // HOME & PROFILE
       // ─────────────────────────────────────────────────────────────────────
-      GoRoute(
-        name: RoutesName.courses,
-        path: RoutesName.courses,
-        builder: (context, state) => BlocProvider(
-          create: (_) =>
-              HomeCubit(getIt<HomeRepo>(), role: CurrentRole.role)
-                ..fetchMyCourses(role: CurrentRole.role),
-          child: const HomeView(),
+      ShellRoute(
+        builder: (context, state, child) => BlocProvider(
+          create: (_) => ProfileCubit(getIt<ProfileRepo>())..getUserProfile(),
+          child: child,
         ),
+        routes: [
+          GoRoute(
+            name: RoutesName.courses,
+            path: RoutesName.courses,
+            builder: (context, state) => BlocProvider(
+              create: (_) =>
+                  HomeCubit(getIt<HomeRepo>(), role: CurrentRole.role)
+                    ..fetchMyCourses(role: CurrentRole.role),
+              child: const HomeView(),
+            ),
+          ),
+
+          GoRoute(
+            name: RoutesName.profile,
+            path: RoutesName.profile,
+            builder: (context, state) => const ProfileView(),
+          ),
+        ],
       ),
 
       GoRoute(
@@ -180,15 +194,6 @@ class AppRouter {
             child: const CreateCourseView(),
           );
         },
-      ),
-
-      GoRoute(
-        name: RoutesName.profile,
-        path: RoutesName.profile,
-        builder: (context, state) => BlocProvider(
-          create: (_) => ProfileCubit(getIt<ProfileRepo>())..getUserProfile(),
-          child: const ProfileView(),
-        ),
       ),
 
       // ─────────────────────────────────────────────────────────────────────

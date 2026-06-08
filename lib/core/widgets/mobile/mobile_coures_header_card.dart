@@ -1,4 +1,3 @@
-//todo shared mobile course details header widget used in the app
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sams_app/core/models/course_header_card_model.dart';
@@ -58,7 +57,7 @@ class MobileCoursesHeaderCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      cardModel.instructor!,
+                      cardModel.getDisplayName(null),
                       style: AppStyles.mobileBodySmallRg.copyWith(
                         color: AppColors.primaryLight,
                       ),

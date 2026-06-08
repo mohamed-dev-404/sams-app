@@ -4,8 +4,8 @@ import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 import 'package:sams_app/core/widgets/base/app_animated_loading_indicator.dart';
 import 'package:sams_app/core/widgets/shared/tab_body_view.dart';
-import 'package:sams_app/features/home/presentation/views/home/widgets/web/web_home_header.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/material_crud_listener.dart';
+import 'package:sams_app/features/materials/presentation/view/material_details/widget/shared/web_header_section.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_content_grid.dart';
 import 'package:sams_app/features/materials/presentation/view/material_details/widget/web/material_details_side_card.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
@@ -42,8 +42,8 @@ class WebMaterialDetailsViewBody extends StatelessWidget {
 
             return Column(
               children: [
-                //* Shared Web Header (Breadcrumbs, Search, Profile).
-                const WebHomeHeader(),
+                //* Shared Web Header.
+                const WebHeaderSection(title: 'Material Details',),
 
                 Expanded(
                   child: TabBodyView(

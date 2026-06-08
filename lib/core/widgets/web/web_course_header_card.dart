@@ -1,4 +1,3 @@
-//todo shared web course details header widget used in the app
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -66,7 +65,7 @@ class WebCourseHeaderCard extends StatelessWidget {
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                cardModel.instructor!,
+                                cardModel.getDisplayName(null),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppStyles.mobileBodyXlargeRg.copyWith(

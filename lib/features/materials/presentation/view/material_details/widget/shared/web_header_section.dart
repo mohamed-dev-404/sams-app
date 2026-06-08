@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
 import 'package:sams_app/core/utils/styles/app_styles.dart';
 
+//* Web header section for material details
 class WebHeaderSection extends StatelessWidget {
   const WebHeaderSection({super.key, required this.title});
   final String title;
