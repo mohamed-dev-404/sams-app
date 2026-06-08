@@ -16,10 +16,10 @@ class AppLogo extends StatelessWidget {
       onTap: () => context.go(RoutesName.courses),
       child: Row(
         children: [
-          SvgPicture.asset(AppIcons.iconsLogo, height: 24),
+          SvgPicture.asset(AppIcons.iconsLogo, height: 28),
           const SizedBox(width: 8),
           Text(
-            'Univerra',
+            'SAMS',
             style: AppStyles.mobileTitleLargeMd.copyWith(
               fontSize: 28.sp.clamp(20, 28),
               color: AppColors.secondaryLight,

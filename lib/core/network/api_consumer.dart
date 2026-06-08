@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 abstract class ApiConsumer {
   Future<dynamic> get(
     String path, {
@@ -27,5 +29,12 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+  });
+
+  /// Downloads raw bytes from [path].
+  /// Use this for binary responses (files, exports, etc.) instead of [get].
+  Future<Uint8List> download(
+    String path, {
+    Map<String, dynamic>? queryParameters,
   });
 }

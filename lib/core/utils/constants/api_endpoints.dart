@@ -95,4 +95,23 @@ class EndPoints {
   static String addComment(String announcementId) => 'announcements/$announcementId/comments';
   /// Endpoint to update or delete a specific comment.
   static String commentById(String commentId) => 'comments/$commentId';
+
+  //* --- Grades --- ;
+
+  /// Endpoint to get all grades for a specific course.
+  /// Needs [courseId] to be passed in the URL.
+  /// Optional parameters: [search], [page], [perPage].
+  static String getInstructorGrades({required String courseId}) => 'instructor/courses/$courseId/grades';
+
+  /// Endpoint to get my grades for a specific course.
+  /// Needs [courseId] to be passed in the URL.
+  static String getMyGrades({required String courseId}) => 'courses/$courseId/my-grades';
+
+  /// endpoint to export grades
+  /// Needs [courseId] to be passed in the URL.
+  static String exportGrades({required String courseId}) => 'instructor/courses/$courseId/grades/export-grades';
+
+  /// endpoint to toggle classwork visibility
+  /// Needs [courseId] and [classworkId] to be passed in the URL.
+  static String toggleClassworkVisibility({required String courseId, required String classworkId}) => 'instructor/courses/$courseId/classworks/$classworkId/toggle-visibility';
 }

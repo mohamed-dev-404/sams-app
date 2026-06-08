@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sams_app/core/widgets/shared/adaptive_layout.dart';
-import 'package:sams_app/features/Grades/presentation/view/widget/grades_mobile_layout.dart';
-import 'package:sams_app/features/Grades/presentation/view/widget/grades_web_layout.dart';
+import 'package:sams_app/features/grades/presentation/view/widget/mobile/grades_mobile_layout.dart';
+import 'package:sams_app/features/grades/presentation/view/widget/web/grades_web_layout.dart';
 
 class GradesTabView extends StatelessWidget {
   final String courseId;
@@ -11,10 +11,10 @@ class GradesTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdaptiveLayout(
       mobileLayout: (BuildContext context) {
-        return const GradesMobileLayout();
+        return GradesMobileLayout(courseId: courseId);
       },
       webLayout: (BuildContext context) {
-        return const GradesWebLayout();
+        return GradesWebLayout(courseId: courseId);
       },
     );
   }

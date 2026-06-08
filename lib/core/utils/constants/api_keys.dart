@@ -111,17 +111,27 @@ abstract class ApiKeys {
   static const String classworkId = 'classworkId';
 
   //? create question request body model Keys
-  static const String questions = 'questions';  //? --- Material Keys ---
+  static const String questions = 'questions';
+
+  //? --- Material Keys ---
   static const String materialItems = 'materialItems';
   static const String displayUrl = 'displayUrl';
   static const String contentReference = 'contentReference';
   static const String filesMetadata = 'filesMetadata';
   static const String itemKey = 'itemKey';
-  static const String context = 'context';  //? --- Announcement Keys
+  static const String context = 'context';
+
+  //? --- Announcement Keys
   static const String content = 'content';
   static const String comments = 'comments';
   static const String commentedAt = 'commentedAt';
   static const String author = 'author';
+
+  //? Grade Keys
+  static const String columns = 'columns';
+  static const String rows = 'rows';
+  static const String grades = 'grades';
+  static const String maxScore = 'maxScore';
 }
 
 //! --- API VALUES (Fixed values that the server expects inside the fields) ---

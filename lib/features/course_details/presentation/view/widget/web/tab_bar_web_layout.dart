@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sams_app/core/utils/colors/app_colors.dart';
+import 'package:sams_app/core/utils/configs/size_config.dart';
 import 'package:sams_app/core/widgets/web/web_course_header_card.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/app_logo.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/custom_web_tab_bar.dart';
@@ -39,18 +40,19 @@ class TabBarWebLayout extends StatelessWidget {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: EdgeInsets.only(left: 12.0),
                         child: AppLogo(),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: SizeConfig.screenWidth(context) * .13),
                       CustomWebTabBar(
                         tabs: cubit.visibleTabTitles,
                         currentIndex: currentIndex,
                         onTap: cubit.changeTab,
                       ),
+                      SizedBox(width: SizeConfig.screenWidth(context) * .22),
                     ],
                   ),
                 ),

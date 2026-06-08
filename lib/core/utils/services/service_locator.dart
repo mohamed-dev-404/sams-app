@@ -4,6 +4,7 @@ import 'package:sams_app/core/enums/enum_user_role.dart';
 import 'package:sams_app/core/network/api_consumer.dart';
 import 'package:sams_app/core/network/dio_consumer.dart';
 import 'package:sams_app/core/utils/services/s3_upload_service.dart';
+import 'package:sams_app/features/grades/presentation/view_model/grade_cubit/grade_cubit.dart';
 import 'package:sams_app/features/announcements/data/data_sources/announcements_local_data_source.dart';
 import 'package:sams_app/features/announcements/data/repos/announcement_repo.dart';
 import 'package:sams_app/features/announcements/data/repos/announcemet_repo_impl.dart';
@@ -12,6 +13,8 @@ import 'package:sams_app/features/announcements/presentation/view_model/cubit/an
 import 'package:sams_app/features/announcements/presentation/view_model/cubit/comment_actions/comment_actions_cubit.dart';
 import 'package:sams_app/features/auth/data/repos/auth_repo.dart';
 import 'package:sams_app/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:sams_app/features/grades/data/repos/grade_repo.dart';
+import 'package:sams_app/features/grades/data/repos/grade_repo_impl.dart';
 import 'package:sams_app/features/home/data/data_sources/home_local_data_sourse.dart';
 import 'package:sams_app/features/home/data/repos/home_repo.dart';
 import 'package:sams_app/features/home/data/repos/home_repo_impl.dart';
@@ -141,8 +144,22 @@ void setupServiceLocator() {
   getIt.registerFactory<AnnouncementsActionsCubit>(
     () => AnnouncementsActionsCubit(getIt<AnnouncementsRepo>()),
   );
-    //* 4. Register Actions Cubit (Add, Update, Delete)
+  //* 4. Register Actions Cubit (Add, Update, Delete)
   getIt.registerFactory<CommentActionsCubit>(
     () => CommentActionsCubit(getIt<AnnouncementsRepo>()),
   );
-}
+
+  //! Grades Feature
+  
+  //* register GradeRepo
+  getIt.registerLazySingleton<GradeRepo>(
+    () => GradeRepoImpl(api: getIt<ApiConsumer>()),
+  );
+
+  //* register GradeCubit (Factory: to get a fresh instance every time)
+  getIt.registerFactory<GradeCubit>(
+    () => GradeCubit(getIt<GradeRepo>()),
+  );
+
+} 
+

@@ -123,6 +123,24 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
+  /// Downloads raw bytes from [path] using [ResponseType.bytes].
+  @override
+  Future<Uint8List> download(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await dio.get<List<int>>(
+        path,
+        queryParameters: queryParameters,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return Uint8List.fromList(response.data ?? []);
+    } catch (e) {
+      _handleException(e);
+    }
+  }
+
   Never _handleException(Object e) {
     if (e is DioException) {
       handleDioExceptions(
