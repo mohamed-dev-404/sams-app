@@ -36,7 +36,7 @@ class TabBarWebLayout extends StatelessWidget {
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(50),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -46,7 +46,7 @@ class TabBarWebLayout extends StatelessWidget {
                         padding: EdgeInsets.only(left: 12.0),
                         child: AppLogo(),
                       ),
-                      SizedBox(width: SizeConfig.screenWidth(context) * .13),
+                      SizedBox(width: SizeConfig.screenWidth(context) * .08),
                       CustomWebTabBar(
                         tabs: cubit.visibleTabTitles,
                         currentIndex: currentIndex,
