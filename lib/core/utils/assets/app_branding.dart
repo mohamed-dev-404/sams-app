@@ -20,4 +20,5 @@ class AppBranding {
       'assets/branding/icon_symbol_only_v2.png';
   static const String iconTextCombinationV1 =
       'assets/branding/icon_text_combination_v1.png';
+  static const String logoWhiteCenter = 'assets/branding/logo_white_center.png';
 }
