@@ -12,7 +12,9 @@ import 'package:sams_app/features/course_code/presentation/view/course_code_tab_
 import 'package:sams_app/features/course_details/presentation/view/widget/mobile/tab_bar_mobile_layout.dart';
 import 'package:sams_app/features/course_details/presentation/view/widget/web/tab_bar_web_layout.dart';
 import 'package:sams_app/features/course_details/presentation/view_models/course_navigation/course_navigation_cubit.dart';
-import 'package:sams_app/features/live_sessions/presentation/view/live_sessions_tab_view.dart';
+import 'package:sams_app/features/live_sessions/data/repos/meeting_repo.dart';
+import 'package:sams_app/features/live_sessions/presentation/view/live_session_tap_view.dart/live_sessions_tab_view.dart';
+import 'package:sams_app/features/live_sessions/presentation/view_model/cubit/meeting_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view/material_tab_view/materials_tab_view.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_crud/material_crud_cubit.dart';
 import 'package:sams_app/features/materials/presentation/view_model/cubits/material_fetch/material_fetch_cubit.dart';
@@ -69,16 +71,18 @@ class CourseDetailsView extends StatelessWidget {
       ),
 
       'Assignments': AssignmentsTabView(courseId: courseId),
-       
-       //* Announcements 
+
+      //* Announcements
       'Announcements': BlocProvider(
-        create: (context) => getIt<AnnouncementsFetchCubit>()..fetchAnnouncements(courseId: courseId),
+        create: (context) =>
+            getIt<AnnouncementsFetchCubit>()
+              ..fetchAnnouncements(courseId: courseId),
         child: AnnouncementsTabView(courseId: courseId),
       ),
 
       'Grades': GradesTabView(courseId: courseId),
-       
-       //* Quizzes 
+
+      //* Quizzes
       'Quizzes': BlocProvider(
         create: (_) =>
             GetAllQuizesCubit(getIt<QuizRepository>())
@@ -86,7 +90,15 @@ class CourseDetailsView extends StatelessWidget {
         child: QuizzesTabView(courseId: courseId),
       ),
 
-      'Live Sessions': LiveSessionsTabView(courseId: courseId),
+      //* Live Sessions
+      'Live Sessions': BlocProvider(
+        create: (_) =>
+            MeetingCubit(getIt<MeetingRepo>())..fetchMeetings(courseId: courseId),
+        child: LiveSessionsTabView(
+          courseId: courseId,
+          instructorId: int.tryParse(courseModel.instructor ?? '0') ?? 0,
+        ),
+      ),
 
       'Course Code': CourseCodeTabView(courseId: courseId),
 
