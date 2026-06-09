@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'SAMS App',
+          title: 'AcademiaX',
           routerConfig: AppRouter.appRouter,
           theme: AppTheme.getAppTheme(),
           themeMode: ThemeMode.light,
